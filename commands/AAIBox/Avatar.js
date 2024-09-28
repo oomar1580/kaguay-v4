@@ -47,6 +47,6 @@ export default {
   name: "اڤتار",
   author: "kaguya project",
   description: "يرسل صورة أفاتار بناءً على id, bgname, signature, color.\nمثال: 4 yazky yazky black",
-  aliases;["أڤتار"],
+  aliases:["أڤتار"],
   execute: avatarAlert
 };
