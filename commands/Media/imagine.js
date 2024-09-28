@@ -37,13 +37,13 @@ export default {
       api.setMessageReaction("⏳", event.messageID, () => {}, true);
 
       // استخدم الرابط الجديد مع الاستعلام المرسل
-      const response = await fetch(`https://smfahim.xyz/hercai?ask=${query}&uid=${event.senderID}`);
+      const response = await fetch(`https://betadash-api-swordslush.vercel.app/gpt3-turbo?question=${query}`);
       if (!response.ok) {
         return api.sendMessage("API DOWN", event.threadID, event.messageID);
       }
 
       const data = await response.json();
-      api.sendMessage(`${data.answer}`, event.threadID, event.messageID);
+      api.sendMessage(`${data.response}`, event.threadID, event.messageID);
       api.setMessageReaction("✅", event.messageID, () => {}, true);
 
       // إعداد الرد للاستمرار في المحادثة
@@ -71,13 +71,13 @@ export default {
         api.setMessageReaction("⏳", messageID, () => {}, true);
 
         // استخدم الرابط الجديد مع الاستعلام في الرد
-        const response = await fetch(`https://smfahim.xyz/hercai?ask=${query}&uid=${senderID}`);
+        const response = await fetch(`https://betadash-api-swordslush.vercel.app/gpt3-turbo?question=${query}`);
         if (!response.ok) {
           return api.sendMessage("API DOWN", threadID, messageID);
         }
 
         const data = await response.json();
-        api.sendMessage(`${data.answer}`, threadID, messageID);
+        api.sendMessage(`${data.response}`, threadID, messageID);
         api.setMessageReaction("✅", messageID, () => {}, true);
 
       } catch (error) {
