@@ -39,22 +39,20 @@ async function execute({ api, event, Users, Threads }) {
         const addedByName = addedByInfo[addedBy]?.name || "Unknown";
 
         // إذا لم يكن الشخص الذي أضاف البوت هو أحد أصحاب البوت المصرح لهم
-        if (!ownerFbIds.includes(addedBy)) {
-          const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount} \n🧑‍💼 بواسطة: ${addedByName}`;
-          await api.sendMessage(notifyOwnerMessage, ownerFbIds[0]);
+        // معرف حسابك الشخصي
+const yourFbId = "100076269693499"; // قم بتغيير هذا إلى معرف حسابك الصحيح
 
-          const exitMessage = `⚠️ | إضافة البوت بدون إذن غير مسموح يرجى التواصل مع المطور من أجل الحصول على الموافقة \n 📞 | رابـط الـمـطـور :   https://www.facebook.com/profile.php?id=100076269693499`;
-          const exitImagePath = path.join(process.cwd(), 'cache12', 'alert.jpg'); // يمكنك وضع صورة مخصصة هنا
+if (!ownerFbIds.includes(addedBy)) {
+  const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount} \n🧑‍💼 بواسطة: ${addedByName}`;
+  await api.sendMessage(notifyOwnerMessage, ownerFbIds[0]);
 
-          // إرسال الرسالة مع صورة
-          await api.sendMessage({
-            body: exitMessage,
-            attachment: fs.createReadStream(exitImagePath),
-          }, event.threadID);
+  // استخدام api.shareContact لإرسال معلومات حسابك
+  const contactMessage = `⚠️ | إضافة البوت بدون إذن غير مسموح. يرجى التواصل مع المطور للحصول على الموافقة.\n📞 | معرف المطور: ${yourFbId}`;
+  await api.shareContact(contactMessage, yourFbId, event.threadID);
 
-          // الخروج من المجموعة
-          await api.removeUserFromGroup(botUserID, event.threadID);
-        } else {
+  // الخروج من المجموعة
+  await api.removeUserFromGroup(botUserID, event.threadID);
+} else {
           // إذا كان أحد أصحاب البوت هو من أضافه، فقط أرسل إشعارًا له
           const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount}`;
           await api.sendMessage(notifyOwnerMessage, ownerFbIds[0]);
