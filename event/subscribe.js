@@ -9,6 +9,7 @@ export default {
     if (!threads) {
       await Threads.create(event.threadID);
     }
+
     switch (event.logMessageType) {
       case "log:unsubscribe":
         {
@@ -17,10 +18,10 @@ export default {
             return log([
               {
                 message: "[ THREADS ]: ",
-                color: "yellow",
+              color: "yellow",
               },
               {
-                message: ` ❌ | المجموعة  مع المعرف : ${event.threadID} قامت بطرد البوت خارجا `,
+                message: ` ❌ | المجموعة مع المعرف : ${event.threadID} قامت بطرد البوت خارجا `,
                 color: "green",
               },
             ]);
@@ -28,12 +29,12 @@ export default {
           await Threads.update(event.threadID, {
             members: +threads.members - 1,
           });
-          kaguya.reply(event.logMessageBody);
-          break;
+          break; // إزالة إرسال رسالة المغادرة
         }
+
       case "log:subscribe": {
         if (event.logMessageData.addedParticipants.some((i) => i.userFbId == api.getCurrentUserID())) {
-          // حذف رسالة حارس توصيل كاغويا
+          // حذف رسالة توصيل كاغويا
           api.unsendMessage(event.messageID);
 
           // تغيير كنية البوت تلقائيا عند الإضافة إلى المجموعة
@@ -44,36 +45,26 @@ export default {
             api.getCurrentUserID()
           );
 
-          // تزيين رسالة الدخول
-          const currentTime = moment().tz("Africa/Casablanca").format("YYYY-MM-DD HH:mm:ss");
-          const welcomeMessagePart1 = `body: `┌───── ～✿～ ─────┐\n✅ | تــم الــتــوصــيــل بـنـجـاح\n❏ الـرمـز : 『بدون رمز』\n❏ إسـم الـبـوت : 『${botName}』\n❏ الـمـطـور : 『حــســيــن يــعــقــوبــي』\n❏ رابـط الـمـطـور : https://www.facebook.com/profile.php?id=100076269693499 \n╼╾─────⊹⊱⊰⊹─────╼╾\n⚠️  | اكتب قائمة او اوامر \n╼╾─────⊹⊱⊰⊹─────╼╾\n🔖 | أكتب تقريرلإرسال رسالة للمطور في حالة واجهت اي مشكلة\n╼╾─────⊹⊱⊰⊹─────╼╾\n〘🎀 KᗩGᑌYᗩ ᗷOT 🎀〙\n└───── ～✿～ ─────┘`;
-
-          const welcomeMessagePart2 = `✿━━━━━━━━━━━━━━━━━✿\n ⚙️  | جاري توصيل ${botName} في المجموعة..... \n
-❏ التاريخ : ${moment().tz("Africa/Casablanca").format("YYYY-MM-DD")}
-❏ الوقت : ${moment().tz("Africa/Casablanca").format("HH:mm:ss")}
-\n✿━━━━━━━━━━━━━━━━━✿`;
-
-          // إرسال رسالة الدخول
+          // رسالة الترحيب مع فيديو الترحيب عند دخول البوت فقط
           const videoPath = "cache12/welcome.mp4";
           api.sendMessage(
             {
-              body: welcomeMessagePart1,
+              body: `┌───── ～✿～ ─────┐\n✅ | تــم الــتــوصــيــل بـنـجـاح\n❏ الـرمـز : 『بدون رمز』\n❏ إسـم الـبـوت : 『${botName}』\n❏ الـمـطـور : 『حــســيــن يــعــقــوبــي』\n❏ رابـط الـمـطـور : https://www.facebook.com/profile.php?id=100076269693499 \n╼╾─────⊹⊱⊰⊹─────╼╾\n⚠️  | اكتب قائمة او اوامر \n╼╾─────⊹⊱⊰⊹─────╼╾\n🔖 | أكتب تقريرلإرسال رسالة للمطور في حالة واجهت اي مشكلة\n╼╾─────⊹⊱⊰⊹─────╼╾\n〘🎀 KᗩGᑌYᗩ ᗷOT 🎀〙\n└───── ～✿～ ─────┘`;
+          
               attachment: fs.createReadStream(videoPath),
             },
             event.threadID
           );
-          api.sendMessage(welcomeMessagePart2, event.threadID);
         } else {
+          // تحديث عدد الأعضاء فقط دون إرسال رسالة ترحيب
           for (let i of event.logMessageData.addedParticipants) {
             await Users.create(i.userFbId);
           }
           await Threads.update(event.threadID, {
             members: +threads.members + +event.logMessageData.addedParticipants.length,
           });
-
-          // إرسال رسالة الدخول
-          return kaguya.send(event.logMessageBody);
         }
+        break; // إزالة إرسال رسالة الترحيب
       }
     }
   },
