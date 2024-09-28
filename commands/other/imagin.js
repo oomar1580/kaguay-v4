@@ -43,10 +43,13 @@ export default {
         return api.sendMessage("❌ | لم يتم توليد أي صور.", event.threadID, event.messageID);
       }
 
-      // Download and save all images
+      // Download and save all images to the cache directory
+      const cacheDir = path.join(process.cwd(), "cache");
+      await fs.ensureDir(cacheDir);
+
       const filePaths = await Promise.all(imageUrls.map(async (imageUrl, index) => {
         const fileName = `xi_${index + 1}.png`;
-        const filePath = path.join("/tmp", fileName);
+        const filePath = path.join(cacheDir, fileName);
 
         const imageResponse = await axios.get(imageUrl, { responseType: 'stream' });
         const writerStream = fs.createWriteStream(filePath);
