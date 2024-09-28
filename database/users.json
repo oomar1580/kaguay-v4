@@ -1,0 +1,968 @@
+[
+  {
+    "uid": "61562844636633",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Eugene Pangilinan Aguilar",
+      "firstName": "Eugene",
+      "vanity": "CallMeEurix.690",
+      "avatar": "https://graph.facebook.com/61562844636633/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/CallMeEurix.690",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100014570224558",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Kim Joseph DG Bien ЁЯлеЁЯлеЁЯле",
+      "firstName": "Kim Joseph",
+      "vanity": "kimtzy2006",
+      "avatar": "https://graph.facebook.com/100014570224558/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/kimtzy2006",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100082748880815",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Rona Vi",
+      "firstName": "Rona",
+      "vanity": "Roronoa.Zor0o",
+      "avatar": "https://graph.facebook.com/100082748880815/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/Roronoa.Zor0o",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100040253298048",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Arjhil Dacayanan",
+      "firstName": "Arjhil",
+      "vanity": "arjhil.dacayanan.73",
+      "avatar": "https://graph.facebook.com/100040253298048/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "friend",
+      "profileUrl": "https://www.facebook.com/arjhil.dacayanan.73",
+      "isFriend": true,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100066637830071",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Alexa DGє▒вП",
+      "firstName": "Alexa",
+      "vanity": "arjhildacayanan31",
+      "avatar": "https://graph.facebook.com/100066637830071/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/arjhildacayanan31",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100078625712143",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Shizyu Xinn",
+      "firstName": "Shizyu",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100078625712143/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100078625712143",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100077070762554",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Jay Mar",
+      "firstName": "Jay",
+      "vanity": "jaymar.dev.00",
+      "avatar": "https://graph.facebook.com/100077070762554/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/jaymar.dev.00",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100036956043695",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Jonell Hutchins Magallanes",
+      "firstName": "Jonell Hutchins",
+      "vanity": "propertynilove.magallnes",
+      "avatar": "https://graph.facebook.com/100036956043695/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/propertynilove.magallnes",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100088690249020",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Joshua Apostol",
+      "firstName": "Joshua",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100088690249020/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100088690249020",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61560090990792",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Joseph Lim",
+      "firstName": "Joseph",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61560090990792/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61560090990792",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61565205900723",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "CK Kpl",
+      "firstName": "CK",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61565205900723/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61565205900723",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61566487408720",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "George M Beard",
+      "firstName": "George",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61566487408720/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61566487408720",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100086132330758",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Sittieaizah Abdullah",
+      "firstName": "Sittieaizah",
+      "vanity": "officialaccountofaizah",
+      "avatar": "https://graph.facebook.com/100086132330758/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/officialaccountofaizah",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61565731088717",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Kevin Chu",
+      "firstName": "Kevin",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61565731088717/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61565731088717",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100028042094538",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Magdasal Estefanie",
+      "firstName": "Estefanie",
+      "vanity": "estefanie.magdasal.1",
+      "avatar": "https://graph.facebook.com/100028042094538/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/estefanie.magdasal.1",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61566404821179",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Nagalulu Dump",
+      "firstName": "Nagalulu",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61566404821179/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61566404821179",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100027399343135",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Mark Hitsuraan",
+      "firstName": "Mark",
+      "vanity": "mark.dev69",
+      "avatar": "https://graph.facebook.com/100027399343135/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/mark.dev69",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100035220155827",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Ryan Wayne Rallos",
+      "firstName": "Ryan Wayne",
+      "vanity": "ryanwayne.rallos.7",
+      "avatar": "https://graph.facebook.com/100035220155827/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/ryanwayne.rallos.7",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100091965145750",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Florence Fnla",
+      "firstName": "Florence",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100091965145750/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100091965145750",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100083421066027",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Aldrin James Almadin",
+      "firstName": "Aldrin James",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100083421066027/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100083421066027",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100085058313131",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Christian Pesebre",
+      "firstName": "Christian",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100085058313131/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100085058313131",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100081920326577",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Rindel Jhy Dela Cerna",
+      "firstName": "Rindel Jhy",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100081920326577/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100081920326577",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100006399705733",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "John Lester Legaspi",
+      "firstName": "John Lester",
+      "vanity": "iamjohn.devx",
+      "avatar": "https://graph.facebook.com/100006399705733/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/iamjohn.devx",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100091592152325",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Jr Busaco є▒вП",
+      "firstName": "Jr",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100091592152325/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100091592152325",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100054706067959",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Kenlie Navacilla Jugarap",
+      "firstName": "Kenlie Navacilla",
+      "vanity": "kenlienjugarap",
+      "avatar": "https://graph.facebook.com/100054706067959/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/kenlienjugarap",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100057571075018",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Rica Tibhongan",
+      "firstName": "Rica",
+      "vanity": "rica.tibhongan.5",
+      "avatar": "https://graph.facebook.com/100057571075018/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/rica.tibhongan.5",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100076488601971",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Ronald Allen Albaniaє▒вП",
+      "firstName": "Ronald Allen",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100076488601971/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100076488601971",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100076235372369",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Esealp Tnod Puevig",
+      "firstName": "Esealp",
+      "vanity": "geotechph.net",
+      "avatar": "https://graph.facebook.com/100076235372369/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/geotechph.net",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100085898449586",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Kiff Hyacinth Pon",
+      "firstName": "Kiff Hyacinth",
+      "vanity": "Kiffhyacinthpon",
+      "avatar": "https://graph.facebook.com/100085898449586/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/Kiffhyacinthpon",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100081852204977",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Junmar Dilao",
+      "firstName": "Junmar",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100081852204977/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100081852204977",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61565019929507",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Duxy Dumps",
+      "firstName": "Duxy",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61565019929507/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61565019929507",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100087212564100",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Churchill Abing",
+      "firstName": "Churchill",
+      "vanity": "Churchill.Dev4100",
+      "avatar": "https://graph.facebook.com/100087212564100/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/Churchill.Dev4100",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100085335111982",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Jade Berdal",
+      "firstName": "Jade",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100085335111982/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100085335111982",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100085303962048",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Alaisa Romandiar",
+      "firstName": "Alaisa",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100085303962048/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100085303962048",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100090090021769",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Faith Aries",
+      "firstName": "Faith",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100090090021769/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100090090021769",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100014367907687",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Jefferson Ferrer",
+      "firstName": "Jefferson",
+      "vanity": "jefferson.ferrer.587",
+      "avatar": "https://graph.facebook.com/100014367907687/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/jefferson.ferrer.587",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100039060577828",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Liza Jane Molato",
+      "firstName": "Liza Jane",
+      "vanity": "lizajane.molato.3",
+      "avatar": "https://graph.facebook.com/100039060577828/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/lizajane.molato.3",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100095108663669",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Grace Redulla Dotillos",
+      "firstName": "Grace",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100095108663669/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100095108663669",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nс╗п",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100081978780345",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "J├╕sh├║─Б M. L├бn├а",
+      "firstName": "J├╕sh├║─Б",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100081978780345/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100081978780345",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100079771134240",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "█ж█ж █ж.",
+      "firstName": "█ж.",
+      "vanity": "iamkiryu",
+      "avatar": "https://graph.facebook.com/100079771134240/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/iamkiryu",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Kh├┤ng x├бc ─Сс╗Лnh",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100009478792332",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Jehson S. Ohoylan",
+      "firstName": "Jehson",
+      "vanity": "jehson.ohoylan",
+      "avatar": "https://graph.facebook.com/100009478792332/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/jehson.ohoylan",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100076269693499",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "HUSSEIN YACOUBIє▒вП",
+      "firstName": "HUSSEIN",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/100076269693499/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "friend",
+      "profileUrl": "https://www.facebook.com/profile.php?id=100076269693499",
+      "isFriend": true,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  }
+]
