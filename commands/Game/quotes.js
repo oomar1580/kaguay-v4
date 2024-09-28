@@ -6,12 +6,12 @@ export default {
   name: "اقتباس",
   author: "حسين يعقوبي",
   role: "member",
-  aliases: ["إقتباس","اقتباسات"],
+  aliases: ["إقتباس", "اقتباسات"],
   description: "يرسل اقتباسات عميقة مع صور معبرة 💖.",
   execute: async ({ api, event, Economy }) => {
     try {
       const messages = [
-        
+
       `لــيــتـــــنا نـــســـتـــطـــيـــع إيــقــاف الـــــــزمــــن عــــلـــــى لـــــحـــــظـــــات كـــنـــا بـــــهــــــا ســعــداء 
 ⁰⁰.⁰⁰🖤🍷𝕀 𝕨𝕚𝕤𝕙 𝕨𝕖 𝕔𝕠𝕦𝕝𝕕 𝕤𝕥𝕠𝕡 𝕥𝕚𝕞𝕖 𝕠𝕟 𝕞𝕠𝕞𝕖𝕟𝕥𝕤 𝕨𝕙𝕖𝕟 𝕨𝕖 𝕨𝕖𝕣𝕖 𝕙𝕒𝕡𝕡𝕪 ⁰⁰.⁰⁰🖤🍷`,
         `أحدهم يضحك وأحدهم يبڪي ، أحدهم يُريد العيش والآخر يشتهي الموت ، وأحدهم لم يعد يبالي ..
@@ -242,33 +242,14 @@ _ 𝒯𝒶𝓀ℯ 𝒸ℴ𝓃𝓉𝓇ℴ𝓁 ℴ𝒻 𝓎ℴ𝓊𝓇 𝒻𝓊�
         `لاتعآمل ڪل ﺂلناس بآسلوب وأحد
 ‎2:28 ━━━●────────10:00 ‌‏ ㅤ◁ㅤㅤ❚❚ㅤㅤ▷ ㅤ↻ ✶•┈┈┈┈•❉❉•┈┈┈┈•✶ 
 فليس ڪل مريض يآخذ نفس دوآء💔💙↗️`,
-        `غباء منك أن تكون حزينا، بسبب شخص يعيش حياته بكل سعادة 🖤📜
-𝐈𝐭'𝐬 𝐬𝐭𝐮𝐩𝐢𝐝 𝐨𝐟 𝐲𝐨𝐮 𝐭𝐨 𝐛𝐞 𝐬𝐚𝐝, 𝐛𝐞𝐜𝐚𝐮𝐬𝐞 𝐨𝐟 𝐬𝐨𝐦𝐞𝐨𝐧𝐞 𝐰𝐡𝐨 𝐥𝐢𝐯𝐞𝐬 𝐡𝐢𝐬 𝐥𝐢𝐟𝐞 𝐡𝐚𝐩𝐩𝐢𝐥𝐲 🖤📜`,
-        `و لأنڪ أعطيتهم فوق ما يستحقون فعلوا بڪ مالا تستحق🦋🍒🖤
-
-𝑨𝒏𝒅 𝒃𝒆𝒄𝒂𝒖𝒔𝒆 𝒚𝒐𝒖 𝒈𝒂𝒗𝒆 𝒕𝒉𝒆𝒎 𝒎𝒐𝒓𝒆 𝒕𝒉𝒂𝒏 𝒘𝒉𝒂𝒕 𝒕𝒉𝒆𝒚 𝒅𝒆𝒔𝒆𝒓𝒗𝒆, 𝒕𝒉𝒆𝒚 𝒅𝒊𝒅 𝒕𝒐 𝒚𝒐𝒖 𝒘𝒉𝒂𝒕 𝒚𝒐𝒖 𝒅𝒊𝒅 𝒏𝒐𝒕 𝒅𝒆𝒔𝒆𝒓𝒗𝒆 🖤🍒🦋`,
-        `ستقتلني يوماً هذه المزاجية , سأقع يوماً وأنا أتأرجح بين السعادة والتعاسة , بين الإكتراث واللامُبالاة الشعور واللاشعور سأتلاشى في المُنتصف.🖤🥀
-𝑶𝒏𝒆 𝒅𝒂𝒚 𝒕𝒉𝒊𝒔 𝒔𝒊𝒏𝒈𝒆𝒓 𝒘𝒊𝒍𝒍 𝒌𝒊𝒍𝒍 𝒎𝒆. 𝑶𝒏𝒆 𝒅𝒂𝒚 𝑰 𝒘𝒊𝒍𝒍 𝒇𝒂𝒍𝒍 𝒃𝒆𝒕𝒘𝒆𝒆𝒏 𝒉𝒂𝒑𝒑𝒊𝒏𝒆𝒔𝒔 𝒂𝒏𝒅 𝒖𝒏𝒉𝒂𝒑𝒑𝒊𝒏𝒆𝒔𝒔, 𝒃𝒆𝒕𝒘𝒆𝒆𝒏 𝒇𝒆𝒆𝒍𝒊𝒏𝒈 𝒊𝒏𝒅𝒊𝒇𝒇𝒆𝒓𝒆𝒏𝒄𝒆 𝒂𝒏𝒅 𝒊𝒏𝒅𝒊𝒇𝒇𝒆𝒓𝒆𝒏𝒄𝒆, 𝒂𝒏𝒅 𝒏𝒐𝒕  𝒇𝒆𝒆𝒍𝒊𝒏𝒈 𝒂𝒏𝒚 𝒋𝒐𝒚 𝒊𝒏 𝒕𝒉𝒆 𝒎𝒊𝒅𝒅𝒍𝒆. 🖤🥀`,
-        `الحياة روايةٌ جميلةٌ عليڪ قـــراءتها حتــــــــى النـهاية، لــــا تتوقــــــف أبــــــداً عند ๛ـطـــــــــڕ حــــــــزينٍ، قد تڪـــــــون النهاية جـــــميلةً . . 🖤🍂
- 𝐋𝐢𝐟𝐞 𝐢𝐬 𝐚 𝐛𝐞𝐚𝐮𝐭𝐢𝐟𝐮𝐥 𝐧𝐨𝐯𝐞𝐥 𝐭𝐡𝐚𝐭 𝐲𝐨𝐮 𝐡𝐚𝐯𝐞 𝐭𝐨 𝐫𝐞𝐚𝐝 𝐭𝐨 𝐭𝐡𝐞 𝐞𝐧𝐝, 𝐧𝐞𝐯𝐞𝐫 𝐬𝐭𝐨𝐩 𝐚𝐭 𝐚 𝐬𝐚𝐝 𝐥𝐢𝐧𝐞, 𝐭𝐡𝐞 𝐞𝐧𝐝 𝐦𝐚𝐲 𝐛𝐞 𝐛𝐞𝐚𝐮𝐭𝐢𝐟𝐮𝐥 . . 🖤🤍❤🐦`,
-        `"‏الـنـظـرات قـادرة عـلـى اخـتـصـار حـديـث مـن سـبـعـيـن ألـف كـلـمـة 💖
-“𝑳𝒐𝒐𝒌𝒔 𝒄𝒂𝒏 𝒔𝒉𝒐𝒓𝒕𝒆𝒏 𝒂 𝒄𝒐𝒏𝒗𝒆𝒓𝒔𝒂𝒕𝒊𝒐𝒏 
-𝑺𝒆𝒗𝒆𝒏𝒕𝒚 𝒕𝒉𝒐𝒖𝒔𝒂𝒏𝒅 𝒘𝒐𝒓𝒅𝒔 💖
-`,
-        `"‏كأنك فقدت كل شيء مع أنك لم تكن تملك شيئا أصلا."🦋🤎
-“𝑰𝒕 𝒊𝒔 𝒂𝒔 𝒊𝒇 𝒚𝒐𝒖 𝒉𝒂𝒗𝒆 𝒍𝒐𝒔𝒕 𝒆𝒗𝒆𝒓𝒚𝒕𝒉𝒊𝒏𝒈 𝒆𝒗𝒆𝒏 𝒕𝒉𝒐𝒖𝒈𝒉 𝒚𝒐𝒖 𝒉𝒂𝒅 𝒏𝒐𝒕𝒉𝒊𝒏𝒈.🤎🦋
-#𝑨𝒍𝒂𝒂_𝑨𝒉𝒎𝒆𝒅
-اقتباسات انجليزية مترجمة 🤎✨`,
-        `*ربـــي إن هذه المجموعه  مــلــيـــئة بــأشـخــاص لا أعـلـم ظـــروفـــهــــم و لا حــاجــتــهــم و لا أعــلـــم مــا فـــي* *قــلــوبــهـــم . فــالــلــهـــم مــن كــان مــنــهـــم مــريــضـــاً فــاشــفـــه و مـــن كــان مــبـــتــلـــى فــعــافــه و مـــن كــان مــحــتــاجـــاً* *فــاقـــض حــاجــتـــه و مـــن كـــان مــهــمـــومًــا فــفـــرج هــمـــه و مـــن كــان مــديــنـا فــاقــضِ عــنـــه ديـــنــه و مـــن كــان يــريـــد الــذريـــة فـــارزقــه الــذريــة الــصــالــحـــة و مـــن كـــان فــي نــفــســـه حــاجـــة لا يــعــلــمــهــا إلا أنـــت فــيــســـرهــا لــه و اخـــتــر* *لــهـــم مــا هــو خـــيـــر ، و لا تـــردهـــم خـــائــبـــيـــن* 
-*آمــيـــن يــا رب الــعــالــمــيـــن`
+      ];
 
       // اختيار رسالة عشوائية
-        ];
       const randomMessageIndex = Math.floor(Math.random() * messages.length);
       const randomMessage = messages[randomMessageIndex];
 
       // جلب صورة عشوائية
-      const searchQueries = ["flowers", "itashi", "Nezko", "joker", "nature"]; // يمكنك إضافة استعلامات بحث إذا كنت ترغب
+      const searchQueries = ["flowers", "itashi", "Nezko", "joker", "nature"]; // استعلامات بحث متنوعة
       const randomQueryIndex = Math.floor(Math.random() * searchQueries.length);
       const searchQuery = searchQueries[randomQueryIndex];
 
@@ -277,41 +258,44 @@ _ 𝒯𝒶𝓀ℯ 𝒸ℴ𝓃𝓉𝓇ℴ𝓁 ℴ𝒻 𝓎ℴ𝓊𝓇 𝒻𝓊�
       const imageLinks = response.data.result;
 
       if (imageLinks.length === 0) {
-        return api.sendMessage(`لم يتم العثور على صور للاستعلام: ${searchQuery}`, event.threadID, event.messageID);
+        return api.sendMessage(`⚠️ لم يتم العثور على صور للاستعلام: ${searchQuery}.`, event.threadID, event.messageID);
       }
 
-      const imageUrl = imageLinks[0]; // جلب الصورة الأولى فقط
+      const randomImageIndex = Math.floor(Math.random() * imageLinks.length);
+      const imageUrl = imageLinks[randomImageIndex]; // اختيار صورة عشوائية من النتائج
 
-      // تحميل الصورة وإرسالها مع الرسالة
+      const userMoney = (await Economy.getBalance(event.senderID)).data;
+      const cost = 100;
+
+      if (userMoney < cost) {
+        return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يجب عليك الحصول على ${cost} دولار أولاً.`, event.threadID);
+      }
+
+      // تحميل الصورة وإرسالها مع الرسالة بعد التأكد من الرصيد
       const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
       const imagePath = path.join(process.cwd(), "cache", `random_image.jpg`);
       await fs.writeFile(imagePath, imageResponse.data);
 
       const imageStream = fs.createReadStream(imagePath);
 
-      api.setMessageReaction("💖", event.messageID, (err) => {}, true);
-
-      const userMoney = (await Economy.getBalance(event.senderID)).data;
-      const cost = 100;
-
-      if (userMoney < cost) {
-        await fs.unlink(imagePath); // حذف الصورة المؤقتة إذا لم يكن هناك رصيد كافٍ
-        return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يجب عليك الحصول على ${cost} دولار أولاً.`, event.threadID);
-      }
-
       // الخصم من الرصيد
       await Economy.decrease(cost, event.senderID);
+
+      api.setMessageReaction("💖", event.messageID, (err) => {}, true);
 
       await api.sendMessage({
         body: randomMessage,
         attachment: imageStream,
       }, event.threadID);
 
+      // إرسال رسالة النجاح
+      await api.sendMessage(`✅ تم خصم ${cost} دولار من رصيدك وتم إرسال الاقتباس بنجاح!`, event.threadID);
+
       // حذف الصورة المؤقتة بعد الإرسال
       await fs.unlink(imagePath);
     } catch (error) {
       console.error(error);
-      return api.sendMessage(`حدث خطأ أثناء معالجة الطلب.`, event.threadID);
+      return api.sendMessage(`حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.`, event.threadID);
     }
   }
 };
