@@ -8,7 +8,7 @@ const databaseType = config.database.type;
 const filePath = "./database/users.json";
 const watcher = chokidar.watch(filePath);
 
-
+var usersData = JSON.parse(fs.readFileSync(filePath));
 
 watcher.on("change", () => {
   usersData = JSON.parse(fs.readFileSync(filePath));
