@@ -1,5 +1,5 @@
 import { log } from "../logger/index.js";
-import fs, { existsSync, mkdirSync } from "fs";
+import fs from "fs";
 import axios from "axios";
 import path from "path";
 
@@ -56,45 +56,9 @@ export default {
           // رسالة الترحيب
           const welcomeMessage = `┌───── ～✿～ ─────┐\n✅ | تــم الــتــوصــيــل بـنـجـاح\n❏ الـرمـز : 『بدون رمز』\n❏ إسـم الـبـوت : 『${botName}』\n❏ الـمـطـور : 『حــســيــن يــعــقــوبــي』\n❏ رابـط الـمـطـور : https://www.facebook.com/profile.php?id=100076269693499 \n╼╾─────⊹⊱⊰⊹─────╼╾\n⚠️  | اكتب قائمة او اوامر \n╼╾─────⊹⊱⊰⊹─────╼╾\n🔖 | اكتب ضيفيني من اجل ان تدخل مجموعة البوت او تقرير \n╼╾─────⊹⊱⊰⊹─────╼╾\n〘🎀 KᗩGᑌYᗩ ᗷOT 🎀〙\n└───── ～✿～ ─────┘`;
 
-          // الرابط الخاص بالفيديو الترحيبي
-          const videoLink = 'https://i.imgur.com/6LeT4Xa.mp4'; // ضع الرابط الصحيح للفيديو هنا
+          // إرسال رسالة الترحيب فقط بدون فيديو
+          api.sendMessage(welcomeMessage, event.threadID);
 
-          // مسار مجلد مؤقت لتخزين الفيديو باستخدام process.cwd()
-          const tmpFolderPath = path.join(process.cwd(), 'tmp');
-
-          // إنشاء المجلد إذا لم يكن موجودًا
-          if (!existsSync(tmpFolderPath)) {
-            mkdirSync(tmpFolderPath);
-          }
-
-          try {
-            // جلب الفيديو وحفظه
-            const videoResponse = await axios.get(videoLink, { responseType: 'arraybuffer' });
-            const videoPath = path.join(tmpFolderPath, 'subscribe_video.mp4');
-            fs.writeFileSync(videoPath, Buffer.from(videoResponse.data, 'binary'));
-
-            // إرسال رسالة الترحيب مع الفيديو
-            api.sendMessage(
-              {
-                body: welcomeMessage,
-                attachment: fs.createReadStream(videoPath),
-              },
-              event.threadID
-            );
-          } catch (error) {
-            // في حالة وجود خطأ عند جلب الفيديو، يتم إرسال رسالة بدون مرفق
-            api.sendMessage(welcomeMessage, event.threadID);
-            log([
-              {
-                message: "[ WARNING ]: ",
-                color: "yellow",
-              },
-              {
-                message: `⚠️ | فشل في جلب الفيديو الترحيبي من الرابط: ${videoLink}`,
-                color: "red",
-              },
-            ]);
-          }
         } else {
           // إذا تم إضافة أعضاء آخرين
           for (let i of event.logMessageData.addedParticipants) {
