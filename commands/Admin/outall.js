@@ -1,9 +1,9 @@
 class OutAll {
   constructor() {
-    this.name = "outall";
+    this.name = "مغادرة-الجميع";
     this.author = "Arjhil"; 
     this.cooldowns = 10; 
-    this.description = "Makes the bot leave the group chat.";
+    this.description = "اجعل البوت يغادر كل المجموعات.";
     this.role = "admin"; 
     this.aliases = [];
   }
@@ -13,7 +13,7 @@ class OutAll {
     
     try {
       await api.removeParticipant(threadID, global.config.BOT_ID);
-      api.sendMessage("The bot has left the group chat.", threadID);
+      api.sendMessage("✅ | تمت المغادرة من جميع المجموعات", threadID);
     } catch (error) {
       api.sendMessage("❌ An error occurred while trying to leave the group chat.", threadID);
       console.error("Error in outall command:", error);
