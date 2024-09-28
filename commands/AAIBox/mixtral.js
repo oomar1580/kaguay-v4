@@ -1,42 +1,57 @@
 import axios from "axios";
+import path from "path";
+import fs from "fs";
 
-class MixtralCommand {
-  name = "mixtral";
-  author = "Arjhil Dacayanan";
-  cooldowns = 60;
-  description = "Fetches a response from the Mixtral-8B API";
-  role = "member";
+export default {
+    name: "تطبيقات",
+    author: "Hussein Yacoubi",
+    role: "member",
+    description: "يجلب معلومات حول تطبيق من متجر جوجل بلاي ويترجمها إلى اللغة العربية.",
+    async execute({ api, event, args }) {
 
-  async execute({ event }) {
-    try {
-      const prompt = encodeURIComponent(event.body || "");
-      if (!prompt) {
-        return kaguya.reply("🤖 Usage: mixtral <your prompt>");
-      }
+        api.setMessageReaction("🔍", event.messageID, (err) => {}, true);
 
-      const apiUrl = `https://deku-rest-api.gleeze.com/api/mixtral-8b?q=${prompt}`;
-      const response = await axios.get(apiUrl);
+        try {
+            const searchTerm = args.join(" ");
+            if (!searchTerm) {
+                return api.sendMessage("يرجى تحديد مصطلح البحث.", event.threadID);
+            }
 
-      console.log("API Response:", response.data);
+            const apiUrl = `https://smfahim.onrender.com/playstore?q=${encodeURIComponent(searchTerm)}`;
+            const response = await axios.get(apiUrl);
 
-      const mixtralResponse = response.data.answer || response.data.result || "No valid response from the Mixtral API";
+            if (response.data && response.data.length > 0) {
+                const appInfo = response.data[0];
+                const translatedTitle = appInfo.name; // Use the name directly as it's in the desired language
 
-      const formattedMessage = `
-Kaguya Mixtral-8B Response 📜:
+                let message = `━━━━━━◈✿◈━━━━━━\n📝 | اسم التطبيق: ${translatedTitle}\n`;
+                message += `🏢 | الشركة المطورة: ${appInfo.developer}\n`;
+                message += `⭐ | التقييم: ${appInfo.rate2}\n`;
 
-━━━━━━━━━━━━━━━
+                if (appInfo.link && appInfo.link !== "undefined") {
+                    message += `\n📎 | رابط التطبيق على المتجر: ${appInfo.link}\n━━━━━━◈✿◈━━━━━━`;
+                }
 
-${mixtralResponse}
+                api.sendMessage(message, event.threadID);
 
-━━━━━━━━━━━━━━━
-`;
+                // Download image and send it as attachment
+                const imagePath = path.join(process.cwd(), 'cache', 'playstore_app.jpg');
+                const imageResponse = await axios.get(appInfo.image, { responseType: 'stream' });
+                imageResponse.data.pipe(fs.createWriteStream(imagePath));
 
-      return kaguya.reply(formattedMessage);
-    } catch (err) {
-      console.error('Error calling the Mixtral API:', err.message);
-      return kaguya.reply("🤖 An unexpected error occurred while calling the Mixtral API.");
+                api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+
+                setTimeout(() => {
+                    api.sendMessage({
+                        attachment: fs.createReadStream(imagePath),
+                    }, event.threadID);
+                }, 2000);
+            } else {
+                api.sendMessage("لم يتم العثور على نتائج للبحث.", event.threadID);
+            }
+        } catch (error) {
+            console.error("Error fetching Play Store app info:", error);
+            api.sendMessage("حدث خطأ أثناء جلب معلومات التطبيق من متجر جوجل بلاي.", event.threadID);
+        }
     }
-  }
-}
-
-export default new MixtralCommand();
+};
