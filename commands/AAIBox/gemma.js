@@ -2,13 +2,14 @@ import axios from "axios";
 import tinyurl from "tinyurl";
 import fs from "fs";
 import path from "path";
-import { process } from "process";
+
 
 export default {
-  name: "i2art",
+  name: "ارت",
   author: "حسين يعقوبي",
-  role: "user",
-  description: "تحويل الصورة إلى فن رقمي عبر URL",
+  role: "member",
+  description: "تحويل الصورة الى أنمي باستخدام الذكاء الاصطناعي",
+  aliases:["art"],
   execute: async ({ api, event, args }) => {
     const text = args.join(" ");
 
