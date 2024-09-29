@@ -18,7 +18,7 @@ const leaveGroupCommand = async ({ api, event, args }) => {
 
       const listbox = listthread.sort((a, b) => b.membersCount - a.membersCount);
 
-      let msg = 'قائمة المجموعات:\n\n',
+      let msg = 'تفضل قائمة المجموعات الاتي يوجد عليها البوت\n\n',
         i = 1;
       const groupid = [];
       for (const group of listbox) {
