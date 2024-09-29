@@ -1,7 +1,6 @@
 import fs from "fs";
-import login from "./logins/fca-disme/index.js"; //fca disme modify by CC PROJECTS [KAGUYA TEAM - JONELL MAGALLANES]
+import login from "./logins/fca-new/fb-chat-api/index.js"; // FCA fb-chat-api
 import { listen } from "./listen/listen.js";
-import './utils/kaguya.js';
 import { commandMiddleware, eventMiddleware } from "./middleware/index.js";
 import sleep from "time-sleep";
 import { log, notifer } from "./logger/index.js";
@@ -11,28 +10,17 @@ import EventEmitter from "events";
 import axios from "axios";
 import semver from "semver";
 
-// replacr 
-login({email: "FB_EMAIL", password: "FB_PASSWORD"}, (err, api) => {
-  if(err) return console.error(err);
-
-  // login
-  fs.writeFileSync('KaguyaState.json', JSON.stringify(api.getAppState())); // create appstate
+// Login replacement
+login({ email: "FB_EMAIL", password: "FB_PASSWORD" }, (err, api) => {
+  if (err) return console.error(err);
+  fs.writeFileSync('KaguyaState.json', JSON.stringify(api.getAppState())); // Create appstate
 });
 
 class Kaguya extends EventEmitter {
   constructor() {
     super();
     this.on("system:error", (err) => {
-      log([
-        {
-          message: "[ ERROR ]: ",
-          color: "red",
-        },
-        {
-          message: `Error! An error occurred. Please try again later: ${err}`,
-          color: "white",
-        },
-      ]);
+      log([{ message: "[ ERROR ]: ", color: "red" }, { message: `Error! An error occurred: ${err}`, color: "white" }]);
       process.exit(1);
     });
     this.currentConfig = config;
@@ -44,13 +32,12 @@ class Kaguya extends EventEmitter {
   checkCredentials() {
     try {
       const credentialsArray = JSON.parse(this.credentials);
-
       if (!Array.isArray(credentialsArray) || credentialsArray.length === 0) {
-        this.emit("system:error", "Please go to KaguyaSetUp/KaguyaState.json folder and fill in appstate!");
+        this.emit("system:error", "Fill in appstate in KaguyaSetUp/KaguyaState.json!");
         process.exit(0);
       }
     } catch (error) {
-      this.emit("system:error", "Cannot parse JSON credentials string in folder KaguyaSetUp/KaguyaState.json");
+      this.emit("system:error", "Cannot parse JSON credentials in KaguyaSetUp/KaguyaState.json");
     }
   }
 
@@ -63,16 +50,7 @@ class Kaguya extends EventEmitter {
 
       const { data } = await axios.get("https://raw.githubusercontent.com/Tshukie/Kaguya-Pr0ject/master/package.json");
       if (semver.lt(this.package.version, (data.version ??= this.package.version))) {
-        log([
-          {
-            message: "[ SYSTEM ]: ",
-            color: "yellow",
-          },
-          {
-            message: `New Update contact the owner: https://www.facebook.com/arjhil.dacayanan.73?mibextid=ZbWKwL`,
-            color: "white",
-          },
-        ]);
+        log([{ message: "[ SYSTEM ]: ", color: "yellow" }, { message: `New Update: contact the owner`, color: "white" }]);
       }
 
       let currentFrame = 0;
@@ -80,7 +58,6 @@ class Kaguya extends EventEmitter {
         process.stdout.write("\b".repeat(currentFrame));
         const frame = redToGreen("■".repeat(currentFrame), { interpolation: "hsv" });
         process.stdout.write(frame);
-
         currentFrame++;
         if (currentFrame > 50) {
           clearInterval(interval);
@@ -99,7 +76,7 @@ class Kaguya extends EventEmitter {
       const [i, a, m] = [Math.floor(t / 3600), Math.floor((t % 3600) / 60), Math.floor(t % 60)].map((num) => (num < 10 ? "0" + num : num));
       const formatMemoryUsage = (data) => `${Math.round((data / 1024 / 1024) * 100) / 100} MB`;
       const memoryData = process.memoryUsage();
-      process.title = `Kaguya Project - owner : Hussein Yacoubi - ${i}:${a}:${m} - External: ${formatMemoryUsage(memoryData.external)}`;
+      process.title = `Kaguya Project - Author: Arjhil Dacayanan - ${i}:${a}:${m} - External: ${formatMemoryUsage(memoryData.external)}`;
     }, 1000);
 
     (async () => {
@@ -121,11 +98,31 @@ class Kaguya extends EventEmitter {
 
       this.on("system:run", () => {
         login({ appState: JSON.parse(this.credentials) }, async (err, api) => {
-          if (err) {
-            this.emit("system:error", err);
-          }
+          if (err) this.emit("system:error", err);
 
           api.setOptions(this.currentConfig.options);
+
+          const reactions = [
+            "🥰", "😂", "😢", "😍", "🤔", "😱", "🥺", "🤣", "😀", "😭",
+            "❤️", "😜", "😎", "😏", "😘", "😤", "🤗", "🤩", "😇", "😬",
+            "😅", "😳", "🙈", "🙉", "🙊", "🤭", "😋", "🤓", "😌", "🤤",
+            "🤑", "😺", "😸", "😻", "🤖", "👻", "🎉", "🌈", "✨", "🔥",
+            "💔", "💖", "🌹", "🌼", "🍀", "🌟", "💯", "👍", "👎", "🤝"
+          ];
+
+          const randomReact = (event) => {
+            if (event.body) {
+              const randomCount = Math.floor(Math.random() * 3) + 1;
+              for (let i = 0; i < randomCount; i++) {
+                const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
+                api.setMessageReaction(randomReaction, event.messageID, (err) => {
+                  if (err) {
+                    // Suppress the error message
+                  }
+                });
+              }
+            }
+          };
 
           const listenMqtt = async () => {
             try {
@@ -136,32 +133,15 @@ class Kaguya extends EventEmitter {
                     this.on("error", err);
                   }
                   await listen({ api, event, client: global.client });
+                  randomReact(event); // Call to react to the message
                 });
                 await sleep(this.currentConfig.mqtt_refresh);
                 notifer("[ MQTT ]", "Mqtt refresh in progress!");
-                log([
-                  {
-                    message: "[ MQTT ]: ",
-                    color: "yellow",
-                  },
-                  {
-                    message: `Refresh mqtt in progress!`,
-                    color: "white",
-                  },
-                ]);
+                log([{ message: "[ MQTT ]: ", color: "yellow" }, { message: `Refresh mqtt in progress!`, color: "white" }]);
                 await mqtt.stopListening();
                 await sleep(5000);
                 notifer("[ MQTT ]", "Refresh successful!");
-                log([
-                  {
-                    message: "[ MQTT ]: ",
-                    color: "green",
-                  },
-                  {
-                    message: `Refresh successful!`,
-                    color: "white",
-                  },
-                ]);
+                log([{ message: "[ MQTT ]: ", color: "green" }, { message: `Refresh successful!`, color: "white" }]);
                 listenMqtt.isListening = false;
               }
               listenMqtt();
