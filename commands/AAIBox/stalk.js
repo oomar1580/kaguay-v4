@@ -12,14 +12,13 @@ async function getProfilePicture(userID) {
 
 async function getMessageCount(api, threadId, userID) {
   try {
-    const messages = await api.getThreadHistory(threadId, 1000);
-    if (!messages || !Array.isArray(messages)) {
+    const threadHistory = await api.getThreadHistory(threadId, 1000);
+    if (!threadHistory || !Array.isArray(threadHistory)) {
         throw new Error('Failed to fetch thread history.');
     }
 
     let userMessageCount = 0;
-    messages.forEach(message => {
-      // التحقق من أن الرسالة موجودة وأنها تحتوي على senderID
+    threadHistory.forEach(message => {
       if (message && message.senderID && message.senderID === userID) {
         userMessageCount++;
       }
@@ -29,6 +28,16 @@ async function getMessageCount(api, threadId, userID) {
   } catch (err) {
     console.error('Error fetching message count:', err);
     return 0;
+  }
+}
+
+async function getThreadInfo(api, threadId) {
+  try {
+    const threadInfo = await api.getThreadInfo(threadId);
+    return threadInfo;
+  } catch (err) {
+    console.error('Error fetching thread info:', err);
+    return null;
   }
 }
 
@@ -57,19 +66,22 @@ export default {
       const balanceResult = await Economy.getBalance(uid);
       const money = balanceResult.data;
 
-      // جلب عدد الرسائل للشخص المحدد في المحادثة
+      // جلب عدد الرسائل للمستخدم باستخدام getThreadHistory
       const userMessageCount = await getMessageCount(api, event.threadID, uid);
+
+      // جلب معلومات المحادثة
+      const threadInfo = await getThreadInfo(api, event.threadID);
 
       // استخدام Exp.check لجلب نقاط الخبرة
       const userDataFile = path.join(process.cwd(), 'pontsData.json');
       const userData = JSON.parse(fs.readFileSync(userDataFile, 'utf8'));
-      const userPoints = userData[uid]?.points || 0; // جلب نقاط المستخدم المحدد
+      const userPoints = userData[uid]?.points || 0;
 
       // تصنيف المستخدم باستخدام عدد الرسائل
       const rank = getRank(userMessageCount);
 
       const message = `
-•——[معلومات]——•\n\n✨ مــﻋــڷــﯡمــاٺ ؏ــن : 『${firstName}』\n❏👤 إسـمـك: 『${name}』\n❏♋ جـنـسـيـتـك : 『${gender === 1 ? "أنثى" : "ذكر"}』\n❏💰 رصـيـدك :『${money}』 دولار\n❏🎖️نـقـاطـك : 『${userPoints}』 نقطة\n❏📩 رسـائـلـك : 『${userMessageCount}』\n❏🧿 تـصـنـيـفـك : 『${rank}』
+•——[معلومات]——•\n\n✨ مــﻋــڷــﯡمــاٺ ؏ــن : 『${firstName}』\n❏👤 إسـمـك: 『${name}』\n❏♋ جـنـسـيـتـك : 『${gender === 1 ? "أنثى" : "ذكر"}』\n❏💰 رصـيـدك :『${money}』 دولار\n❏🎖️نـقـاطـك : 『${userPoints}』 نقطة\n❏📩 رسـائـلـك : 『${userMessageCount}』\n❏🧿 تـصـنـيـفـك : 『${rank}』\n❏👥 عـدد أعـضـاء الـمـحـادثـة: 『${threadInfo?.participantIDs.length || 'غير معروف'}』
 `;
 
       api.sendMessage({
@@ -82,7 +94,7 @@ export default {
       api.sendMessage('❌ | حدث خطأ أثناء جلب المعلومات. الرجاء معاودة المحاولة في وقت لاحق.', event.threadID, event.messageID);
     }
   }
-}
+};
 
 // دالة لتحديد تصنيف المستخدم بناءً على عدد الرسائل
 function getRank(messageCount) {
