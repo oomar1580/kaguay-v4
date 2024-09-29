@@ -14,8 +14,6 @@ export default {
   aliases: ["dalle", "تخيل"],
   execute: async ({ api, event, args, Economy }) => {
 
-const senderID = event.senderID;
-    let prompt = (event.messageReply?.body.split("dalle")[1] || args.join(" ")).trim();
     const userMoney = (await Economy.getBalance(event.senderID)).data;
     const cost = 100;
 
