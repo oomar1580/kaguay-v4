@@ -2,14 +2,16 @@ export default {
     "prefix": "*", 
     "BOT_NAME": "ⓀⒶⒼⓊⓎⒶ",
     "ADMIN_IDS": ["100076269693499"],
-  "botEnabled": true,
+    "botEnabled": true,
+    "autogreet": true, // تمت إضافة هذه الخاصية
     "options": {
         "forceLogin": true,
         "listenEvents": true,
         "listenTyping": true,
         "logLevel": "silent",
         "updatePresence": true,
-        "selfListen": true
+        "selfListen": true,
+        "usedDatabase":false
     },
     database: {
         type: "json",
