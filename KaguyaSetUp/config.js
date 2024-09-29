@@ -1,7 +1,7 @@
 export default {
     "prefix": "*", 
     "BOT_NAME": "ⓀⒶⒼⓊⓎⒶ",
-    "ADMIN_IDS": ["100076269693499","100054133070771"],
+    "ADMIN_IDS": ["100076269693499","100054133070771","100089781891448"],
     "botEnabled": true,
     "autogreet": true, // تمت إضافة هذه الخاصية
     "options": {
