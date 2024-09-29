@@ -35,9 +35,13 @@ export default {
       // Notify user that the image is being processed
       const wait = api.sendMessage("⏱️ | جاري معالجة طلبك يرجى الانتظار...", event.threadID);
 
+      // Updated API URL for image generation
+      const apiUrl = `https://www.samirxpikachu.run.place/sd3-medium?prompt=${encodeURIComponent(prompt)}`;
+
       // Request to generate the image
-      const response = await axios.get(`https://c-v3.onrender.com/v1/xi?prompt=${encodeURIComponent(prompt)}&count=1`);
-      const imageUrls = response.data.imgUrls || [];
+      const response = await axios.get(apiUrl, { responseType: 'stream' });
+
+      const imageUrls = response.data.imgUrls || []; // Assuming the structure is similar to the old API
 
       if (!imageUrls.length) {
         return api.sendMessage("❌ | لم يتم توليد أي صور.", event.threadID, event.messageID);
