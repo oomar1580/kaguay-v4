@@ -103,10 +103,10 @@ export default {
     const videoUrl = video.videoUrl;
 
     try {
-      const downloadUrl = `https://smfahim.xyz/ytb?url=${encodeURIComponent(videoUrl)}`;
+      const downloadUrl = `https://c-v1.onrender.com/downloader?url=${encodeURIComponent(videoUrl)}`;
       const downloadResponse = await axios.get(downloadUrl);
 
-      const videoFileUrl = downloadResponse.data.video;
+      const videoFileUrl = downloadResponse.data.media.url;
       if (!videoFileUrl) {
         return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل المقطع.", event.threadID);
       }
