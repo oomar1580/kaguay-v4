@@ -1,10 +1,10 @@
 export default {
   name: "إنضمام",
-  author: "Thiệu Trung Kiên",
+  author: "khizitch&Hussein",
   role: "member",
   description: "يعرض قائمة بالدردشات الجماعية والانضمام إلى واحدة منها.",
   cooldowns: 50,
-  aliases: ["join", "groups"],
+  aliases: ["join", "انضمام"],
   execute: async ({ api, event }) => {
     try {
       const groupList = await api.getThreadList(300, null, ['INBOX']); 
