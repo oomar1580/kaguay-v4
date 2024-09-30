@@ -46,44 +46,9 @@ export default {
       api.sendMessage(`${data.response}`, event.threadID, event.messageID);
       api.setMessageReaction("✅", event.messageID, () => {}, true);
 
-      // إعداد الرد للاستمرار في المحادثة
-      global.client.handler.reply.set(event.messageID, {
-        author: event.senderID,
-        type: "reply",
-        name: "كاغويا",
-        unsend: false,
-      });
-
     } catch (error) {
       console.error(error);
       api.sendMessage("🚧 | حدث خطأ أثناء معالجة استفسارك.", event.threadID, event.messageID);
-    }
-  },
-
-  async onReply({ api, event, reply }) {
-    const { threadID, messageID, body, senderID } = event;
-
-    if (reply.type === "reply" && reply.name === "كاغويا") {
-      const query = body.trim();
-      if (!query) return;
-
-      try {
-        api.setMessageReaction("⏳", messageID, () => {}, true);
-
-        // استخدم الرابط الجديد مع الاستعلام في الرد
-        const response = await fetch(`https://betadash-api-swordslush.vercel.app/gpt3-turbo?question=${query}`);
-        if (!response.ok) {
-          return api.sendMessage("API DOWN", threadID, messageID);
-        }
-
-        const data = await response.json();
-        api.sendMessage(`${data.response}`, threadID, messageID);
-        api.setMessageReaction("✅", messageID, () => {}, true);
-
-      } catch (error) {
-        console.error(error);
-        api.sendMessage("🚧 | حدث خطأ أثناء معالجة استفسارك.", threadID, messageID);
-      }
     }
   }
 };
