@@ -5,7 +5,7 @@ class OutAll {
     this.cooldowns = 10; 
     this.description = "اجعل البوت يغادر كل المجموعات.";
     this.role = "admin"; 
-    this.aliases = [];
+    this.aliases = ["مغادرة-الكل"];
   }
 
   async execute({ api, event }) {
