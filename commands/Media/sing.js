@@ -8,7 +8,7 @@ export default {
   cooldowns: 60,
   description: "تنزيل مقطع من YouTube",
   role: "member",
-  aliases: ["أغنية","موسيقى"],
+  aliases: ["أغنية", "موسيقى","غني"],
 
   async execute({ api, event }) {
     const input = event.body;
@@ -89,7 +89,7 @@ export default {
     const { author, searchResults } = reply;
 
     if (event.senderID !== author) {
-  return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
+      return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
     }
 
     const selectedIndex = parseInt(event.body, 10) - 1;
@@ -102,12 +102,13 @@ export default {
     const videoUrl = video.videoUrl;
 
     try {
-      const downloadUrl = `https://ccproject10-df3227f754.onlitegix.com/api/yt/audio?url=${encodeURIComponent(videoUrl)}`;
+      // Updated API URL
+      const downloadUrl = `https://smfahim.xyz/ytb?url=${encodeURIComponent(videoUrl)}`;
       const downloadResponse = await axios.get(downloadUrl);
 
-      const audioFileUrl = downloadResponse.data.url; // Correctly handling the new API response format
+      const { audio, video: videoFile } = downloadResponse.data.data; // Correctly handling the new API response format
 
-      if (!audioFileUrl) {
+      if (!audio && !videoFile) {
         return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل الأغنية.", event.threadID);
       }
 
@@ -118,7 +119,7 @@ export default {
 
       const writer = fs.createWriteStream(filePath);
       const audioStream = await axios({
-        url: audioFileUrl,
+        url: audio, // Assuming we are downloading the audio file
         responseType: 'stream'
       });
 
