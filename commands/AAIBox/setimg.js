@@ -10,7 +10,7 @@ export default {
 
   async execute({ api, event }) {
     try {
-      const res = await axios.get(`https://smfahim.onrender.com/waifu`);
+      const res = await axios.get(`https://smfahim.xyz/waifu`);
       const imgUrl = res.data.url;
 
       if (imgUrl) {
