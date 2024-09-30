@@ -1,138 +1,79 @@
+import fetch from 'node-fetch';
+
 export default {
   name: "إنضمام",
-  author: "khizitch&Hussein",
+  author: "Kaguya Project",
   role: "member",
-  description: "يعرض قائمة بالدردشات الجماعية والانضمام إلى واحدة منها.",
-  cooldowns: 50,
-  aliases: ["join", "انضمام"],
-  execute: async ({ api, event }) => {
+  aloases:["join","انضمام"],
+  description: "يرسل قائمة بالمجموعات المتاحة للانضمام ويتيح للمستخدم اختيار مجموعة والانضمام إليها.",
+  async execute({ api, event, args }) {
     try {
-      const groupList = await api.getThreadList(300, null, ['INBOX']); 
+      const groupList = await api.getThreadList(10, null, ['INBOX']);
       const filteredList = groupList.filter(group => group.threadName !== null);
 
       if (filteredList.length === 0) {
-        return api.sendMessage("⚠️ | لم يتم إيجاد أي مجموعة", event.threadID, event.messageID);
+        return api.sendMessage('⚠️ | لم يتم ايجاد اي مجموعة', event.threadID, event.messageID);
       }
 
       const formattedList = filteredList.map((group, index) =>
-        `${index + 1}. ${group.threadName}\n𝐓𝐈𝐃: ${group.threadID}`
+        `│${index + 1}. ${group.threadName}\n│𝐓𝐈𝐃: ${group.threadID}\n│𝐓𝐨𝐭𝐚𝐥 𝐦𝐞𝐦𝐛𝐞𝐫𝐬: ${group.participantIDs.length}\n│`
       );
+      const message = `╭─╮\n│𝐋𝐢𝐬𝐭 𝐨𝐟 𝐠𝐫𝐨𝐮𝐩 𝐜𝐡𝐚𝐭𝐬:\n${formattedList.map(line => `${line}`).join("\n")}\n╰───────────ꔪ\nالحد الأقصى من الأعضاء = 250\n\nرد.بـ رقم المجموعة اللتي ترغب في الإنضمام إليها`;
 
-      const start = 0;
-      const currentList = formattedList.slice(start, start + 5);
+      const sentMessage = await api.sendMessage(message, event.threadID);
 
-      const message = `╭─╮\n│𝐋𝐢𝐬𝐭 𝐨𝐟 𝐠𝐫𝐨𝐮𝐩 𝐜𝐡𝐚𝐭𝐬:\n${currentList.join("\n")}\n╰───────────ꔪ`;
-      const sentMessage = await api.sendMessage(message, event.threadID, event.messageID);
-
+      // إعداد الرد للاستمرار في المحادثة
       global.client.handler.reply.set(sentMessage.messageID, {
         author: event.senderID,
-        type: 'pick',
-        name: 'إنضمام',
-        start,
-        unsend: true
+        type: "pick",
+        name: "إنضمام",
+        unsend: true,
       });
+
     } catch (error) {
       console.error("Error listing group chats", error);
-      return api.sendMessage("حدث خطأ أثناء محاولة جلب قائمة الدردشات الجماعية.", event.threadID, event.messageID);
+      return api.sendMessage('❌ | حدث خطأ أثناء محاولة الحصول على المجموعات.', event.threadID, event.messageID);
     }
   },
-  onReply: async ({ api, event, reply }) => {
-    if (reply.type !== 'pick') return;
 
-    const { author, start } = reply;
+  async onReply({ api, event, reply }) {
+    if (reply.type === "pick" && reply.name === "إنضمام" && reply.author === event.senderID) {
+      const groupIndex = parseInt(event.body.trim(), 10);
 
-    if (event.senderID !== author) return;
-
-    const userInput = event.body.trim().toLowerCase();
-
-    if (userInput === 'التالي') {
-      const nextPageStart = start + 5;
-      const nextPageEnd = nextPageStart + 5;
-
-      try {
-        const groupList = await api.getThreadList(300, null, ['INBOX']);
-        const filteredList = groupList.filter(group => group.threadName !== null);
-
-        if (nextPageStart >= filteredList.length) {
-          return api.sendMessage('لقد وصلت لآخر الصفحة', event.threadID, event.messageID);
-        }
-
-        const currentList = filteredList.slice(nextPageStart, nextPageEnd).map((group, index) =>
-          `${nextPageStart + index + 1}. ${group.threadName}\n𝐓𝐈𝐃: ${group.threadID}`
-        );
-
-        const message = `╭─╮\n│𝐋𝐢𝐬𝐭 𝐨𝐟 𝐠𝐫𝐨𝐮𝐩 𝐜𝐡𝐚𝐭𝐬:\n${currentList.join("\n")}\n╰───────────ꔪ`;
-        const sentMessage = await api.sendMessage(message, event.threadID, event.messageID);
-
-        global.client.handler.reply.set(sentMessage.messageID, {
-          author: event.senderID,
-          type: 'pick',
-          name: 'إنضمام',
-          start: nextPageStart,
-          unsend: true
-        });
-
-      } catch (error) {
-        console.error("Error loading next page of group chats", error);
-        return api.sendMessage('حدث خطأ أثناء تحميل الصفحة التالية من الدردشات الجماعية.', event.threadID, event.messageID);
+      if (isNaN(groupIndex) || groupIndex <= 0) {
+        return api.sendMessage('❌ | أنت لم ترد برقم صحيح، حاول مرة أخرى.', event.threadID, event.messageID);
       }
 
-    } else if (userInput === 'السابق') {
-      const prevPageStart = Math.max(start - 5, 0);
-      const prevPageEnd = prevPageStart + 5;
-
       try {
-        const groupList = await api.getThreadList(300, null, ['INBOX']);
+        const groupList = await api.getThreadList(10, null, ['INBOX']);
         const filteredList = groupList.filter(group => group.threadName !== null);
 
-        if (start === 0) {
-          return api.sendMessage('⚠️ | أنت بالفعل في الصفحة الأولى', event.threadID, event.messageID);
-        }
-
-        const currentList = filteredList.slice(prevPageStart, prevPageEnd).map((group, index) =>
-          `${prevPageStart + index + 1}. ${group.threadName}\n𝐓𝐈𝐃: ${group.threadID}`
-        );
-
-        const message = `╭─╮\n│𝐋𝐢𝐬𝐭 𝐨𝐟 𝐠𝐫𝐨𝐮𝐩 𝐜𝐡𝐚𝐭𝐬:\n${currentList.join("\n")}\n╰───────────ꔪ`;
-        const sentMessage = await api.sendMessage(message, event.threadID, event.messageID);
-
-        global.client.handler.reply.set(sentMessage.messageID, {
-          author: event.senderID,
-          type: 'pick',
-          name: 'إنضمام',
-          start: prevPageStart,
-          unsend: true
-        });
-
-      } catch (error) {
-        console.error("Error loading previous page of group chats", error);
-        return api.sendMessage('حدث خطأ أثناء تحميل الصفحة السابقة من الدردشات الجماعية.', event.threadID, event.messageID);
-      }
-
-    } else if (!isNaN(userInput)) {
-      const groupIndex = parseInt(userInput, 10);
-
-      try {
-        const groupList = await api.getThreadList(300, null, ['INBOX']);
-        const filteredList = groupList.filter(group => group.threadName !== null);
-
-        if (groupIndex <= 0 || groupIndex > filteredList.length) {
-          return api.sendMessage('رقم المجموعة غير صالح.\nالرجاء اختيار رقم ضمن النطاق.', event.threadID, event.messageID);
+        if (groupIndex > filteredList.length) {
+          return api.sendMessage('⚠️ | الرقم الذي أدخلته غير صحيح، حاول مرة أخرى.', event.threadID, event.messageID);
         }
 
         const selectedGroup = filteredList[groupIndex - 1];
         const groupID = selectedGroup.threadID;
 
+        // تحقق إذا كان المستخدم موجود مسبقاً في المجموعة
+        const memberList = await api.getThreadInfo(groupID);
+        if (memberList.participantIDs.includes(event.senderID)) {
+          return api.sendMessage(`⚠️ | أنت موجود مسبقاً في هذه المجموعة: ${selectedGroup.threadName}`, event.threadID, event.messageID);
+        }
+
+        // تحقق إذا كانت المجموعة ممتلئة
+        if (memberList.participantIDs.length >= 250) {
+          return api.sendMessage(`⚠️ | لا يمكن إضافتك، المجموعة ممتلئة: ${selectedGroup.threadName}`, event.threadID, event.messageID);
+        }
+
+        // إضافة المستخدم إلى المجموعة
         await api.addUserToGroup(event.senderID, groupID);
-        return api.sendMessage(`لقد انضممت بنجاح إلى المجموعة: ${selectedGroup.threadName}`, event.threadID, event.messageID);
+        return api.sendMessage(`✅ | تمت إضافتك بنجاح إلى المجموعة: ${selectedGroup.threadName}`, event.threadID, event.messageID);
 
       } catch (error) {
         console.error("Error joining group chat", error);
-        return api.sendMessage('حدث خطأ أثناء الانضمام إلى المجموعة. يرجى المحاولة مرة أخرى لاحقًا.', event.threadID, event.messageID);
+        return api.sendMessage('❌ | حدث خطأ أثناء محاولة إضافتك إلى المجموعة، حاول مرة أخرى لاحقاً.', event.threadID, event.messageID);
       }
-
-    } else {
-      return api.sendMessage('⚠️ | إدخال غير صالح.\nيرجى تقديم رقم صالح أو الرد بـ "التالي" أو "السابق".', event.threadID, event.messageID);
     }
   }
 };
