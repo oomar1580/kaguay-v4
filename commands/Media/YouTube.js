@@ -36,16 +36,14 @@ export default {
       const selectedResults = searchResults.slice(0, 4); // Get only the first 4 results
       const attachments = [];
 
-      // الرموز التي تم طلبها للأرقام: ⓵, ⓶, ⓷, ⓸
       const numberSymbols = ['⓵', '⓶', '⓷', '⓸'];
 
       for (let i = 0; i < selectedResults.length; i++) {
         const video = selectedResults[i];
-        const videoIndex = numberSymbols[i]; // استخدام الرموز
+        const videoIndex = numberSymbols[i];
 
         msg += `\n${videoIndex}. ❀ العنوان: ${video.title}`;
 
-        // تنزيل الصورة وإضافتها إلى المرفقات
         const imagePath = path.join(process.cwd(), 'cache', `video_thumb_${i + 1}.jpg`);
         const imageStream = await axios({
           url: video.thumbnail,
@@ -77,7 +75,6 @@ export default {
           unsend: true
         });
 
-        // حذف الصور المؤقتة بعد إرسال الرسالة
         attachments.forEach((file) => fs.unlinkSync(file.path));
       });
 
@@ -106,10 +103,10 @@ export default {
     const videoUrl = video.videoUrl;
 
     try {
-      const downloadUrl = `https://c-v1.onrender.com/downloader?url=${encodeURIComponent(videoUrl)}`;
+      const downloadUrl = `https://smfahim.xyz/ytb?url=${encodeURIComponent(videoUrl)}`;
       const downloadResponse = await axios.get(downloadUrl);
 
-      const videoFileUrl = downloadResponse.data.media.url;
+      const videoFileUrl = downloadResponse.data.video;
       if (!videoFileUrl) {
         return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل المقطع.", event.threadID);
       }
@@ -131,7 +128,7 @@ export default {
           api.setMessageReaction("✅", event.messageID, (err) => {}, true);
 
           const message = {
-            body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${video.title}\n━━━━━━━◈✿◈━━━━━━━`,
+            body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${video.title}\n📅 | تـاريـخ الـرفـع : ${video.publishDate}\n👍 | عـدد الـايـكـات : ${video.likeCount}\n👁️ | عـدد الـمـشـاهـدات : ${video.viewCount}\n━━━━━━━◈✿◈━━━━━━━`,
             attachment: fs.createReadStream(filePath)
           };
 
