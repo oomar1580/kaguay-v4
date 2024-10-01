@@ -1,5 +1,4 @@
 import cron from 'node-cron';
-import config from './KaguyaSetUp/config.js';  // استيراد إعدادات config.json
 
 export default {
   name: "autosendmessages",
