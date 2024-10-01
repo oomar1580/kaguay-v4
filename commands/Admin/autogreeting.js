@@ -14,7 +14,7 @@ export default {
     let config = require(configPath);
 
     // تبديل حالة الميزة
-    config.featureEnabled = !config.featureEnabled;
+    config.autogreet = !config.autogreet;
 
     // تعديل الملف باستخدام JSON.stringify لتحديث قيمة featureEnabled
     fs.writeFileSync(configPath, `module.exports = ${JSON.stringify(config, null, 2)};`);
