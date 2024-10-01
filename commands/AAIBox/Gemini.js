@@ -18,7 +18,7 @@ export default {
 
       // طلب البيانات من API الجديد
       try {
-        const response = await axios.get("https://betadash-shoti-yazky.vercel.app/shotizxx?apikey=shipazu");
+        const response = await axios.get("https://shoti-apix.vercel.app/v1/shoti");
         const { title, shotiurl: videoUrl, username, nickname, duration, region } = response.data;
 
         // مسار تخزين الصورة مؤقتًا
