@@ -39,20 +39,20 @@ async function execute({ api, event, Users, Threads }) {
         const addedByName = addedByInfo[addedBy]?.name || "Unknown";
 
         // إذا لم يكن الشخص الذي أضاف البوت هو أحد أصحاب البوت المصرح لهم
-        // معرف حسابك الشخصي
-const yourFbId = "100076269693499"; // قم بتغيير هذا إلى معرف حسابك الصحيح
+        if (!ownerFbIds.includes(addedBy)) {
+          const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount} \n🧑‍💼 بواسطة: ${addedByName}`;
+          await api.sendMessage(notifyOwnerMessage, ownerFbIds[0]);
 
-if (!ownerFbIds.includes(addedBy)) {
-  const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount} \n🧑‍💼 بواسطة: ${addedByName}`;
-  await api.sendMessage(notifyOwnerMessage, ownerFbIds[0]);
+          const exitMessage = `⚠️ | إضافة البوت بدون إذن غير مسموح يرجى التواصل مع المطور من أجل الحصول على الموافقة \n 📞 | رابـط الـمـطـور : https://www.facebook.com/profile.php?id=100076269693499`;
 
-  // استخدام api.shareContact لإرسال معلومات حسابك
-  const contactMessage = `⚠️ | إضافة البوت بدون إذن غير مسموح. يرجى التواصل مع المطور للحصول على الموافقة.\n📞 | معرف المطور: ${yourFbId}`;
-  await api.shareContact(contactMessage, yourFbId, event.threadID);
+// إرسال الرسالة بدون صورة
+await api.sendMessage({
+  body: exitMessage
+}, event.threadID);
 
-  // الخروج من المجموعة
-  await api.removeUserFromGroup(botUserID, event.threadID);
-} else {
+// الخروج من المجموعة
+await api.removeUserFromGroup(botUserID, event.threadID);
+        } else {
           // إذا كان أحد أصحاب البوت هو من أضافه، فقط أرسل إشعارًا له
           const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount}`;
           await api.sendMessage(notifyOwnerMessage, ownerFbIds[0]);
@@ -120,3 +120,4 @@ export default {
   description: "يتم استدعاء هذا الأمر عندما ينضم شخص جديد إلى المجموعة أو يغادرها.",
   execute,
 };
+        
