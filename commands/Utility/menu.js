@@ -27,12 +27,12 @@ class MenuCommand {
 
     commandList.forEach((command, index) => {
       if (index % commandsPerPage === 0 && index > 0) {
-        msg += `◊───────────◊\n`;
+        msg += `◊────────────────◊\n`;
       }
-      msg += `│✧${command.name} \n`;
+      msg += `┣${command.name} \n`;
     });
 
-    msg += `\n◊───────────◊\n`;
+    msg += `\n◊────────────────◊\n`;
     msg += `إجمالي الأوامر : ${totalCommands}`;
     msg += `\n\nقائمة ( إسم الأمر ) من أجل مزيد من التفاصيل.`;
 
