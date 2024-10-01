@@ -5,41 +5,33 @@ class RestrictCommand {
   name = "تقييد";
   author = "Hussein Yacoubi";
   cooldowns = 60;
-  description = "تقييد أو إلغاء تقييد البوت";
+  description = "تبديل حالة البوت بين تقييد أو إلغاء تقييد";
   role = "admin"; // Only admins can execute this command
   aliases = ["onlyadmin"];
 
-  async execute({ api, event, args }) {
+  async execute({ api, event }) {
     try {
-      const [action] = args;
       const isAdmin = global.client.config.ADMIN_IDS.includes(event.senderID);
 
       if (!isAdmin) {
         api.setMessageReaction("⚠️", event.messageID, (err) => {}, true);
-
         return api.sendMessage("⚠️ | ليس لديك الإذن لاستخدام هذا الأمر!", event.threadID);
       }
 
+      // التبديل بين حالتي التقييد وعدم التقييد
+      global.client.config.botEnabled = !global.client.config.botEnabled;
+
       const currentUserID = await api.getCurrentUserID(); // احصل على معرّف البوت
 
-      if (action === "تعطيل") {
-        global.client.setConfig({ botEnabled: true });
+      if (global.client.config.botEnabled) {
         api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-
         await this.updateBotNickname(api, "كاغويا 》✅《 الحالة ➠ مفعل", event.threadID, currentUserID);
         return api.sendMessage("✅ | تم تعطيل تقييد إستخدام البوت !", event.threadID);
-      }
-
-      if (action === "تفعيل") {
-        global.client.setConfig({ botEnabled: false });
-
+      } else {
         api.setMessageReaction("🚫", event.messageID, (err) => {}, true);
-
         await this.updateBotNickname(api, "كاغويا 》❌《 الحالة ➠ مقيد", event.threadID, currentUserID);
         return api.sendMessage("❌ | تم تفعيل تقييد إستخدام البوت !", event.threadID);
       }
-
-      return api.sendMessage("⚠️ | استخدم الأمر بشكل صحيح: تقييد تفعيل | تعطيل", event.threadID);
     } catch (err) {
       console.log(err);
     }
