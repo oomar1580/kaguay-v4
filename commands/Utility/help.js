@@ -119,11 +119,11 @@ class Help {
 
         api.setMessageReaction("🎯", event.messageID, (err) => {}, true);
 
-      const message = `\n\n\n⎔━〚〘${selectedCommand.name}〙〛━⎔\n
+      const message = `\n\n\n⎔━━━━〚〘${selectedCommand.name}〙〛━━━⎔\n
 👤 | ➭ المؤلف:『${selectedCommand.author}』
 🔑 | ➭ الدور:『${roleText}』
 📋 | ➭ الوصف:『${selectedCommand.description}』
-📝 | ➭ اسماء بديلة:『${selectedCommand.aliases?.join(", ") || "غير متوفرة"}』\n⎔━〚〘${selectedCommand.name}〙〛━⎔`;
+📝 | ➭ اسماء بديلة:『${selectedCommand.aliases?.join(", ") || "غير متوفرة"}』\n⎔━━━━〚〘${selectedCommand.name}〙〛━━━⎔`;
       const detailedImageUrl = this.detailedImageUrls[Math.floor(Math.random() * this.detailedImageUrls.length)];
       const tempImagePath = path.join(this.tempFolder, `detailed_image_${Date.now()}.jpeg`);
 
