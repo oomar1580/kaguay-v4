@@ -29,7 +29,7 @@ class MenuCommand {
       if (index % commandsPerPage === 0 && index > 0) {
         msg += `◊────────────────◊\n`;
       }
-      msg += `┣${command.name.padStart(30, ' ')}\n`;
+      msg += `${command.name.padStart(30, ' ')}\n`;
     });
 
     msg += `\n◊────────────────◊\n`;
