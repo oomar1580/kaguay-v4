@@ -23,8 +23,11 @@ export default {
       // ترجمة النص إلى الإنجليزية
       const translatedPrompt = await translateToEnglish(prompt);
 
+      // معامل الأبعاد الافتراضي
+      const ratioParam = `&ratio=2:3`;
+
       // رابط الأساسي للخدمة مع المعاملات
-      const apiUrl = `https://www.samirxpikachu.run.place/pixai?prompt=${encodeURIComponent(translatedPrompt)}&resolution=${encodeURIComponent(resolution)}`;
+      const apiUrl = `https://team-calyx.onrender.com/gen?prompt=${encodeURIComponent(translatedPrompt)}${ratioParam}`;
       const response = await axios.get(apiUrl);
 
       // جلب الصورة الأولى فقط من النتائج
