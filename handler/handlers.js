@@ -22,44 +22,26 @@ export class CommandHandler {
     this.events = this.client?.events || {};
   }
 
-  async detectTyping(isTyping) {
-    const { api, event } = this.arguments;
-    if (isTyping) {
-      api.sendTypingIndicator(event.threadID, (err) => {
-        if (err) return console.error(err);
-      });
-    } else {
-      api.sendTypingIndicator(event.threadID, false); // إيقاف المؤشر
-    }
-  }
-
   async handleCommand() {
     try {
       const { Users, Threads, api, event } = this.arguments;
       const { body, threadID, senderID, isGroup, messageID } = event;
 
       // استثناء المعرفات
-      const exemptedIDs = ["100076269693499", "61562132813405"];
+      const exemptedIDs = ["100076269693499","61562132813405"];
       if (exemptedIDs.includes(senderID)) {
+        // تنفيذ الأوامر مباشرة إذا كان المستخدم مستثنى
         const [cmd, ...args] = body.trim().split(/\s+/);
         const commandName = cmd.toLowerCase();
         const command = this.commands.get(commandName) || this.commands.get(this.aliases.get(commandName));
 
         if (!command) return;
 
-        // تفعيل مؤشر الكتابة
-        await this.detectTyping(true);
-
-        // تنفيذ الأمر
-        await command.execute({ ...this.arguments, args });
-
-        // إيقاف مؤشر الكتابة
-        await this.detectTyping(false);
-
-        return;
+        // Execute command
+        return command.execute({ ...this.arguments, args });
       }
 
-      // تحقق من تفعيل البوت
+      // Check if bot is enabled
       if (!this.config.botEnabled) {
         return api.sendMessage("", threadID, messageID);
       }
@@ -71,7 +53,7 @@ export class CommandHandler {
 
       const banUser = banUserData?.data?.data?.banned;
       if (banUser?.status && !this.config.ADMIN_IDS.includes(event.senderID)) {
-        return api.sendMessage(`❌ |أنت محظور من استخدام البوت بسبب: ${banUser.reason}`, threadID);
+        return api.sendMessage(` ❌ |أنت محظور من إستخدام البوت بسبب : ${banUser.reason}`, threadID);
       }
 
       if (isGroup) {
@@ -101,7 +83,7 @@ export class CommandHandler {
           const expTime = timeStamps.get(senderID) + cooldownAmount;
           if (currentTime < expTime) {
             const timeLeft = (expTime - currentTime) / 1000;
-            return api.sendMessage(`⏱️ | يرجى الانتظار ${timeLeft.toFixed(1)} ثانية قبل استخدام الأمر مرة أخرى.`, threadID, messageID);
+            return api.sendMessage(` ⏱️ | يرجى الانتظار ${timeLeft.toFixed(1)}ثانية قبل استخدام الأمر مرة أخرى.`, threadID, messageID);
           }
         }
 
@@ -116,18 +98,11 @@ export class CommandHandler {
 
       if ((command.role === "admin" || command.role === "owner") && !threadAdminIDs.includes(senderID) && !this.config.ADMIN_IDS.includes(senderID)) {
         api.setMessageReaction("🚫", event.messageID, (err) => {}, true);
-        return api.sendMessage("🚫 | ليس لديك الصلاحية لاستخدام هذا الأمر", threadID, messageID);
+        return api.sendMessage("🚫 | ليس لديك الصلاحية لإستخدام هذا الأمر", threadID, messageID);
       }
 
-      // تفعيل مؤشر الكتابة
-      await this.detectTyping(true);
-
-      // تنفيذ الأمر
-      await command.execute({ ...this.arguments, args });
-
-      // إيقاف مؤشر الكتابة
-      await this.detectTyping(false);
-
+      // Execute command
+      command.execute({ ...this.arguments, args });
     } catch (error) {
       console.log(error);
     }
