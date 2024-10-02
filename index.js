@@ -70,19 +70,6 @@ class Kaguya extends EventEmitter {
     }
   }
 
-  async detectTyping(api, event) {
-    if (event.type === "typ") {
-      if (event.isTyping) {
-        api.sendTypingIndicator(event.threadID, (err) => {
-          if (err) return console.error(err);
-        });
-      } else {
-        // Stop the typing indicator
-        api.sendTypingIndicator(event.threadID, false);
-      }
-    }
-  }
-
   start() {
     setInterval(() => {
       const t = process.uptime();
@@ -147,7 +134,6 @@ class Kaguya extends EventEmitter {
                   }
                   await listen({ api, event, client: global.client });
                   randomReact(event); // Call to react to the message
-                  await this.detectTyping(api, event); // Call to detect typing
                 });
                 await sleep(this.currentConfig.mqtt_refresh);
                 notifer("[ MQTT ]", "Mqtt refresh in progress!");
