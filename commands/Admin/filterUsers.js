@@ -15,20 +15,20 @@ class LocBox {
       
       const threadData = (await Threads.find(event.threadID))?.data?.data;
       if (!threadData.adminIDs.includes(api.getCurrentUserID())) {
-        return api.sendMessage("⚠️ | يحتاج البوت أن يكون آدمن لإستخدام هذه الميزة", event.threadID);
+        return api.sendMessage(" ⚠️ | يحتاج البوت أن يكون آدمن لإستخدام هذه الميزة", event.threadID);
       }
       
       const [length, filterType] = args.map((arg) => isNaN(arg) ? arg : Number(arg));
 
       if (isNaN(length) || length <= 0) {
-        return api.sendMessage("⚠️ | أرجوك قم بإدخال عدد صحيح !", event.threadID);
+        return kaguya.reply("⚠️ | أرجوك قم بإدخال عدد صحيح !");
       }
 
       const threads = (await Threads.getAll()).data;
       const findThreads = threads.filter((thread) => thread.data.members < length);
 
       if (!findThreads.length) {
-        return api.sendMessage(`❗ | المجموعة ليست اقل من ${length} عضو !`, event.threadID);
+        return kaguya.reply(`❗ | المجموعة ليست اقل من ${length} عضو !`);
       }
 
       // في حالة طلب طرد الحسابات المعطلة أو المحظورة
@@ -37,7 +37,7 @@ class LocBox {
         const bannedUsers = allUsers.filter(user => user.data.banned.status === true);
 
         if (!bannedUsers.length) {
-          return api.sendMessage("❗ | لم يتم إيجاد أي حسابات معطلة او محظورة", event.threadID);
+          return kaguya.reply("❗ | لم بتم إيجاد أي حسابات معطلة او محظورة");
         }
 
         for (const user of bannedUsers) {
@@ -48,7 +48,7 @@ class LocBox {
             console.error(`Failed to remove ${user.data.name}: ${error.message}`);
           }
         }
-        return api.sendMessage(`✅ | تمت تصفية ${bannedUsers.length} حساب معطل او محظور !`, event.threadID);
+        return kaguya.reply(`✅ | تمت تصفية ${bannedUsers.length} حساب معطل او محظور !`);
       }
 
       // فلترة المجموعات بناءً على عدد الأعضاء
@@ -59,7 +59,7 @@ class LocBox {
 
     } catch (error) {
       console.error(error);
-      return api.sendMessage("❌ | حدث خطأ غير متوقع !", event.threadID);
+      return kaguya.reply("❌ | حدث خطأ غير متوقع !");
     }
   }
 }
