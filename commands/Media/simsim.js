@@ -15,19 +15,12 @@ export default {
       return api.sendMessage("🗨️ | رد على هذه الرسالة لبدء الدردشة مع البوت.", threadID, messageID);
     }
 
-    // تشغيل مؤشر الكتابة
-    api.sendTypingIndicator(threadID, (err) => {
-      if (err) console.error(err);
-    });
-
     try {
       const response = await axios.get(`https://simsimi.site/api/v2/?mode=talk&lang=ar&message=${encodeURIComponent(body)}&filter=true`);
       const replyMessage = response.data.success || "عذرا، لم أتمكن من فهم رسالتك.";
 
       // إرسال الرد النصي فقط
       api.sendMessage(replyMessage, threadID, (error, info) => {
-        // إيقاف مؤشر الكتابة بعد إرسال الرد
-        api.sendTypingIndicator(threadID, false);
         if (!error) {
           global.client.handler.reply.set(info.messageID, {
             author: senderID,
@@ -39,8 +32,6 @@ export default {
       }, messageID);
     } catch (error) {
       console.error(error);
-      // إيقاف مؤشر الكتابة في حالة الخطأ
-      api.sendTypingIndicator(threadID, false);
       api.sendMessage("⚠️ | حدث خطأ أثناء محاولة الدردشة. يرجى المحاولة مرة أخرى.", threadID);
     }
   },
@@ -54,19 +45,12 @@ export default {
         return api.sendMessage("🗨️ | رد على هذه الرسالة لبدء الدردشة مع البوت.", threadID, messageID);
       }
 
-      // تشغيل مؤشر الكتابة
-      api.sendTypingIndicator(threadID, (err) => {
-        if (err) console.error(err);
-      });
-
       try {
         const response = await axios.get(`https://simsimi.site/api/v2/?mode=talk&lang=ar&message=${encodeURIComponent(body)}&filter=true`);
         const replyMessage = response.data.success || "عذرا، لم أتمكن من فهم رسالتك.";
 
         // إرسال الرد النصي فقط
         api.sendMessage(replyMessage, threadID, (error, info) => {
-          // إيقاف مؤشر الكتابة بعد إرسال الرد
-          api.sendTypingIndicator(threadID, false);
           if (!error) {
             global.client.handler.reply.set(info.messageID, {
               author: senderID,
@@ -78,8 +62,6 @@ export default {
         }, messageID);
       } catch (error) {
         console.error(error);
-        // إيقاف مؤشر الكتابة في حالة الخطأ
-        api.sendTypingIndicator(threadID, false);
         api.sendMessage("⚠️ | حدث خطأ أثناء محاولة الدردشة. يرجى المحاولة مرة أخرى.", threadID);
       }
     } else {
