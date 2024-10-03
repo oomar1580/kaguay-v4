@@ -1,150 +1,105 @@
 import axios from 'axios';
-import fs from 'fs-extra';
+import fs from 'fs';
 import path from 'path';
 
 export default {
-  name: "اغنية",
-  author: "حسين يعقوبي",
-  cooldowns: 60,
-  description: "تنزيل مقطع من YouTube",
+  name: "أغنية",
+  author: "Hussein Yacoubi",//api by cliff 
   role: "member",
-  aliases: ["أغنية","موسيقى","غني"],
+  aliases:["اغنية","غني","سبوتيفاي","موسيقى"],
+  description: "يقوم بجلب اغاني من سبوتيفاي وارسالها",
 
   async execute({ api, event }) {
-    const input = event.body;
-    const data = input.split(" ");
+    const { threadID, messageID, senderID } = event;
+    const query = event.body.slice(event.body.indexOf(" ")).trim();  // extract search query
 
-    if (data.length < 2) {
-      return api.sendMessage("⚠️ | أرجوك قم بإدخال اسم المقطع.", event.threadID);
+    if (!query) {
+      return api.sendMessage("⚠️ | يرجى إدخال اسم الأغنية للبحث.", threadID, messageID);
     }
 
-    data.shift();
-    const videoName = data.join(" ");
-
     try {
-      const sentMessage = await api.sendMessage(`✔ | جاري البحث عن الأغنية المطلوبة "${videoName}". المرجو الانتظار...`, event.threadID);
+      // Sending a waiting message
+      const waitMessage = await api.sendMessage("⏱️ | جاري البحث عن الأغنية المطلوبة ، يرجى الانتظار...", threadID);
 
-      const searchUrl = `https://c-v1.onrender.com/yt/s?query=${encodeURIComponent(videoName)}`;
-      const searchResponse = await axios.get(searchUrl);
+      // Fetch songs from the Spotify API
+      const response = await axios.get(`https://betadash-api-swordslush.vercel.app/spotify/search?q=${query}&apikey=syugg`);
+      const songData = response.data.data.slice(0, 4); // Fetch the top 4 results
 
-      const searchResults = searchResponse.data;
-      if (!searchResults || searchResults.length === 0) {
-        return api.sendMessage("⚠️ | لم يتم العثور على أي نتائج.", event.threadID);
+      if (songData.length === 0) {
+        api.unsendMessage(waitMessage.messageID);
+        return api.sendMessage("⚠️ | لم يتم العثور على أي أغاني!", threadID, messageID);
       }
 
-      let msg = '🎵 | تم العثور على النتائج التالية:\n';
-      const selectedResults = searchResults.slice(0, 4); // Get only the first 4 results
-      const attachments = [];
-
-      for (let i = 0; i < selectedResults.length; i++) {
-        const video = selectedResults[i];
-        const videoIndex = i + 1;
-        msg += `\n${videoIndex}. ❀ العنوان: ${video.title}`;
-        
-        // تنزيل الصورة وإضافتها إلى المرفقات
-        const imagePath = path.join(process.cwd(), 'cache', `video_thumb_${videoIndex}.jpg`);
-        const imageStream = await axios({
-          url: video.thumbnail,
-          responseType: 'stream',
-        });
-
-        const writer = fs.createWriteStream(imagePath);
-        imageStream.data.pipe(writer);
-        
-        await new Promise((resolve) => {
-          writer.on('finish', resolve);
-        });
-
-        attachments.push(fs.createReadStream(imagePath));
-      }
-
-      msg += '\n\n📥 | الرجاء الرد برقم من اجل تنزيل وسماع الأغنية.';
-
-      api.unsendMessage(sentMessage.messageID);
-
-      api.sendMessage({ body: msg, attachment: attachments }, event.threadID, (error, info) => {
-        if (error) return console.error(error);
-
-        global.client.handler.reply.set(info.messageID, {
-          author: event.senderID,
-          type: "pick",
-          name: "اغنية",
-          searchResults: selectedResults,
-          unsend: true
-        });
-
-        // حذف الصور المؤقتة بعد إرسال الرسالة
-        attachments.forEach((file) => fs.unlinkSync(file.path));
+      let songList = "";
+      songData.forEach((song, index) => {
+        songList += `${index + 1}. 🎵 | العنوان: ${song.title}\n🌟 | الشعبية: ${song.popularity}\n\n`;
       });
 
+      // Remove waiting message and send the song list
+      api.unsendMessage(waitMessage.messageID);
+      api.sendMessage({
+        body: `🎶 | نتائج البحث:\n\n${songList}🔢 | الرجاء الرد برقم الأغنية لتحميلها.`,
+      }, threadID, (err, info) => {
+        if (err) return console.error("Error sending song list:", err);
+
+        // Store reply data for song selection
+        global.client.handler.reply.set(info.messageID, {
+          author: senderID,
+          type: "songPick",
+          songData,
+          unsend: true
+        });
+      }, messageID);
+
     } catch (error) {
-      console.error('[ERROR]', error);
-      api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الأمر.', event.threadID);
+      console.error('Error fetching Spotify API:', error.message);
+      api.unsendMessage(waitMessage.messageID);
+      api.sendMessage(`⚠️ | حدث خطأ أثناء استدعاء API!\n${error.message}`, threadID, messageID);
     }
   },
 
   async onReply({ api, event, reply }) {
-    if (reply.type !== 'pick') return;
+    const { author, songData, type } = reply;
 
-    const { author, searchResults } = reply;
+    // Ensure only the command sender can reply
+    if (type === "songPick" && event.senderID === author) {
+      const selectedIndex = parseInt(event.body.trim());
 
-    if (event.senderID !== author) {
-      return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
-    }
-
-    const selectedIndex = parseInt(event.body, 10) - 1;
-
-    if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
-      return api.sendMessage("❌ | الرد غير صالح. يرجى الرد برقم صحيح.", event.threadID);
-    }
-
-    const video = searchResults[selectedIndex];
-    const videoUrl = video.videoUrl;
-
-    try {
-      const downloadUrl = `https://www.samirxpikachu.run.place/ytb?url=${encodeURIComponent(videoUrl)}`;
-      const downloadResponse = await axios.get(downloadUrl);
-
-      const audioFileUrl = downloadResponse.data.audios; // Correctly handling the new API response format
-
-      if (!audioFileUrl) {
-        return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل الأغنية.", event.threadID);
+      if (isNaN(selectedIndex) || selectedIndex < 1 || selectedIndex > songData.length) {
+        return api.sendMessage("⚠️ | يرجى إدخال رقم صالح بين 1 و 4.", event.threadID, event.messageID);
       }
 
-      api.setMessageReaction("⬇️", event.messageID, (err) => {}, true);
+      const selectedSong = songData[selectedIndex - 1];
 
-      const fileName = `${event.senderID}.mp3`;
-      const filePath = path.join(process.cwd(), 'cache', fileName);
+      // Fetch the song preview (if available) and send it
+      try {
+        const songPath = path.resolve(process.cwd(), `song_preview.mp3`);
+        const writer = fs.createWriteStream(songPath);
 
-      const writer = fs.createWriteStream(filePath);
-      const audioStream = await axios({
-        url: audioFileUrl,
-        responseType: 'stream'
-      });
-
-      audioStream.data.pipe(writer);
-
-      writer.on('finish', () => {
-        if (fs.statSync(filePath).size > 26214400) {
-          fs.unlinkSync(filePath);
-          return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
-        }
-
-        api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-
-        const message = {
-          body: `✅ | تم تنزيل الأغنية:\n❀ العنوان: ${video.title}`,
-          attachment: fs.createReadStream(filePath)
-        };
-
-        api.sendMessage(message, event.threadID, () => {
-          fs.unlinkSync(filePath);
+        const response = await axios({
+          url: selectedSong.preview,
+          method: 'GET',
+          responseType: 'stream'
         });
-      });
 
-    } catch (error) {
-      console.error('[ERROR]', error);
-      api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الأمر.', event.threadID);
+        response.data.pipe(writer);
+
+        writer.on('finish', () => {
+          api.sendMessage({
+            body: `🎵 | تـم اخـتـيـار الأغـنـيـة: ${selectedSong.title}\n🌟 | الشـعـبـيـة: ${selectedSong.popularity}`,
+            attachment: fs.createReadStream(songPath)
+          }, event.threadID, () => fs.unlinkSync(songPath), event.messageID);
+        });
+
+        writer.on('error', (err) => {
+          console.error('Error downloading song preview:', err);
+          api.sendMessage("⚠️ | حدث خطأ أثناء تحميل معاينة الأغنية.", event.threadID, event.messageID);
+        });
+
+      } catch (error) {
+        console.error('Error fetching song preview:', error.message);
+        api.sendMessage("⚠️ | حدث خطأ أثناء تحميل معاينة الأغنية.", event.threadID, event.messageID);
+      }
     }
   }
 };
