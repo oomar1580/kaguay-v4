@@ -4,9 +4,9 @@ import path from 'path';
 
 export default {
   name: "أغنية",
-  author: "Hussein Yacoubi",//api by cliff 
+  author: "Hussein Yacoubi", // api by cliff 
   role: "member",
-  aliases:["اغنية","غني","سبوتيفاي","موسيقى"],
+  aliases: ["اغنية", "غني", "سبوتيفاي", "موسيقى"],
   description: "يقوم بجلب اغاني من سبوتيفاي وارسالها",
 
   async execute({ api, event }) {
@@ -45,7 +45,8 @@ export default {
         // Store reply data for song selection
         global.client.handler.reply.set(info.messageID, {
           author: senderID,
-          type: "songPick",
+          type: "pick",
+          name: "أغنية", // Adding name property here
           songData,
           unsend: true
         });
@@ -59,10 +60,10 @@ export default {
   },
 
   async onReply({ api, event, reply }) {
-    const { author, songData, type } = reply;
+    const { author, songData, type, name } = reply;
 
-    // Ensure only the command sender can reply
-    if (type === "songPick" && event.senderID === author) {
+    // Ensure only the command sender can reply and check for the correct name
+    if (type === "pick" && event.senderID === author && name === "أغنية") {
       const selectedIndex = parseInt(event.body.trim());
 
       if (isNaN(selectedIndex) || selectedIndex < 1 || selectedIndex > songData.length) {
@@ -86,7 +87,7 @@ export default {
 
         writer.on('finish', () => {
           api.sendMessage({
-            body: `🎵 | تـم اخـتـيـار الأغـنـيـة: ${selectedSong.title}\n🌟 | الشـعـبـيـة: ${selectedSong.popularity}`,
+            body: `🎵 | تم اختيار الأغنية: ${selectedSong.title}\n👤 | المؤلف: ${selectedSong.artist}\n🌟 | الشعبية: ${selectedSong.popularity}\n\n📛 | اسم الأغنية: ${selectedSong.title}`,  // Added name
             attachment: fs.createReadStream(songPath)
           }, event.threadID, () => fs.unlinkSync(songPath), event.messageID);
         });
