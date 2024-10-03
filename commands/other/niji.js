@@ -7,7 +7,7 @@ export default {
   name: "نيجي",
   author: "kaguya project",
   role: "member",
-  aliases: ["niji"],
+  aliases: ["xl"],
   description: "توليد صورة أنمي بناء على النص المعطى.",
   async execute({ message, event, args, api }) {
     api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
@@ -28,36 +28,44 @@ export default {
 
       // رابط الأساسي للخدمة مع المعاملات
       const apiUrl = `https://team-calyx.onrender.com/gen?prompt=${encodeURIComponent(translatedPrompt)}${ratioParam}`;
-      const response = await axios.get(apiUrl);
+      const response = await axios.get(apiUrl, { responseType: 'stream' });
 
-      // جلب الصورة الأولى فقط من النتائج
-      const imageUrl = response.data.images[0];
-
-      // تحميل الصورة
-      const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-      const imageData = Buffer.from(imageResponse.data, 'binary');
-
-      // تحديد المسار لحفظ الصورة مؤقتاً
+      // تحديد مسار حفظ الصورة مؤقتاً
       const imagePath = path.join(process.cwd(), "cache", `${Date.now()}_generated_image.png`);
-      await fs.outputFile(imagePath, imageData);
+      
+      // حفظ الصورة محليًا من الـ stream
+      const writer = fs.createWriteStream(imagePath);
+      response.data.pipe(writer);
 
-      // قراءة الصورة المولدة وإرسالها
-      const stream = fs.createReadStream(imagePath);
+      // عند الانتهاء من تحميل الصورة
+      writer.on('finish', async () => {
+        const stream = fs.createReadStream(imagePath);
 
-      // تقصير رابط الصورة باستخدام tinyurl
-      shorten(imageUrl, async function (shortUrl) {
-        api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-        await api.sendMessage({
-          body: `◆❯━━━━━▣✦▣━━━━━━❮◆\n✅ |تــــم تـــولـــيــد الــصــورة بــنــجــاح\n📎 | رابط الصورة  ${shortUrl} \n◆❯━━━━━▣✦▣━━━━━━❮◆`,
-          attachment: stream
-        }, event.threadID, event.messageID);
+        // تقصير رابط الصورة باستخدام tinyurl
+        shorten(apiUrl, async function (shortUrl) {
+          api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+          await api.sendMessage({
+            body: `◆❯━━━━━▣✦▣━━━━━━❮◆\n✅ |تــــم تـــولـــيــد الــصــورة بــنــجــاح\n📎 | رابط الصورة  ${shortUrl} \n◆❯━━━━━▣✦▣━━━━━━❮◆`,
+            attachment: stream
+          }, event.threadID, event.messageID);
+        });
+
+        // حذف الصورة المؤقتة بعد الإرسال
+        await fs.remove(imagePath);
       });
+
+      // في حال وجود خطأ أثناء تحميل الصورة
+      writer.on('error', async (err) => {
+        console.error('خطأ في تحميل الصورة:', err);
+        api.sendMessage("❌ | حدث خطأ أثناء تحميل الصورة.", event.threadID, event.messageID);
+        await fs.remove(imagePath); // حذف الصورة المؤقتة
+      });
+
     } catch (error) {
       console.error('خطأ في إرسال الصورة:', error);
       api.sendMessage("❌ | حدث خطأ. الرجاء المحاولة مرة أخرى لاحقًا.", event.threadID, event.messageID);
     } finally {
       api.setMessageReaction("", event.messageID, (err) => {}, true);
-      await fs.remove(imagePath); // حذف الصورة المؤقتة بعد الإرسال
     }
   }
 };
