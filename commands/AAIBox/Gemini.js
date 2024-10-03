@@ -21,10 +21,27 @@ export default {
         const response = await axios.get("https://shoti-apix.vercel.app/v1/shoti");
         const { title, shotiurl: videoUrl, username, nickname, duration, region } = response.data;
 
+        // مجموعة روابط الصور
+        const imageUrls = [
+          "https://i.ibb.co/HTGCGBb/images-2024-10-03-T023158-296.jpg",
+          "https://i.ibb.co/1szTWkb/images-2024-10-03-T023148-120.jpg",
+          "https://i.ibb.co/Yd7rfv1/images-2024-10-03-T023136-330.jpg",
+          "https://i.ibb.co/f9XDWSF/download-36.jpg",
+          "https://i.ibb.co/fYM6xsL/images-2024-10-03-T023053-271.jpg",
+          "https://i.ibb.co/qCMGtDN/images-2024-10-03-T023057-678.jpg",
+          "https://i.ibb.co/TvNyPNF/images-2024-10-03-T023038-995.jpg",
+          "https://i.ibb.co/q7P5H73/images-2024-10-03-T023028-777.jpg",
+          "https://i.ibb.co/FBFBGZh/images-2024-10-03-T023007-729.jpg",
+          "https://i.ibb.co/jGgTGD3/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f.jpg"
+        ];
+
+        // اختيار صورة عشوائية من المجموعة
+        const randomImageUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+
         // مسار تخزين الصورة مؤقتًا
         const imagePath = path.resolve(process.cwd(), 'shoti_cover.jpg');
         const imageResponse = await axios({
-          url: "https://via.placeholder.com/150",  // صورة مؤقتة لأن API لم يقدم غلافًا
+          url: randomImageUrl,  // استخدام صورة عشوائية من المجموعة
           method: 'GET',
           responseType: 'stream'
         });
