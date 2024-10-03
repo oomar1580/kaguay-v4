@@ -11,13 +11,7 @@ class LocBox {
   }
 
   async execute({ api, event, Threads, Users, args }) {
-    try {
-      
-      const threadData = (await Threads.find(event.threadID))?.data?.data;
-      if (!threadData.adminIDs.includes(api.getCurrentUserID())) {
-        return api.sendMessage(" ⚠️ | يحتاج البوت أن يكون آدمن لإستخدام هذه الميزة", event.threadID);
-      }
-      
+    try { 
       const [length, filterType] = args.map((arg) => isNaN(arg) ? arg : Number(arg));
 
       if (isNaN(length) || length <= 0) {
