@@ -1,69 +1,60 @@
-import axios from "axios";
-import fs from "fs";
-import path from "path";
+import jimp from 'jimp';
+import fs from 'fs';
 
-const animeImageLinks = [
-  "https://i.imgur.com/vqAeakJ.jpg",
-  "https://i.imgur.com/06t7gFK.jpg",
-  "https://i.imgur.com/ciQ3L9e.jpg",
-  "https://i.imgur.com/qiBfUjj.jpg",
-  "https://i.imgur.com/GOtV4tu.jpg",
-  "https://i.imgur.com/QIndWOA.jpg",
-  "https://i.imgur.com/SzXQEv2.jpg",
-  "https://i.imgur.com/NIYNKOp.jpg",
-  "https://i.imgur.com/ZRIuu9S.jpg",
-  "https://i.imgur.com/4J7frsw.jpg",
-  "https://i.imgur.com/31ap7SM.jpg",
-  "https://i.imgur.com/NKHnVD8.jpg",
-  "https://i.imgur.com/nstCRMi.jpg",
-  "https://i.imgur.com/IHUKZLz.jpg",
-  "https://i.imgur.com/q40Yl6C.jpg",
-  "https://i.imgur.com/iWk64pg.jpg",
-  "https://i.imgur.com/GsCfKQh.jpg",
-  "https://i.imgur.com/XGnZM7k.jpg",
-  "https://i.imgur.com/8jI6mfV.jpg",
-  "https://i.imgur.com/YqMy5FK.jpg",
-  "https://i.imgur.com/wYQgCAO.jpg",
-  "https://i.imgur.com/4Sdipb6.jpg",
-  "https://i.imgur.com/z3AlT8J.jpg",
-  "https://i.imgur.com/nlGSD9A.jpg",
-  "https://i.imgur.com/dNKpLqh.jpg",
-  "https://i.imgur.com/IJ4rtcy.jpg",
-  "https://i.imgur.com/hqotpkx.jpg",
-  "https://i.imgur.com/HnhvEgu.jpg",
-  "https://i.imgur.com/5CEQoco.jpg",
-  "https://i.imgur.com/74G1HDw.jpg", 
-];
+async function bal(one, two) {
+    let avatarOne = await circle(`https://graph.facebook.com/${one}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`);
+    let avatarTwo = await circle(`https://graph.facebook.com/${two}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`);
+
+    let avone = await jimp.read(await circle(avatarOne));
+    let avtwo = await jimp.read(await circle(avatarTwo));
+
+    // استخدام رابط الصورة الجديد
+    let img = await jimp.read("https://i.imgur.com/hmKmmam.jpg");
+
+    // تحديث الإحداثيات والمقاسات
+    img.resize(1024, 712)
+       .composite(avone.resize(200, 200), 527, 141)
+       .composite(avtwo.resize(200, 200), 389, 407);
+
+    const pth = "زواج.png";
+    await img.writeAsync(pth);
+    return pth;
+}
+
+async function circle(url) {
+    const img = await jimp.read(url);
+    img.circle();
+    return await img.getBufferAsync(jimp.MIME_PNG);
+}
 
 export default {
-  name: "أزياء",
-  author: "Kaguya Project",
-  role: "member",
-  aliases:["كوسبلاي"],
-  description: "يقوم بعرض صورة عشوائية لشخصية أنمي",
-  async execute({ api, event }) {
-    try {
-      const randomIndex = Math.floor(Math.random() * animeImageLinks.length);
-      const imageUrl = animeImageLinks[randomIndex];
-
-      const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
-      const tempImagePath = path.join(process.cwd(), `./cache/anime_image_${randomIndex + 1}.jpg`);
-
-      fs.writeFileSync(tempImagePath, Buffer.from(imageResponse.data));
-
-      api.setMessageReaction("💐", event.messageID, () => {}, true);
-
-      const message = {
-        body: "◆❯━━━━━▣✦▣━━━━━❮◆\n🌺 | تفضل إليك صورة الأزياء \n◆❯━━━━━▣✦▣━━━━━❮◆",
-        attachment: fs.createReadStream(tempImagePath)
-      };
-
-      api.sendMessage(message, event.threadID, () => {
-        fs.unlinkSync(tempImagePath); // حذف الملف المؤقت للصورة بعد إرسال الرسالة
-      });
-    } catch (error) {
-      console.error("حدث خطأ: ", error);
-      api.sendMessage("❌ | حدث خطأ أثناء جلب صورة أنمي.", event.threadID);
+    name: "سيلفي",
+    author: "Anonymous",
+    role: "member",
+    description: "إرسال صورة زفاف بين عروسين محددين.",
+    execute: async function ({ api, event, args }) {
+        const mention = Object.keys(event.mentions);
+        if (mention.length == 0) return api.sendMessage("اعمل منشن لفتاة ما 😎", event.threadID);
+        else if (mention.length == 1) {
+            const one = event.senderID, two = mention[0];
+            try {
+              api.setMessageReaction("🤳", event.messageID, (err) => {}, true);
+  
+                const ptth = await bal(one, two);
+                return api.sendMessage({ body: "❛ ━━━━━･❪ 🕊️ ❫ ･━━━━━ ❜\n سيلفي مع حبيبتي 😎 \n❛ ━━━━━･❪ 🕊️ ❫ ･━━━━━ ❜", attachment: fs.createReadStream(ptth) }, event.threadID);
+            } catch (error) {
+                console.error(error);
+                return api.sendMessage("حدث خطأ أثناء إرسال الصورة.", event.threadID);
+            }
+        } else {
+            const one = mention[1], two = mention[0];
+            try {
+                const ptth = await bal(one, two);
+                return api.sendMessage({ body: " ❛ ━━━━━･❪ 🕊️ ❫ ･━━━━━ ❜\n سيلفي مع حبيبتي 😎\n❛ ━━━━━･❪ 🕊️ ❫ ･━━━━━ ❜", attachment: fs.createReadStream(ptth) }, event.threadID);
+            } catch (error) {
+                console.error(error);
+                return api.sendMessage("حدث خطأ أثناء إرسال الصورة.", event.threadID);
+            }
+        }
     }
-  },
 };
