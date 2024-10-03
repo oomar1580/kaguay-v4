@@ -23,7 +23,7 @@ class MenuCommand {
 
     let msg = `╔═══════════╗\n
     𝐏𝐑𝐎𝐉𝐄𝐂𝐓 𝐊𝐀𝐆𝐔𝐘𝐀\n╚═══════════╝\n\n`;
-    msg += `╭─『 𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓 』\n`;
+    msg += `\t\t\t•───[𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓]───•\n`;
 
     commandList.forEach((command, index) => {
       if (index % commandsPerPage === 0 && index > 0) {
@@ -33,8 +33,8 @@ class MenuCommand {
     });
 
     msg += `\n◊────────────────◊\n`;
-    msg += `إجمالي الأوامر : ${totalCommands}`;
-    msg += `\n\nقائمة ( إسم الأمر ) من أجل مزيد من التفاصيل.`;
+    msg += `إجمالي عدد الأوامر : ${totalCommands}`;
+    msg += `\n\ ( رد بـ رقم ) من أجل مزيد من التفاصيل.`;
 
     // Share contact instead of sending GIF
     api.shareContact(msg, api.getCurrentUserID(), event.threadID);
