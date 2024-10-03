@@ -11,7 +11,9 @@ export default {
   async execute({ api, event }) {
     try {
       const res = await axios.get(`https://smfahim.xyz/waifu`);
-      const imgUrl = res.data.url;
+      const imgUrl = res.data.url; // استخدام الرابط الجديد للصورة
+      const authorName = res.data.author.name; // اسم المؤلف
+      const authorContact = res.data.author.contact; // رابط المؤلف
 
       if (imgUrl) {
         const imagePath = path.join(process.cwd(), 'cache', `${Date.now()}.png`);
@@ -28,7 +30,7 @@ export default {
           api.setMessageReaction("😘", event.messageID, (err) => {}, true);
   
           api.sendMessage({
-            body: `࿇ ══━━━✥◈✥━━━══ ࿇\n\t\t\t\t💜☟  ω𝒶ⓘғυ  ☟💜\n࿇ ══━━━✥◈✥━━━══ ࿇`,
+            body: `࿇ ══━━━✥◈✥━━━══ ࿇\n\t\t\t\t💜☟  ω𝒶ⓘфυ  ☟💜\n📸 المؤلف: ${authorName}\n💬 رابط المؤلف: ${authorContact}\n࿇ ══━━━✥◈✥━━━══ ࿇`,
             attachment: fs.createReadStream(imagePath)
           }, event.threadID, () => fs.unlinkSync(imagePath));
         });
