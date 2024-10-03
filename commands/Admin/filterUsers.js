@@ -5,25 +5,14 @@ class LocBox {
     this.name = "تصفية";
     this.author = "Arjhil Dacayanan & Hussein";
     this.cooldowns = 60;
-    this.description = "تصفية عدد محدد من الاعضاء او الحسابات المعطلة !";
+    this.description = "تصفية الحسابات المعطلة او المحظورة !";
     this.role = "owner";
     this.aliases = ["filter"];
   }
 
-  async execute({ api, event, Threads, Users, args }) {
-    try { 
-      const [length, filterType] = args.map((arg) => isNaN(arg) ? arg : Number(arg));
-
-      if (isNaN(length) || length <= 0) {
-        return kaguya.reply("⚠️ | أرجوك قم بإدخال عدد صحيح !");
-      }
-
-      const threads = (await Threads.getAll()).data;
-      const findThreads = threads.filter((thread) => thread.data.members < length);
-
-      if (!findThreads.length) {
-        return kaguya.reply(`❗ | المجموعة ليست اقل من ${length} عضو !`);
-      }
+  async execute({ api, event, Users, args }) {
+    try {
+      const filterType = args[0];
 
       // في حالة طلب طرد الحسابات المعطلة أو المحظورة
       if (filterType === "die") {
@@ -31,7 +20,7 @@ class LocBox {
         const bannedUsers = allUsers.filter(user => user.data.banned.status === true);
 
         if (!bannedUsers.length) {
-          return kaguya.reply("❗ | لم بتم إيجاد أي حسابات معطلة او محظورة");
+          return kaguya.reply("❗ | لم يتم إيجاد أي حسابات معطلة أو محظورة.");
         }
 
         for (const user of bannedUsers) {
@@ -42,18 +31,14 @@ class LocBox {
             console.error(`Failed to remove ${user.data.name}: ${error.message}`);
           }
         }
-        return kaguya.reply(`✅ | تمت تصفية ${bannedUsers.length} حساب معطل او محظور !`);
-      }
-
-      // فلترة المجموعات بناءً على عدد الأعضاء
-      for (const threadData of findThreads) {
-        await api.removeUserFromGroup(api.getCurrentUserID(), threadData.threadID);
-        await sleep(1000);
+        return kaguya.reply(`✅ | تمت تصفية ${bannedUsers.length} حساب معطل أو محظور!`);
+      } else {
+        return kaguya.reply("❓ | الرجاء إدخال نوع الفلترة الصحيح. استخدم 'die' لإزالة الحسابات المعطلة.");
       }
 
     } catch (error) {
       console.error(error);
-      return kaguya.reply("❌ | حدث خطأ غير متوقع !");
+      return kaguya.reply("❌ | حدث خطأ غير متوقع!");
     }
   }
 }
