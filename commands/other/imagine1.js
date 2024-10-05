@@ -30,7 +30,8 @@ export default {
       }
       prompt = translationResponse.data[0][0][0];
 
-      const apiUrl = `https://www.samirxpikachu.run.place/sd3-medium?prompt=${encodeURIComponent(prompt)}`;
+      // استخدام رابط الـ API الجديد
+      const apiUrl = `https://www.samirxpikachu.run.place/arcticfl?prompt=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl, { responseType: 'stream' });
 
       if (!response.data) {
