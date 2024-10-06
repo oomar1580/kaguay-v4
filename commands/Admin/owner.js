@@ -13,7 +13,7 @@ export default {
     try {
 
       const userMoney = (await Economy.getBalance(event.senderID)).data;
-      const cost = 1000;
+      const cost = 5000;
       if (userMoney < cost) {
         return api.sendMessage(`⚠️ | إدفع ${cost} دولار أولاً من أجل ان ترى من هو المطور`, event.threadID);
       }
@@ -32,7 +32,7 @@ export default {
         nick: 'صاིئدّ اིلཻأرٰوٰ໑ٰاིح᪽',
       };
 
-      const videoLink = 'https://i.imgur.com/0V9e0TX.mp4'; // الرابط الخاص بالفيديو
+      const videoLink = 'https://drive.google.com/uc?export=download&id=1VU7B3OxTlTmGymay7l9McpCYKOPJy7m9'; // الرابط الخاص بالفيديو
 
       // مسار مجلد مؤقت لتخزين الفيديو باستخدام process.cwd()
       const tmpFolderPath = path.join(process.cwd(), 'tmp');
