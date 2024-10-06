@@ -5,7 +5,7 @@ class ImageUploader {
   author = "Kaguya Project";
   role = "member"; // يمكن تعديل الدور حسب الحاجة
   description = "يستخدم لرفع الصور من المرفقات";
-  aliases = [];
+  aliases = ["imgbb"];
 
   async execute({ api, event }) {
     try {
@@ -17,7 +17,7 @@ class ImageUploader {
       } else if (event.attachments.length > 0) {
         imageUrl = event.attachments[0].url;
       } else {
-        return api.sendMessage('لم يتم الكشف عن مرفقات. يرجى الرد على صورة.', event.threadID, event.messageID);
+        return api.sendMessage('❗ | لم يتم الكشف عن مرفقات. يرجى الرد على صورة.', event.threadID, event.messageID);
       }
 
       // تحديد عنوان URL لرفع الصورة
