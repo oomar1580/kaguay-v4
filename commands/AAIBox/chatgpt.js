@@ -3,9 +3,9 @@ import axios from 'axios';
 async function gpt4(prompt, customId) {
   try {
     // استدعاء API الجديد لجلب الرد من ChatGPT
-    const apiUrl = `https://jonellccprojectapis10.adaptable.app/api/chatgpt?input=${encodeURIComponent(prompt)}`;
+    const apiUrl = `https://markdevs69v2.onrender.com/new/api/gpt3?prompt=${encodeURIComponent(prompt)}&uid=${customId}`;
     const res = await axios.get(apiUrl);
-    const gptResponse = res.data.result;  // استخدام gptResponse
+    const gptResponse = res.data.gpt3;  // استخدام الحقل gpt3 بدلاً من result
 
     return gptResponse;
   } catch (error) {
@@ -24,7 +24,7 @@ export default {
       api.setMessageReaction("⏱️", event.messageID, (err) => {}, true);
 
       const { threadID, senderID } = event;
-      const prompt = args.join(" ") || "hello";
+      const prompt = args.join(" ") || "أهلاً";
       const response = await gpt4(prompt, senderID);
 
       api.setMessageReaction("✨", event.messageID, (err) => {}, true);
