@@ -137,23 +137,36 @@ async function handleApprovalModeChange(api, event, Threads, threads) {
 
 // التعامل مع تغيير أيقونة المجموعة
 async function handleThreadIconChange(api, event, Threads, threads) {
-  const { threadThumbnail: newIcon } = event.logMessageData;
-  const oldIcon = threads.data.threadThumbnail || null; // افترض أن هذا هو رمز الأيقونة القديم
-  const adminName = await getUserName(api, event.author);
+  try {
+    const { threadThumbnail: oldIcon } = threads.data; // جلب الصورة القديمة من المخطط
+    const newIcon = event.logMessageData.threadThumbnail; // جلب الصورة الجديدة من الحدث
 
-  // تحديث بيانات المجموعة لتخزين الصورة القديمة
-  await Threads.update(event.threadID, {
-    data: {
-      ...threads.data,
-      threadThumbnail: newIcon, // تحديث الصورة الرمزية الجديدة
-    },
-  });
+    // تحقق إذا كانت ميزة حماية الصورة مفعلة
+    if (threads.data.anti?.imageBox) {
+      // إذا كانت مفعلة، إعادة الصورة القديمة وإبلاغ المجموعة
+      await api.changeGroupImage(oldIcon, event.threadID);
+      await api.sendMessage(
+        `❌ | ميزة حماية صورة المجموعة مفعلة، لذا لم يتم تغيير صورة المجموعة 📷 | <${event.threadID}> - ${threads.data.name}`,
+        event.threadID
+      );
+      return;
+    }
 
-  // إرسال إشعار بتغيير الصورة
-  api.sendMessage(
-    `تم تغيير صورة المجموعة بواسطة: ${adminName}`,
-    event.threadID
-  );
+    // تحديث الصورة الجديدة في قاعدة البيانات
+    await Threads.updateOne(
+      { threadID: event.threadID },
+      { "data.threadThumbnail": newIcon }
+    );
+
+    // جلب اسم المسؤول الذي قام بالتغيير
+    const adminName = await getUserName(api, event.author);
+    await api.sendMessage(
+      `✅ | تم تغيير صورة المجموعة الجديدة بواسطة: ${adminName}`,
+      event.threadID
+    );
+  } catch (error) {
+    console.error("Error in handleThreadIconChange:", error);
+  }
 }
 
 // الحصول على اسم المستخدم
