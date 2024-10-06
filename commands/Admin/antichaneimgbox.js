@@ -1,6 +1,6 @@
 export default {
   name: "الرياكط",
-  author: "Arjhil Dacayanan",
+  author: "HUSSEIN YACOUBI",
   cooldowns: 0, // لا حاجة لـ cooldown لهذا النوع من الأوامر
   description: "يتفاعل مع كلمات محددة في الرسائل",
   role: "member",
