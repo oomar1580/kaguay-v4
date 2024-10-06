@@ -12,7 +12,7 @@ if (!fs.existsSync(userDataFile)) {
 
 export default {
     name: "تخمين",
-    author: "kaguya project",
+    author: "HUSSEIN YACOUBI",
     role: "member",
     description: "تخمين اسم شخصيات الانمي من خلال الوصف والفوز بالنقاط",
     execute: async function ({ api, event, Economy }) {
@@ -249,7 +249,7 @@ export default {
                         );
 
                         api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                        api.unsendMessage(reply.messageID);
+                       // api.unsendMessage(reply.messageID);
                     } else {
                         api.sendMessage(`❌ | آسفة ، لم تكن تلك الإجابة الصحيحة. حاول مرة أخرى.`, event.threadID);
                         api.setMessageReaction("❌", event.messageID, (err) => {}, true);
