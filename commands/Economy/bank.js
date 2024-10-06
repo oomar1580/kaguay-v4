@@ -105,8 +105,8 @@ export default {
         if (bankData[userID].loan > 0) {
           return api.sendMessage(`${lianeBank}\n\n✧ آسف يا ${userName} لكن أنت بالفعل لديك قرض.\n\nمزيد من الخيارات:\n⦿ بنك دفع_القرض\n⦿ بنك الرصيد`, event.threadID);
         }
-        if (amount > 1000000) {
-          return api.sendMessage(`${lianeBank}\n\n✧ آسف يا ${userName}, الحد الأقصى للقرض هو 1000000.\n\nمزيد من الخيارات:\n⦿ بنك دفع_القرض\n⦿ بنك الرصيد`, event.threadID);
+        if (amount > 5000) {
+          return api.sendMessage(`${lianeBank}\n\n✧ آسف يا ${userName}, الحد الأقصى للقرض هو 5000.\n\nمزيد من الخيارات:\n⦿ بنك دفع_القرض\n⦿ بنك الرصيد`, event.threadID);
         }
         bankData[userID].loan = amount;
         bankData[userID].loanDueDate = Date.now() + 7 * 24 * 60 * 60 * 1000; // تاريخ الاستحقاق بعد أسبوع
