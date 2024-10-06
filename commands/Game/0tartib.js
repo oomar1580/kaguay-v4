@@ -65,7 +65,7 @@ export default {
          }
       } catch (error) {
          console.error('Error:', error);
-         api.sendMessage('❌ | حدث خطأ أثناء التحقق من الإجابة. الرجاء المحاولة لاحقًا.', event.threadID, event.messageID);
+        // api.sendMessage('❌ | حدث خطأ أثناء التحقق من الإجابة. الرجاء المحاولة لاحقًا.', event.threadID, event.messageID);
       }
    }
 };
