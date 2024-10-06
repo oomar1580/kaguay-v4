@@ -1,46 +1,41 @@
-import sleep from "time-sleep";
+import fs from 'fs';
+import path from 'path';
+import { cwd } from 'process';
 
-class LocBox {
-  constructor() {
-    this.name = "تصفية";
-    this.author = "Arjhil Dacayanan & Hussein";
-    this.cooldowns = 60;
-    this.description = "تصفية الحسابات المعطلة او المحظورة !";
-    this.role = "owner";
-    this.aliases = ["filter"];
-  }
+const configFilePath = path.join(cwd(), 'setup', 'config.js');
 
-  async execute({ api, event, Users, args }) {
-    try {
-      const filterType = args[0];
+async function restart(event, api) {
+  const waitingMessageID = await new Promise((resolve, reject) => {
+    api.sendMessage('⚙️ | يتم الآن إعادة التشغيل...', event.threadID, (err, info) => {
+      if (err) return reject(err);
+      resolve(info.messageID);
+    });
+  });
 
-      // في حالة طلب طرد الحسابات المعطلة أو المحظورة
-      if (filterType === "die") {
-        const allUsers = await Users.find({});
-        const bannedUsers = allUsers.filter(user => user.data.banned.status === true);
+  setTimeout(() => {
+    api.unsendMessage(waitingMessageID, (err) => {
+      if (err) console.error('Failed to unsend message:', err);
+    });
 
-        if (!bannedUsers.length) {
-          return kaguya.reply("❗ | لم يتم إيجاد أي حسابات معطلة أو محظورة.");
-        }
+    api.setMessageReaction("✅", event.messageID, (err) => {}, true);
 
-        for (const user of bannedUsers) {
-          try {
-            await api.removeUserFromGroup(user.uid, event.threadID);
-            await sleep(1000);
-          } catch (error) {
-            console.error(`Failed to remove ${user.data.name}: ${error.message}`);
-          }
-        }
-        return kaguya.reply(`✅ | تمت تصفية ${bannedUsers.length} حساب معطل أو محظور!`);
-      } else {
-        return kaguya.reply("❓ | الرجاء إدخال نوع الفلترة الصحيح. استخدم 'die' لإزالة الحسابات المعطلة.");
-      }
+    api.sendMessage('✅ | تم إعادة تشغيل البوت بنجاح\n⏱️ | انتظر 10 ثواني حتى يبدا يشتغل معك', event.threadID);
 
-    } catch (error) {
-      console.error(error);
-      return kaguya.reply("❌ | حدث خطأ غير متوقع!");
-    }
-  }
+    setTimeout(() => {
+      process.exit(0);
+    }, 1000);
+  }, 4000);
 }
 
-export default new LocBox();
+export default {
+  name: "رست",
+  version: "1.0.0",
+  author: "kaguya project",
+  description: "إعادة تشغيل البوت",
+  restart:["restart"],
+  role: "admin",
+  cooldowns: 5,
+  execute: async ({ api, event }) => {
+    await restart(event, api);
+  }
+};
