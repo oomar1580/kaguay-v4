@@ -10,8 +10,12 @@ export default {
   aliases: [],
   
   execute: async ({ api, event }) => {
+    // لا شيء مطلوب في التنفيذ الرئيسي هنا
+  },
+  
+  events: async ({ api, event, Users, Threads, Economy }) => {
+    const message = event.body ? event.body.toLowerCase() : "";
     const threadID = event.threadID;
-    const message = event.body.toLowerCase();
 
     // قائمة الجمل والردود
     const responses = [
@@ -60,10 +64,6 @@ export default {
         }
       }
     }
-  },
-  
-  events: async () => {
-    // لا شيء مطلوب هنا
   },
 
   onReply: async () => {
