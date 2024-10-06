@@ -82,7 +82,7 @@ export default {
                     api.sendMessage(`✅ | تهانينا يا ${userName}! 🥳لقد قمت بتخمين إسم السورة بشكل صحيح. و حصلت بذالك على 50 نقطة.`, event.threadID);
 
                     api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                    api.unsendMessage(reply.messageID);
+                   // api.unsendMessage(reply.messageID);
                 } catch (e) {
                     console.error("Error handling winning action:", e);
                 }
