@@ -107,7 +107,7 @@ export default {
                         fs.writeFileSync(userDataFile, JSON.stringify(pointsData, null, 2));
 
                         api.sendMessage(`✅ | تهانينا يا ${userName} ! أنت كنت الأسرع وحصلت بذالك على 50 نقطة.`, event.threadID);
-                        api.unsendMessage(reply.messageID);
+                       // api.unsendMessage(reply.messageID);
                         api.setMessageReaction("✅", event.messageID, (err) => {}, true);
                     });
                 } catch (e) {
