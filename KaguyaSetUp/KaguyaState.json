@@ -1,137 +1,76 @@
-[
-    {
-        "key": "dbln",
-        "value": "%7B%2261550614205651%22%3A%22moTlUyra%22%2C%2261552988672033%22%3A%22purYXsry%22%2C%2261554140641632%22%3A%22StWXWwfH%22%2C%2261554739530748%22%3A%22jiitQJEp%22%2C%2261554838057909%22%3A%22g4lsogK4%22%2C%2261552007827695%22%3A%220M7pdzpi%22%2C%2261554867314710%22%3A%22jCJ5zrIk%22%2C%2261556218071653%22%3A%22jbQeFDpe%22%2C%2261556088358755%22%3A%22xs97bHl9%22%2C%2261556171443361%22%3A%22t0uJLVpA%22%2C%2261556960810877%22%3A%22L0t5aZEf%22%2C%2261556784689200%22%3A%22Hde3X4Ct%22%2C%22100089817049895%22%3A%22PPG1XrXU%22%2C%2261557910582011%22%3A%22e5U05PU8%22%2C%22100007453322747%22%3A%22Qh31hioe%22%2C%22100000573441938%22%3A%22ocuvuqqK%22%2C%2261562816679641%22%3A%22ajWPA3wa%22%2C%2261563575795625%22%3A%223xc2WptM%22%2C%2261564445691292%22%3A%22CRPgSTRd%22%2C%2261564108391446%22%3A%22YlFOTF7J%22%2C%2261564866073657%22%3A%22OxoTCmGV%22%2C%2261565843883202%22%3A%22NK4GdQk3%22%2C%2261566027368273%22%3A%22I75zHJRr%22%2C%2261561117323488%22%3A%22N14Gd7bE%22%2C%2261566497400450%22%3A%22lsmquVm8%22%2C%2261558079237891%22%3A%22F9sJmyOL%22%2C%2261566445631462%22%3A%22OGOPFBdm%22%7D",
-        "domain": "facebook.com",
-        "path": "/login/device-based/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.504Z",
-        "lastAccessed": "2024-10-06T22:39:56.505Z"
-    },
-    {
-        "key": "datr",
-        "value": "6YPqZP9GeWfe-wufMu82yIFK",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.505Z",
-        "lastAccessed": "2024-10-06T22:39:56.505Z"
-    },
-    {
-        "key": "sb",
-        "value": "6YPqZObPK8Mh6NYG12RO-yVy",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.505Z",
-        "lastAccessed": "2024-10-06T22:39:56.505Z"
-    },
-    {
-        "key": "ps_n",
-        "value": "1",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.505Z",
-        "lastAccessed": "2024-10-06T22:39:56.505Z"
-    },
-    {
-        "key": "ps_l",
-        "value": "1",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.505Z",
-        "lastAccessed": "2024-10-06T22:39:56.505Z"
-    },
-    {
-        "key": "vpd",
-        "value": "v1%3B717x360x2",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.505Z",
-        "lastAccessed": "2024-10-06T22:39:56.505Z"
-    },
-    {
-        "key": "locale",
-        "value": "ar_AR",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.505Z",
-        "lastAccessed": "2024-10-06T22:39:56.505Z"
-    },
-    {
-        "key": "m_pixel_ratio",
-        "value": "2",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.505Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
-    },
-    {
-        "key": "c_user",
-        "value": "61566445631462",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.506Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
-    },
-    {
-        "key": "fr",
-        "value": "0uAPSuIXm2yApZSXo.AWWOhReO3FUHnquCYdAkmOsK8hg.BmQOHr..AAA.0.0.BnAxHz.AWWUn3PVGO0",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.506Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
-    },
-    {
-        "key": "xs",
-        "value": "20%3AfcfIO4MARrc8_w%3A2%3A1728254451%3A-1%3A-1",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.506Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
-    },
-    {
-        "key": "m_page_voice",
-        "value": "61566445631462",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.506Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
-    },
-    {
-        "key": "wd",
-        "value": "360x717",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.506Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
-    },
-    {
-        "key": "fbl_st",
-        "value": "100720551%3BT%3A28804239",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.506Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
-    },
-    {
-        "key": "wl_cbv",
-        "value": "v2%3Bclient_version%3A2641%3Btimestamp%3A1728254467",
-        "domain": "facebook.com",
-        "path": "/",
-        "hostOnly": false,
-        "creation": "2024-10-06T22:39:56.506Z",
-        "lastAccessed": "2024-10-06T22:39:56.506Z"
+import fs from 'fs';
+import path from 'path';
+
+export default {
+  name: "الردود",
+  author: "Arjhil Dacayanan",
+  cooldowns: 0,
+  description: "يتفاعل مع كلمات محددة في الرسائل",
+  role: "member",
+  aliases: [],
+  
+  execute: async ({ api, event }) => {
+    // لا شيء مطلوب في التنفيذ الرئيسي هنا
+  },
+  
+  events: async ({ api, event, Users, Threads, Economy }) => {
+    const message = event.body ? event.body.toLowerCase() : "";
+    const threadID = event.threadID;
+
+    // قائمة الجمل والردود
+    const responses = [
+      { keywords: ["احبك", "أحبك"], response: "ها يمعود مو هنا" },
+      { keywords: ["شكرا", "شكرا يا بوت"], response: "العفو هذا واجب" },
+      { keywords: ["عضمة", "عضمه"], response: "ماكس التميت سوبر عضمة" },
+      { keywords: ["صباح الخير", "صباح"], response: "صباح الخير و السرور و باقات الزهور" },
+      { keywords: ["كيفكم", "شلونكم"], response: "بخير حياتي ماذا عنك!" },
+      { keywords: ["اتفق", "أتفق"], response: "اطلق من يتفق" },
+      { keywords: ["أصنام"], response: "نعم أرى هذا" },
+      { keywords: ["إجييت"], response: "منور يا غالي 🙂" },
+      { keywords: ["هلو", "هلا"], response: "هلاوات ❤️" },
+      { keywords: ["بوت غبي"], response: "وأنت أغبى يا مخ العصفور" },
+      { keywords: ["جميل", "راقي"], response: "حبيبي نت الارقى والأجمل❤️" },
+      { keywords: ["بوسة", "اريد بوسه"], response: "استحي ع روحك بكد المطي تدور بوس" },
+      { keywords: ["تزوجيني يا كاغويا", "تزوجيني يا هيناتا"], response: "️في أحلامك" },
+      { keywords: ["كيف الحال", "كيف حالك"], response: ", الحمدلله ماذا عنك:))))" },
+      { keywords: ["الحمدلله دومك", "بخير دوم"], response: "️آمين بدوامك انشاء الله" },
+      { keywords: ["ثباحو", "ثباحوو"], response: "️ثباحوات <3/" },
+      { keywords: ["منورة", ""], response: "️بنورك 💖" },
+      { keywords: ["السلام عليكم", "سلام"], response: "️و؏ٌٍـلًِيٌِگِـٍٍّّـًـًٍم السـلام" },
+      { keywords: ["وداعا", "أنا ذاهب"], response: "️وداعا مع السلامه آمل أن نراك قريبا ☺️" },
+      { keywords: ["من أنتي يا كاغويا", "عرفينا على نفسك"], response: "️حسنا إسمي كاغويا من أنمي الحب هو حرب..." },
+      { keywords: ["بوت أحمق"], response: "️من قال لك استخدمه في المقام الأول 😒" },
+      { keywords: ["حسين", "صائد الأرواح"], response: "️ سيدي مشغول حاليا" },
+      { keywords: ["المالك", "المطور"], response: "️حسين طبعا لكن يمكنك مناداته صائد الأرواح" },
+      { keywords: ["مساء الخير"], response: "️مساء النور و السرور و الورد المنثور <3 <3" },
+      { keywords: ["🙂"], response: "هذا الإيموجي بالضبط لا يمكن التكهن بما يخفيه 😑" },
+      { keywords: ["أنا جائع"], response: "زدني عليك أتمنى أن أتناول الشكولاتة 🥺 :>>" },
+      { keywords: ["يأيها البوت", "أين هو البوت"], response: "أنا هنا يا أخي 🙂:))))" },
+      { keywords: ["تصبحون على خير", "تصبح على خير"], response: "وأنت من أهله" },
+      { keywords: ["تأخر الوقت"], response: "نعم و عليكم أن تذهبو للنوم <3" },
+      { keywords: ["👍"], response: "جرب ضغط لايك مرة أخرى و راح تشوف 🙂🔪" },
+      { keywords: ["هل ريم تحبني"], response: "بخير الحمدلله دومكم إن شاء الله" },
+      { keywords: ["أشعر أنني وحيد", "ليس لدي أحد"], response: "لا تقلق... أنا معك" },
+      { keywords: ["أظن أن البوت نام أيضا", "مات البوت"], response: "أنا هنا يا غبي 🙂 <3" },
+      { keywords: ["كم عمرك"], response: "18 <3" }
+    ];
+
+    // تحقق من وجود تطابق، ووقف التحقق بعد الرد الأول
+    for (const item of responses) {
+      for (const keyword of item.keywords) {
+        if (message.includes(keyword)) {
+          api.sendMessage(item.response, threadID);
+          return;  // هنا نتوقف بعد الرد الأول لتجنب السبام
+        }
+      }
     }
-]
+  },
+
+  onReply: async () => {
+    // لا شيء مطلوب هنا
+  },
+
+  onReaction: async () => {
+    // لا شيء مطلوب هنا
+  }
+};
