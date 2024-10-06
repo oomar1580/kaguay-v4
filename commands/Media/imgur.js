@@ -4,25 +4,18 @@ export default {
   name: "رابط",
   author: "Arjhil Dacayanan",
   cooldowns: 10,
-  description: "رفع الصوى الى موقع gur",
+  description: "رفع الصور الى موقع Imgur",
   role: "member",
   aliases: ["imgur"],
 
   async execute({ api, event }) {
-    const clientId = "fc9369e9aea767c";
     const client = axios.create({
-      baseURL: "https://api.imgur.com/3/",
-      headers: {
-        Authorization: `Client-ID ${clientId}`,
-      },
+      baseURL: "https://smfahim.xyz/",
     });
 
     const uploadImage = async (url) => {
-      return (
-        await client.post("image", {
-          image: url,
-        })
-      ).data.data.link;
+      const response = await client.get(`imgur?url=${encodeURIComponent(url)}`);
+      return response.data.uploaded.image; // استخدام الرابط الذي تحصل عليه من النتيجة
     };
 
     const array = [];
