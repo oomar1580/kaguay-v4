@@ -127,7 +127,7 @@ export default {
 
                         api.sendMessage(`✅ | تهانينا يا ${userName} 🥳إجابتك صحيحة، وحصلت بذالك على『50 』 نقطة`, event.threadID);
                         api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                        api.unsendMessage(reply.messageID);
+                     //   api.unsendMessage(reply.messageID);
                     } else {
                      api.sendMessage(` ❌ |آسفة إجابتك خاطئة`, event.threadID); 
                         api.setMessageReaction("❌", event.messageID, (err) => {}, true); } } catch (e) { console.error("حدث خطأ أثناء معالجة الرد:", e); }
