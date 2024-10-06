@@ -52,7 +52,7 @@ export default {
             fs.writeFileSync(tempImageFilePath, Buffer.from(imageResponse.data, "binary"));
 
             const attachment = [fs.createReadStream(tempImageFilePath)];
-            const message = `▱▱▱▱▱▱▱▱▱▱▱▱▱\n\tمن يرسل الإيموجي الأول يفز:\n▱▱▱▱▱▱▱▱▱▱▱▱▱`;
+            const message = `▱▱▱▱▱▱▱▱▱▱▱▱▱\n\tمن يرد بالإيموجي الأول يفز:\n▱▱▱▱▱▱▱▱▱▱▱▱▱`;
 
             api.sendMessage({ body: message, attachment }, event.threadID, async (error, info) => {
                 if (!error) {
