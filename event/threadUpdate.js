@@ -51,7 +51,7 @@ async function handleNicknameChange(api, event, Threads, threadData) {
   if (threadData.data.anti?.nicknameBox) {
     await api.setUserNickname(userID, threadData.data.oldNicknames[userID] || "");
     return api.sendMessage(
-      `❌ | ميزة حماية الكنية مفعلة، لذا لم يتم تغيير كنية العضو 🔖 |<${event.threadID}> - ${threadData.data.name}`,
+      `❌ | ميزة حماية الكنية مفعلة، لذا لم يتم تغيير كنية العضو 🔖 | <${event.threadID}> - ${threadData.data.name}`,
       event.threadID
     );
   }
@@ -77,7 +77,7 @@ async function handleThreadName(api, event, Threads, threadData) {
   if (threadData.data.anti?.nameBox) {
     await api.setTitle(oldName, event.threadID);
     return api.sendMessage(
-      `❌ | ميزة حماية الاسم مفعلة، لذا لم يتم تغيير اسم المجموعة 🔖 |<${event.threadID}> - ${threadData.data.name}`,
+      `❌ | ميزة حماية الاسم مفعلة، لذا لم يتم تغيير اسم المجموعة 🔖 | <${event.threadID}> - ${threadData.data.name}`,
       event.threadID
     );
   }
@@ -115,6 +115,7 @@ async function handleAdminChange(api, event, Threads, threadData) {
   const adminName = await getUserName(api, TARGET_ID);
   api.sendMessage(
     `🔖 | تمت ${action} ${adminName} كآدمن في المجموعة`,
+
     event.threadID
   );
 }
@@ -127,7 +128,7 @@ async function handleApprovalModeChange(api, event, Threads, threadData) {
 
   const action = APPROVAL_MODE === 0 ? "❌ تعطيل" : "✅ تفعيل";
   api.sendMessage(
-    `تم ${action} ميزة الموافقة في المجموعة 🔖 |<${event.threadID}> - ${threadData.data.name}`,
+    `تم ${action} ميزة الموافقة في المجموعة 🔖 | <${event.threadID}> - ${threadData.data.name}`,
     event.threadID
   );
 }
@@ -149,19 +150,33 @@ async function handleThreadIconChange(api, event, Threads, threadData) {
       return;
     }
 
+    // تحقق من صحة رابط الصورة الجديدة
+    if (!isValidImageUrl(newIcon)) {
+      return api.sendMessage(
+        `❌ | رابط الصورة غير صالح. يرجى استخدام رابط مباشر لصورة بصيغة jpg, jpeg, png, أو gif.`,
+        event.threadID
+      );
+    }
+
     // تحديث الصورة الجديدة في قاعدة البيانات
     threadData.data.threadThumbnail = newIcon;
     await threadData.save();
 
     // جلب اسم المسؤول الذي قام بالتغيير
     const adminName = await getUserName(api, event.author);
-    await api.sendMessage(
+    api.sendMessage(
       `✅ | تم تغيير صورة المجموعة الجديدة بواسطة: ${adminName}`,
       event.threadID
     );
   } catch (error) {
     console.error("Error in handleThreadIconChange:", error);
   }
+}
+
+// التحقق من صحة رابط الصورة
+function isValidImageUrl(url) {
+  const regex = /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i;
+  return regex.test(url);
 }
 
 // الحصول على اسم المستخدم
