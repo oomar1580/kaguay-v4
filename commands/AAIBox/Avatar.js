@@ -8,7 +8,7 @@ async function avatarAlert({ api, event, args }) {
 
     // التحقق من أن المستخدم أدخل 4 قيم
     if (args.length !== 4) {
-      return api.sendMessage("⚠️ | يرجى إدخال 4 معلومات بالترتيب: id, bgname, signature, color.\nمثال: 4 yazky yazky black", threadID, messageID);
+      return api.sendMessage("⚠️ | يرجى إدخال 4 معلومات بالترتيب: id, bgname, signature, color.\nمثال: 1 Joshua 'Joshua Sy' blue", threadID, messageID);
     }
 
     // استخلاص القيم من المدخلات
@@ -20,7 +20,7 @@ async function avatarAlert({ api, event, args }) {
     api.setMessageReaction("📱", event.messageID, () => {}, true);
 
     // جلب الصورة باستخدام القيم المدخلة
-    const response = await axios.get(`https://betadash-api-swordslush.vercel.app/avatar?id=${encodeURIComponent(id)}&bgname=${encodeURIComponent(bgname)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`, { responseType: 'arraybuffer' });
+    const response = await axios.get(`https://deku-rest-api.gleeze.com/canvas/avatarv2?id=${encodeURIComponent(id)}&bgtext=${encodeURIComponent(bgname)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`, { responseType: 'arraybuffer' });
     fs.writeFileSync(imagePath, Buffer.from(response.data, "utf-8"));
 
     // تغيير رد الفعل لإعلام المستخدم بنجاح العملية
@@ -46,7 +46,7 @@ async function avatarAlert({ api, event, args }) {
 export default {
   name: "اڤتار",
   author: "kaguya project",
-  description: "يرسل صورة أفاتار بناءً على id, bgname, signature, color.\nمثال: 4 yazky yazky black",
-  aliases:["أڤتار"],
+  description: "يرسل صورة أفاتار بناءً على id, bgname, signature, color.\nمثال: 1 Joshua 'Joshua Sy' blue",
+  aliases: ["أڤتار"],
   execute: avatarAlert
 };
