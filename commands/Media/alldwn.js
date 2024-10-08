@@ -11,6 +11,15 @@ export default {
   execute: async ({ api, event, args, Economy }) => {
     api.setMessageReaction("⬇️", event.messageID, (err) => {}, true);
 
+    const userMoney = (await Economy.getBalance(event.senderID)).data;
+    const cost = 500;
+    if (userMoney < cost) {
+      return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يجب عليك الحصول على ${cost} دولار أولاً من أجل تنزيل مقطع أو صورة. يمكنك تنزيل مقاطع من تيك توك، فيسبوك، بنتريست، يوتيوب، انستغرام.`, event.threadID);
+    }
+
+    // الخصم من الرصيد
+    await Economy.decrease(cost, event.senderID);
+
     try {
       const description = args.join(" ");
       if (!description) {
@@ -90,23 +99,6 @@ export default {
     } catch (error) {
       console.error(error);
       api.sendMessage("⚠️ | حدث خطأ أثناء تنزيل المحتوى. يرجى المحاولة مرة أخرى.", event.threadID);
-    }
-  },
-
-  // إضافة دالة events
-  events: async ({ api, event, Users, Threads, Economy }) => {
-    const message = event.body ? event.body.toLowerCase() : "";
-    const threadID = event.threadID;
-    const messageID = event.messageID;
-
-    // تحقق من وجود رابط في الرسالة
-    const urlPattern = /https?:\/\/[^\s]+/;
-    if (urlPattern.test(message)) {
-      const args = message.match(urlPattern); // استخراج الرابط من الرسالة
-      if (args) {
-        // استدعاء دالة التحميل تلقائياً
-        await this.execute({ api, event, args, Economy });
-      }
     }
   },
 };
