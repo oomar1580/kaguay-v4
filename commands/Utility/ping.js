@@ -4,15 +4,16 @@ import path from "path";
 
 async function randomImageAndUptime({ api, event }) {
     try {
-        const searchQueries = ["zoro", "madara", "obito", "luffy", "boa Hancock", "kaguya sama", "hinata hyuga",  "itashi", "nizko", "rim rezero", "nami"]; // إضافة استعلامات البحث عن الصور هنا
+        const searchQueries = ["zoro", "madara", "obito", "luffy", "boa Hancock", "kaguya sama", "hinata hyuga", "itashi", "nezuko", "rim rezero", "nami"]; // إضافة استعلامات البحث عن الصور هنا
 
         const randomQueryIndex = Math.floor(Math.random() * searchQueries.length);
         const searchQuery = searchQueries[randomQueryIndex];
 
-        const apiUrl = `https://pin-two.vercel.app/pin?search=${encodeURIComponent(searchQuery)}`;
+        // استخدام الاستعلام العشوائي في الرابط الجديد
+        const apiUrl = `https://smfahim.xyz/pin?title=${encodeURIComponent(searchQuery)}&search=1`;
 
         const response = await axios.get(apiUrl);
-        const imageLinks = response.data.result;
+        const imageLinks = response.data.data; // استخراج الروابط من البيانات المسترجعة
 
         if (imageLinks.length === 0) {
             return api.sendMessage(`لم يتم العثور على صور للاستعلام: ${searchQuery}`, event.threadID, event.messageID);
