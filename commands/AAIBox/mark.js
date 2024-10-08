@@ -8,7 +8,7 @@ async function oogwayAlert({ api, event, args }) {
     const query = args.join(" ");
 
     if (!query) {
-      return api.sendMessage("⚠️ | يرجى إدخال نص لتوليد الصورة.\nمثال: أوجواي او حكمة لا تؤجل عمل اليوم إلى الغد", threadID, messageID);
+      return api.sendMessage("⚠️ | يرجى إدخال نص لتوليد الصورة.\nمثال: مارك لا تؤجل عمل اليوم إلى الغد", threadID, messageID);
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -40,9 +40,9 @@ async function oogwayAlert({ api, event, args }) {
 }
 
 export default {
-  name: "حكمة",
+  name: "مارك",
   author: "kaguya project",
-  description: "يرسل صورة أوجواي مع النص المقدم.\nمثال: أوجواي الحكمة",
-  aliases: ["أوجواي"],
+  description: "يرسل صورة مارك مع النص المقدم.\nمثال: مارك الحكمة",
+  aliases: ["mark"],
   execute: oogwayAlert
 };
