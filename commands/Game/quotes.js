@@ -253,11 +253,17 @@ _ 𝒯𝒶𝓀ℯ 𝒸ℴ𝓃𝓉𝓇ℴ𝓁 ℴ𝒻 𝓎ℴ𝓊𝓇 𝒻𝓊�
       const randomQueryIndex = Math.floor(Math.random() * searchQueries.length);
       const searchQuery = searchQueries[randomQueryIndex];
 
-      const apiUrl = `https://pin-two.vercel.app/pin?search=${encodeURIComponent(searchQuery)}`;
-      const response = await axios.get(apiUrl);
-      const imageLinks = response.data.result;
+      const apiUrl = `https://smfahim.xyz/pin?title=${encodeURIComponent(searchQuery)}&search=1`;
 
-      if (imageLinks.length === 0) {
+        const response = await axios.get(apiUrl);
+        const imageLinks = response.data.data; // استخراج الروابط من البيانات المسترجعة
+
+        if (imageLinks.length === 0) {
+            return api.sendMessage(`لم يتم العثور على صور للاستعلام: ${searchQuery}`, event.threadID, event.messageID);
+        }
+
+        const imageUrl = imageLinks[0]; // جلب الصورة الأولى فقط
+
         return api.sendMessage(`⚠️ لم يتم العثور على صور للاستعلام: ${searchQuery}.`, event.threadID, event.messageID);
       }
 
