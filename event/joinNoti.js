@@ -45,13 +45,11 @@ async function execute({ api, event, Users, Threads }) {
 
           const exitMessage = `⚠️ | إضافة البوت بدون إذن غير مسموح يرجى التواصل مع المطور من أجل الحصول على الموافقة \n 📞 | رابـط الـمـطـور : https://www.facebook.com/profile.php?id=100076269693499`;
 
-// إرسال الرسالة بدون صورة
-await api.sendMessage({
-  body: exitMessage
-}, event.threadID);
+          // إرسال الرسالة
+          await api.sendMessage(exitMessage, event.threadID);
 
-// الخروج من المجموعة
-await api.removeUserFromGroup(botUserID, event.threadID);
+          // الخروج من المجموعة
+          await api.removeUserFromGroup(botUserID, event.threadID);
         } else {
           // إذا كان أحد أصحاب البوت هو من أضافه، فقط أرسل إشعارًا له
           const notifyOwnerMessage = `⚠️ إشعار: تم إضافة البوت إلى مجموعة جديدة! \n📍 اسم المجموعة: ${threadName} \n🔢 عدد الأعضاء: ${membersCount}`;
@@ -84,7 +82,7 @@ await api.removeUserFromGroup(botUserID, event.threadID);
 
         const currentTime = moment().tz("Africa/Casablanca").format("hh:mm A");
         const formattedTime = currentTime.replace('AM', 'صباحًا').replace('PM', 'مساءً');
-        const welcomeMessage = `◆❯━━━━━▣✦▣━━━━━━❮◆\n≪⚠️ إشــعــار بــالإنــضــمــام ⚠️≫\n👥 | الإســم :『${profileName}』\n الـتـرتـيـب 🔢 : 『${membersCount}』\n🧭 | إسـم الـمـجـمـوعـة :『${threadName}』\n📅 | بـ تـاريـخ : ${moment().tz("Africa/Casablanca").format("YYYY-MM-DD")}\n⏰ | عـلـى الـوقـت : ${formattedTime}\n『🔖لا تـسـئ الـلـفـظ وإن ضـاق بـك الـرد🔖』\n◆❯━━━━━▣✦▣━━━━━━❮◆`;
+        const welcomeMessage = `◆❯━━━━━▣✦▣━━━━━━❮◆\n≪⚠️ إشــعــار بــالإنــضــمــام ⚠️≫\n👥 | الإســم :『${profileName}』\n الـتـرتـيـب 🔢 : 『${membersCount}』\n🧭 | إسـم الـمـجـموعـة :『${threadName}』\n📅 | بـ تـاريـخ : ${moment().tz("Africa/Casablanca").format("YYYY-MM-DD")}\n⏰ | عـلـى الـوقـت : ${formattedTime}\n『🔖لا تـسـئ الـلـفـظ وإن ضـاق بـك الـرد🔖』\n◆❯━━━━━▣✦▣━━━━━━❮◆`;
         await sendWelcomeOrFarewellMessage(api, event.threadID, welcomeMessage, "cache12/hello.jpg");
       }
       break;
@@ -120,4 +118,3 @@ export default {
   description: "يتم استدعاء هذا الأمر عندما ينضم شخص جديد إلى المجموعة أو يغادرها.",
   execute,
 };
-        
