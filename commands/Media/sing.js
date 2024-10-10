@@ -8,14 +8,14 @@ export default {
   cooldowns: 60,
   description: "تنزيل مقطع من YouTube",
   role: "member",
-  aliases: ["أغنية", "موسيقى"],
+  aliases: ["أغنية","موسيقى","غني"],
 
   async execute({ api, event }) {
     const input = event.body;
     const data = input.split(" ");
 
     if (data.length < 2) {
-      return api.sendMessage("⚠️ | أرجوك قم بإدخال اسم المقطع.", event.threadID);
+      return api.sendMessage("⚠️ | أرجوك قم بإدخال اسم الاغنية.", event.threadID);
     }
 
     data.shift();
