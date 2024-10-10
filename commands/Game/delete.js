@@ -35,7 +35,7 @@ export default {
 
     try {
       // استدعاء API لتوليد صورة القمامة
-      const apiUrl = `https://deku-rest-api.gleeze.com/canvas/delete?uid=${chilli}`;
+      const apiUrl = `https://deku-rest-apis.ooguy.com/canvas/trash?uid=${chilli}`;
       const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
 
       const imagePath = path.join(process.cwd(), 'cache', 'trash.jpg');
