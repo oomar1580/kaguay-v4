@@ -50,3 +50,5 @@ export default {
   aliases: ["أڤتار"],
   execute: avatarAlert
 };
+غير الرابط بهذا 
+https://markdevs69v2.onrender.com/api/canvas/avatarwibu?id=1&bgname=YACOUBI%20&sig=HUSSEIN
