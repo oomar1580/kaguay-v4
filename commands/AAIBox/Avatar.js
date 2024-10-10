@@ -19,8 +19,8 @@ async function avatarAlert({ api, event, args }) {
     // إضافة رد فعل لإعلام المستخدم بأن العملية قيد التقدم
     api.setMessageReaction("📱", event.messageID, () => {}, true);
 
-    // جلب الصورة باستخدام القيم المدخلة من الرابط الجديد
-    const response = await axios.get(`https://markdevs69v2.onrender.com/api/canvas/avatarwibu?id=${encodeURIComponent(id)}&bgname=${encodeURIComponent(bgname)}&sig=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`, { responseType: 'arraybuffer' });
+    // جلب الصورة باستخدام القيم المدخلة
+    const response = await axios.get(`https://deku-rest-api.gleeze.com/canvas/avatarv2?id=${encodeURIComponent(id)}&bgtext=${encodeURIComponent(bgname)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`, { responseType: 'arraybuffer' });
     fs.writeFileSync(imagePath, Buffer.from(response.data, "utf-8"));
 
     // تغيير رد الفعل لإعلام المستخدم بنجاح العملية
