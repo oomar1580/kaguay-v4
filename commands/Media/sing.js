@@ -29,6 +29,7 @@ export default {
 
       const songData = searchResponse.data?.data;
       if (!songData || !songData.audio) {
+        api.unsendMessage(sentMessage.messageID);  // حذف رسالة الانتظار
         return api.sendMessage("⚠️ | لم يتم العثور على أي نتائج.", event.threadID);
       }
 
@@ -45,6 +46,8 @@ export default {
       audioStream.data.pipe(writer);
 
       writer.on('finish', () => {
+        api.unsendMessage(sentMessage.messageID);  // حذف رسالة الانتظار
+
         if (fs.statSync(filePath).size > 26214400) {
           fs.unlinkSync(filePath);
           return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
@@ -63,6 +66,7 @@ export default {
       });
 
     } catch (error) {
+      api.unsendMessage(sentMessage.messageID);  // حذف رسالة الانتظار عند حدوث خطأ
       console.error('[ERROR]', error);
       api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الأمر.', event.threadID);
     }
