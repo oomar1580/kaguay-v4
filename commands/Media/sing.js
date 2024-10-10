@@ -8,7 +8,7 @@ export default {
   cooldowns: 60,
   description: "تنزيل مقطع من YouTube",
   role: "member",
-  aliases: ["أغنية","موسيقى"],
+  aliases: ["أغنية", "موسيقى"],
 
   async execute({ api, event }) {
     const input = event.body;
@@ -18,7 +18,7 @@ export default {
       return api.sendMessage("⚠️ | أرجوك قم بإدخال اسم المقطع.", event.threadID);
     }
 
-    data.shift();
+    data.shift();  // إزالة الكلمة الأولى
     const videoName = data.join(" ");
 
     try {
@@ -33,15 +33,15 @@ export default {
       }
 
       let msg = '🎵 | تم العثور على النتائج التالية:\n';
-      const selectedResults = searchResults.slice(0, 4); // Get only the first 4 results
+      const selectedResults = searchResults.slice(0, 4); // عرض أول 4 نتائج فقط
       const attachments = [];
 
+      // تحميل الصور المصغرة وإضافتها للمرفقات
       for (let i = 0; i < selectedResults.length; i++) {
         const video = selectedResults[i];
         const videoIndex = i + 1;
         msg += `\n${videoIndex}. ❀ العنوان: ${video.title}`;
         
-        // تنزيل الصورة وإضافتها إلى المرفقات
         const imagePath = path.join(process.cwd(), 'cache', `video_thumb_${videoIndex}.jpg`);
         const imageStream = await axios({
           url: video.thumbnail,
@@ -51,8 +51,9 @@ export default {
         const writer = fs.createWriteStream(imagePath);
         imageStream.data.pipe(writer);
         
-        await new Promise((resolve) => {
+        await new Promise((resolve, reject) => {
           writer.on('finish', resolve);
+          writer.on('error', reject);
         });
 
         attachments.push(fs.createReadStream(imagePath));
@@ -82,69 +83,79 @@ export default {
       api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الأمر.', event.threadID);
     }
   },
-async onReply({ api, event, reply }) {
-  if (reply.type !== 'pick') return;
 
-  const { author, searchResults } = reply;
+  async onReply({ api, event, reply }) {
+    if (reply.type !== 'pick') return;
 
-  if (event.senderID !== author) {
-    return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
-  }
+    const { author, searchResults } = reply;
 
-  const selectedIndex = parseInt(event.body, 10) - 1;
-
-  if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
-    return api.sendMessage("❌ | الرد غير صالح. يرجى الرد برقم صحيح.", event.threadID);
-  }
-
-  const video = searchResults[selectedIndex];
-  const videoUrl = video.videoUrl;
-
-  try {
-    const downloadUrl = `https://joncll.serv00.net/yt.php?url=${encodeURIComponent(videoUrl)}`;
-    const downloadResponse = await axios.get(downloadUrl);
-
-    // تحقق من تنسيق الاستجابة الجديدة
-    const audioFileUrl = downloadResponse.data.data.downloadLink.url;
-
-    if (!audioFileUrl) {
-      return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل الأغنية.", event.threadID);
+    if (event.senderID !== author) {
+      return api.sendMessage("⚠️ | هذا ليس لك.", event.threadID);
     }
 
-    api.setMessageReaction("⬇️", event.messageID, (err) => {}, true);
+    const selectedIndex = parseInt(event.body, 10) - 1;
 
-    const fileName = `${event.senderID}.mp3`;
-    const filePath = path.join(process.cwd(), 'cache', fileName);
+    if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
+      return api.sendMessage("❌ | الرجاء اختيار رقم صحيح من 1 إلى 4.", event.threadID);
+    }
 
-    const writer = fs.createWriteStream(filePath);
-    const audioStream = await axios({
-      url: audioFileUrl,
-      responseType: 'stream'
-    });
+    const video = searchResults[selectedIndex];
+    const videoUrl = video.videoUrl;
 
-    audioStream.data.pipe(writer);
+    if (!videoUrl) {
+      return api.sendMessage("❌ | لم يتم العثور على رابط الفيديو.", event.threadID);
+    }
 
-    writer.on('finish', () => {
-      if (fs.statSync(filePath).size > 26214400) {
-        fs.unlinkSync(filePath);
-        return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
+    try {
+      const downloadUrl = `https://joncll.serv00.net/yt.php?url=${encodeURIComponent(videoUrl)}`;
+      const downloadResponse = await axios.get(downloadUrl);
+
+      const audioFileUrl = downloadResponse.data.data.downloadLink.url;
+
+      if (!audioFileUrl) {
+        return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل الأغنية.", event.threadID);
       }
 
-      api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+      api.setMessageReaction("⬇️", event.messageID, (err) => {}, true);
 
-      const message = {
-        body: `✅ | تم تنزيل الأغنية:\n❀ العنوان: ${video.title}`,
-        attachment: fs.createReadStream(filePath)
-      };
+      const fileName = `${Date.now()}_${event.senderID}.mp3`;
+      const filePath = path.join(process.cwd(), 'cache', fileName);
 
-      api.sendMessage(message, event.threadID, () => {
-        fs.unlinkSync(filePath);
+      const writer = fs.createWriteStream(filePath);
+      const audioStream = await axios({
+        url: audioFileUrl,
+        responseType: 'stream'
       });
-    });
 
-  } catch (error) {
-    console.error('[ERROR]', error);
-    api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الأمر.', event.threadID);
+      audioStream.data.pipe(writer);
+
+      writer.on('finish', () => {
+        if (fs.statSync(filePath).size > 26214400) { // Check if file exceeds 25MB
+          fs.unlinkSync(filePath);
+          return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
+        }
+
+        api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+
+        const message = {
+          body: `✅ | تم تنزيل الأغنية:\n❀ العنوان: ${video.title}`,
+          attachment: fs.createReadStream(filePath)
+        };
+
+        api.sendMessage(message, event.threadID, () => {
+          fs.unlinkSync(filePath);
+        });
+      });
+
+      writer.on('error', (err) => {
+        console.error('[ERROR] Download Error:', err);
+        api.sendMessage('❌ | حدث خطأ أثناء تنزيل الملف. حاول مجددًا لاحقًا.', event.threadID);
+        fs.unlinkSync(filePath); // Ensure file is deleted on error
+      });
+
+    } catch (error) {
+      console.error('[ERROR]', error);
+      api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الأمر.', event.threadID);
+    }
   }
-}
-
+};
