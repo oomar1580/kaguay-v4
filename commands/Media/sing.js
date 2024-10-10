@@ -18,7 +18,7 @@ export default {
       return api.sendMessage("⚠️ | أرجوك قم بإدخال اسم المقطع.", event.threadID);
     }
 
-    data.shift();  // إزالة الكلمة الأولى
+    data.shift();
     const videoName = data.join(" ");
 
     try {
@@ -33,15 +33,15 @@ export default {
       }
 
       let msg = '🎵 | تم العثور على النتائج التالية:\n';
-      const selectedResults = searchResults.slice(0, 4); // عرض أول 4 نتائج فقط
+      const selectedResults = searchResults.slice(0, 4); // Get only the first 4 results
       const attachments = [];
 
-      // تحميل الصور المصغرة وإضافتها للمرفقات
       for (let i = 0; i < selectedResults.length; i++) {
         const video = selectedResults[i];
         const videoIndex = i + 1;
         msg += `\n${videoIndex}. ❀ العنوان: ${video.title}`;
         
+        // تنزيل الصورة وإضافتها إلى المرفقات
         const imagePath = path.join(process.cwd(), 'cache', `video_thumb_${videoIndex}.jpg`);
         const imageStream = await axios({
           url: video.thumbnail,
@@ -51,9 +51,8 @@ export default {
         const writer = fs.createWriteStream(imagePath);
         imageStream.data.pipe(writer);
         
-        await new Promise((resolve, reject) => {
+        await new Promise((resolve) => {
           writer.on('finish', resolve);
-          writer.on('error', reject);
         });
 
         attachments.push(fs.createReadStream(imagePath));
@@ -96,20 +95,17 @@ export default {
     const selectedIndex = parseInt(event.body, 10) - 1;
 
     if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= searchResults.length) {
-      return api.sendMessage("❌ | الرجاء اختيار رقم صحيح من 1 إلى 4.", event.threadID);
+      return api.sendMessage("❌ | الرد غير صالح. يرجى الرد برقم صحيح.", event.threadID);
     }
 
     const video = searchResults[selectedIndex];
     const videoUrl = video.videoUrl;
 
-    if (!videoUrl) {
-      return api.sendMessage("❌ | لم يتم العثور على رابط الفيديو.", event.threadID);
-    }
-
     try {
-      const downloadUrl = `https://joncll.serv00.net/yt.php?url=${encodeURIComponent(videoUrl)}`;
+      const downloadUrl = `https://c-v1.onrender.com/yt?url=${encodeURIComponent(videoUrl)}`;
       const downloadResponse = await axios.get(downloadUrl);
 
+      // تحقق من تنسيق الاستجابة الجديدة
       const audioFileUrl = downloadResponse.data.data.downloadLink.url;
 
       if (!audioFileUrl) {
@@ -118,7 +114,7 @@ export default {
 
       api.setMessageReaction("⬇️", event.messageID, (err) => {}, true);
 
-      const fileName = `${Date.now()}_${event.senderID}.mp3`;
+      const fileName = `${event.senderID}.mp3`;
       const filePath = path.join(process.cwd(), 'cache', fileName);
 
       const writer = fs.createWriteStream(filePath);
@@ -130,7 +126,7 @@ export default {
       audioStream.data.pipe(writer);
 
       writer.on('finish', () => {
-        if (fs.statSync(filePath).size > 26214400) { // Check if file exceeds 25MB
+        if (fs.statSync(filePath).size > 26214400) {
           fs.unlinkSync(filePath);
           return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
         }
@@ -145,12 +141,6 @@ export default {
         api.sendMessage(message, event.threadID, () => {
           fs.unlinkSync(filePath);
         });
-      });
-
-      writer.on('error', (err) => {
-        console.error('[ERROR] Download Error:', err);
-        api.sendMessage('❌ | حدث خطأ أثناء تنزيل الملف. حاول مجددًا لاحقًا.', event.threadID);
-        fs.unlinkSync(filePath); // Ensure file is deleted on error
       });
 
     } catch (error) {
