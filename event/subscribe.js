@@ -51,7 +51,7 @@ export default {
           );
 
           // تحديد مسار الـ GIF باستخدام process.cwd() و path
-          const gifPath = path.join(process.cwd(), 'cache12', 'welcome.gif'); // تأكد من أن الملف موجود في المسار المحدد
+          const gifPath = path.join(process.cwd(), 'cache12', 'welcom.gif'); // تأكد من أن الملف موجود في المسار المحدد
 
           // التحقق من وجود ملف الـ GIF
           if (!fs.existsSync(gifPath)) {
