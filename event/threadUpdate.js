@@ -5,15 +5,13 @@ export default {
   execute: async ({ api, event, Threads }) => {
     try {
       // العثور على بيانات المجموعة باستخدام معرّف المجموعة
-      let threadData = await Threads.findOne({ threadID: event.threadID });
+      const threadsData = await Threads.find(event.threadID);
+      const threads = threadsData?.data?.data || {};
 
       // إذا كانت البيانات غير موجودة، قم بإنشاء مجموعة جديدة
-      if (!threadData) {
-        threadData = new Threads({ threadID: event.threadID });
-        await threadData.save();
+      if (!threads) {
+        await Threads.create(event.threadID);
       }
-
-      const threads = threadData.data || {};
 
       // إذا كانت البيانات فارغة، أوقف المعالجة
       if (!Object.keys(threads).length) return;
@@ -21,19 +19,19 @@ export default {
       // التعامل مع أنواع التحديث المختلفة
       switch (event.logMessageType) {
         case "log:thread-name":
-          await handleThreadName(api, event, Threads, threadData);
+          await handleThreadName(api, event, Threads, threads);
           break;
         case "change_thread_admins":
-          await handleAdminChange(api, event, Threads, threadData);
+          await handleAdminChange(api, event, Threads, threads);
           break;
         case "change_thread_approval_mode":
-          await handleApprovalModeChange(api, event, Threads, threadData);
+          await handleApprovalModeChange(api, event, Threads, threads);
           break;
         case "log:thread-icon":
-          await handleThreadIconChange(api, event, Threads, threadData);
+          await handleThreadIconChange(api, event, Threads, threads);
           break;
         case "change_thread_nickname":
-          await handleNicknameChange(api, event, Threads, threadData);
+          await handleNicknameChange(api, event, Threads, threads);
           break;
         default:
           break;
@@ -45,22 +43,24 @@ export default {
 };
 
 // التعامل مع تغيير الكنية
-async function handleNicknameChange(api, event, Threads, threadData) {
+async function handleNicknameChange(api, event, Threads, threads) {
   const { userID, newNickname } = event.logMessageData;
 
-  if (threadData.data.anti?.nicknameBox) {
-    await api.setUserNickname(userID, threadData.data.oldNicknames[userID] || "");
+  if (threads.anti?.nicknameBox) {
+    await api.setUserNickname(userID, threads.data.oldNicknames[userID] || "");
     return api.sendMessage(
-      `❌ | ميزة حماية الكنية مفعلة، لذا لم يتم تغيير كنية العضو 🔖 |<${event.threadID}> - ${threadData.data.name}`,
+      `❌ | ميزة حماية الكنية مفعلة، لذا لم يتم تغيير كنية العضو 🔖 |<${event.threadID}> - ${threads.name}`,
       event.threadID
     );
   }
 
   // تحديث الكنية في البيانات
-  threadData.data.oldNicknames = threadData.data.oldNicknames || {};
-  threadData.data.oldNicknames[userID] = newNickname;
+  threads.data.oldNicknames = threads.data.oldNicknames || {};
+  threads.data.oldNicknames[userID] = newNickname;
 
-  await threadData.save();
+  await Threads.update(event.threadID, {
+    data: threads.data,
+  });
 
   const adminName = await getUserName(api, event.author);
   api.sendMessage(
@@ -70,20 +70,21 @@ async function handleNicknameChange(api, event, Threads, threadData) {
 }
 
 // التعامل مع تغيير الاسم
-async function handleThreadName(api, event, Threads, threadData) {
-  const { name: oldName = null } = threadData.data;
+async function handleThreadName(api, event, Threads, threads) {
+  const { name: oldName = null } = threads;
   const { name: newName } = event.logMessageData;
 
-  if (threadData.data.anti?.nameBox) {
+  if (threads.anti?.nameBox) {
     await api.setTitle(oldName, event.threadID);
     return api.sendMessage(
-      `❌ | ميزة حماية الاسم مفعلة، لذا لم يتم تغيير اسم المجموعة 🔖 |<${event.threadID}> - ${threadData.data.name}`,
+      `❌ | ميزة حماية الاسم مفعلة، لذا لم يتم تغيير اسم المجموعة 🔖 |<${event.threadID}> - ${threads.name}`,
       event.threadID
     );
   }
 
-  threadData.data.name = newName;
-  await threadData.save();
+  await Threads.update(event.threadID, {
+    name: newName,
+  });
 
   const adminName = await getUserName(api, event.author);
   api.sendMessage(
@@ -93,8 +94,8 @@ async function handleThreadName(api, event, Threads, threadData) {
 }
 
 // التعامل مع تغيير المسؤولين
-async function handleAdminChange(api, event, Threads, threadData) {
-  const { adminIDs = [] } = threadData.data;
+async function handleAdminChange(api, event, Threads, threads) {
+  const { adminIDs = [] } = threads;
   const { TARGET_ID, ADMIN_EVENT } = event.logMessageData;
 
   if (ADMIN_EVENT === "add_admin" && !adminIDs.includes(TARGET_ID)) {
@@ -108,8 +109,9 @@ async function handleAdminChange(api, event, Threads, threadData) {
     }
   }
 
-  threadData.data.adminIDs = adminIDs;
-  await threadData.save();
+  await Threads.update(event.threadID, {
+    adminIDs,
+  });
 
   const action = ADMIN_EVENT === "add_admin" ? "✅ إضافة" : "❌ إزالة";
   const adminName = await getUserName(api, TARGET_ID);
@@ -120,48 +122,38 @@ async function handleAdminChange(api, event, Threads, threadData) {
 }
 
 // التعامل مع تغيير وضع الموافقة
-async function handleApprovalModeChange(api, event, Threads, threadData) {
+async function handleApprovalModeChange(api, event, Threads, threads) {
   const { APPROVAL_MODE } = event.logMessageData;
-  threadData.data.approvalMode = APPROVAL_MODE === 0 ? false : true;
-  await threadData.save();
+  await Threads.update(event.threadID, {
+    approvalMode: APPROVAL_MODE === 0 ? false : true,
+  });
 
-  const action = APPROVAL_MODE === 0 ? "❌ تعطيل" : "✅ تفعيل";
+  const action = APPROVAL_MODE === 0 ? "تفعيل" : "❌ تعطيل ✅";
   api.sendMessage(
-    `تم ${action} ميزة الموافقة في المجموعة 🔖 |<${event.threadID}> - ${threadData.data.name}`,
+    `تم ${action} ميزة الموافقة في المجموعة 🔖 |<${event.threadID}> - ${threads.name}`,
     event.threadID
   );
 }
 
 // التعامل مع تغيير أيقونة المجموعة
-async function handleThreadIconChange(api, event, Threads, threadData) {
-  try {
-    const { threadThumbnail: oldIcon } = threadData.data; // جلب الصورة القديمة من المخطط
-    const newIcon = event.logMessageData.threadThumbnail; // جلب الصورة الجديدة من الحدث
+async function handleThreadIconChange(api, event, Threads, threads) {
+  const { threadThumbnail: newIcon } = event.logMessageData;
+  const oldIcon = threads.data.threadThumbnail || null; // افترض أن هذا هو رمز الأيقونة القديم
+  const adminName = await getUserName(api, event.author);
 
-    // تحقق إذا كانت ميزة حماية الصورة مفعلة
-    if (threadData.data.anti?.imageBox) {
-      // إذا كانت مفعلة، إعادة الصورة القديمة وإبلاغ المجموعة
-      await api.changeGroupImage(oldIcon, event.threadID);
-      await api.sendMessage(
-        `❌ | ميزة حماية صورة المجموعة مفعلة، لذا لم يتم تغيير صورة المجموعة 📷 | <${event.threadID}> - ${threadData.data.name}`,
-        event.threadID
-      );
-      return;
-    }
+  // تحديث بيانات المجموعة لتخزين الصورة القديمة
+  await Threads.update(event.threadID, {
+    data: {
+      ...threads.data,
+      threadThumbnail: newIcon, // تحديث الصورة الرمزية الجديدة
+    },
+  });
 
-    // تحديث الصورة الجديدة في قاعدة البيانات
-    threadData.data.threadThumbnail = newIcon;
-    await threadData.save();
-
-    // جلب اسم المسؤول الذي قام بالتغيير
-    const adminName = await getUserName(api, event.author);
-    await api.sendMessage(
-      `✅ | تم تغيير صورة المجموعة الجديدة بواسطة: ${adminName}`,
-      event.threadID
-    );
-  } catch (error) {
-    console.error("Error in handleThreadIconChange:", error);
-  }
+  // إرسال إشعار بتغيير الصورة
+  api.sendMessage(
+    `تم تغيير صورة المجموعة بواسطة: ${adminName}`,
+    event.threadID
+  );
 }
 
 // الحصول على اسم المستخدم
