@@ -1,6 +1,5 @@
 import { log } from "../logger/index.js";
 import fs from "fs";
-import axios from "axios";
 import path from "path";
 
 export default {
@@ -51,26 +50,24 @@ export default {
             api.getCurrentUserID()
           );
 
-          // رابط الـ GIF
-          const gifURL = "https://i.ibb.co/r2MQtKx/welcome.gif"; // ضع رابط الـ GIF هنا
+          // تحديد مسار الـ GIF باستخدام process.cwd() و path
+          const gifPath = path.join(process.cwd(), 'cache12', 'welcome.gif'); // تأكد من أن الملف موجود في المسار المحدد
 
-          // تحديد المسار لحفظ الـ GIF باستخدام process.cwd() و path
-          const gifPath = path.join(process.cwd(), 'cache', 'welcome.gif');
+          // التحقق من وجود ملف الـ GIF
+          if (!fs.existsSync(gifPath)) {
+            return api.sendMessage("❌ | ملف GIF غير موجود في المسار المحدد.", event.threadID);
+          }
 
-          // تنزيل وحفظ الـ GIF
-          const response = await axios.get(gifURL, { responseType: 'arraybuffer' });
-          fs.writeFileSync(gifPath, Buffer.from(response.data, 'binary'));
-
-          // قراءة الـ GIF كـ Buffer
-          const gifBuffer = fs.readFileSync(gifPath);
+          // قراءة ملف الـ GIF
+          const gifAttachment = fs.createReadStream(gifPath);
 
           // رسالة الترحيب عند إضافة البوت فقط
           const welcomeMessage = `✅ | تــم الــتــوصــيــل بـنـجـاح\n❏ الـرمـز : 『بدون رمز』\n❏ إسـم الـبـوت : 『${botName}』\n❏ الـمـطـور : 『حــســيــن يــعــقــوبــي』\n╼╾─────⊹⊱⊰⊹─────╼╾\n⚠️  |  اكتب قائمة او اوامر او تقرير في حالة واجهتك أي مشكلة\n╼╾─────⊹⊱⊰⊹─────╼╾\n ⪨༒𓊈𒆜𝔨𝔞𝔤𝔲𝔶𝔞 𝔠𝔥𝔞𝔫 𒆜𓊉༒⪩ \n╼╾─────⊹⊱⊰⊹─────╼╾\n❏ رابـط الـمـطـور : \nhttps://www.facebook.com/profile.php?id=100076269693499`;
 
-          // إرسال الرسالة مع ملف الـ GIF
+          // إرسال رسالة الترحيب مع الـ GIF
           api.sendMessage({
             body: welcomeMessage,
-            attachment: gifBuffer
+            attachment: gifAttachment
           }, event.threadID);
 
         } else {
