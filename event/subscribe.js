@@ -1,5 +1,6 @@
 import { log } from "../logger/index.js";
 import fs from "fs";
+import axios from "axios";
 import path from "path";
 
 export default {
@@ -50,26 +51,11 @@ export default {
             api.getCurrentUserID()
           );
 
-          // تحديد مسار الـ GIF باستخدام process.cwd() و path
-          const gifPath = path.join(process.cwd(), 'cache12', 'welcom.gif'); // تأكد من أن الملف موجود في المسار المحدد
-
-          // التحقق من وجود ملف الـ GIF
-          if (!fs.existsSync(gifPath)) {
-            return api.sendMessage("❌ | ملف GIF غير موجود في المسار المحدد.", event.threadID);
-          }
-
-          // قراءة ملف الـ GIF كـ stream
-          const gifStream = fs.createReadStream(gifPath);
-
           // رسالة الترحيب عند إضافة البوت فقط
           const welcomeMessage = `✅ | تــم الــتــوصــيــل بـنـجـاح\n❏ الـرمـز : 『بدون رمز』\n❏ إسـم الـبـوت : 『${botName}』\n❏ الـمـطـور : 『حــســيــن يــعــقــوبــي』\n╼╾─────⊹⊱⊰⊹─────╼╾\n⚠️  |  اكتب قائمة او اوامر او تقرير في حالة واجهتك أي مشكلة\n╼╾─────⊹⊱⊰⊹─────╼╾\n ⪨༒𓊈𒆜𝔨𝔞𝔤𝔲𝔶𝔞 𝔠𝔥𝔞𝔫 𒆜𓊉༒⪩ \n╼╾─────⊹⊱⊰⊹─────╼╾\n❏ رابـط الـمـطـور : \nhttps://www.facebook.com/profile.php?id=100076269693499`;
 
-          // إرسال رسالة الترحيب مع الـ GIF كـ stream
-          api.sendMessage({
-            body: welcomeMessage,
-            attachment: gifStream
-          }, event.threadID);
-
+          // إرسال رسالة الترحيب عند إضافة البوت فقط
+          api.sendMessage(welcomeMessage, event.threadID);
         } else {
           // إذا تم إضافة أعضاء آخرين، فقط تحديث عدد الأعضاء بدون رسائل
           for (let i of event.logMessageData.addedParticipants) {
