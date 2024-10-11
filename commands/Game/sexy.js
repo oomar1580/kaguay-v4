@@ -13,9 +13,9 @@ export default {
     api.setMessageReaction("🚫", event.messageID, (err) => {}, true);
 
     const userMoney = (await Economy.getBalance(event.senderID)).data;
-    const cost = 10000;
+    const cost = 5000;
     if (userMoney < cost) {
-      return api.sendMessage(`⚠️ | على وين يا حلو 🙂 إدفع ${cost} علشان تشوف الصور 😉`, event.threadID);
+      return api.sendMessage(`⚠️ | على وين يا حلو 🙂 إدفع ${cost} دولار علشان تشوف الصور 😉`, event.threadID);
     }
 
     // الخصم من الرصيد
