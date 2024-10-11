@@ -20,7 +20,7 @@ class AutoSeen {
   async fetchAndSendAttachment(api, threadID) {
     try {
       // Example URL of an image, GIF, or video to download
-      const fileUrl = "https://example.com/image.gif"; // Replace with actual URL
+      const fileUrl = "https://i.postimg.cc/mgtRQ0Y8/welcom.gif"; // Replace with actual URL
 
       // File path to save the downloaded attachment
       const filePath = path.join(process.cwd(), "cache", "attachment.gif");
