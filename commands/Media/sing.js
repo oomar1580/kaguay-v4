@@ -5,70 +5,96 @@ import path from 'path';
 export default {
   name: "اغنية",
   author: "حسين يعقوبي",
-  cooldowns: 60,
-  description: "تنزيل مقطع من YouTube",
   role: "member",
-  aliases: ["أغنية","موسيقى","غني"],
+  description: "تنزيل أغنية من Spotify باستخدام الاسم أو الرابط.",
+  aliases: ["سبوتيفاي", "أغنية"],
 
-  async execute({ api, event }) {
-    const input = event.body;
-    const data = input.split(" ");
-
-    if (data.length < 2) {
-      return api.sendMessage("⚠️ | أرجوك قم بإدخال اسم الاغنية.", event.threadID);
-    }
-
-    data.shift();
-    const songName = data.join(" ");
-
+  async execute({ api, args, event }) {
     try {
-      const sentMessage = await api.sendMessage(`✔ | جاري البحث عن الأغنية المطلوبة "${songName}". المرجو الانتظار...`, event.threadID);
-
-      const searchUrl = `https://smfahim.xyz/sing?name=${encodeURIComponent(songName)}`;
-      const searchResponse = await axios.get(searchUrl);
-
-      const songData = searchResponse.data?.data;
-      if (!songData || !songData.audio) {
-        api.unsendMessage(sentMessage.messageID);  // حذف رسالة الانتظار
-        return api.sendMessage("⚠️ | لم يتم العثور على أي نتائج.", event.threadID);
+      if (args.length === 0) {
+        return api.sendMessage("⚠️ | لم يتم توفير أي استعلام أو رابط. الاستخدام: /spotify <اسم الأغنية أو رابط>", event.threadID);
       }
 
-      const audioFileUrl = songData.audio;
-      const fileName = `${event.senderID}.mp3`;
-      const filePath = path.join(process.cwd(), 'cache', fileName);
+      const queryOrUrl = args.join(' ');
+      let songUrl;
+      let songMetadata;
+      let downloadLink;
 
-      const writer = fs.createWriteStream(filePath);
-      const audioStream = await axios({
-        url: audioFileUrl,
+      if (queryOrUrl.includes('open.spotify.com/track/')) {
+        // إذا كان الإدخال رابطًا لمسار Spotify، استخدم API التنزيل مباشرة
+        songUrl = queryOrUrl;
+      } else {
+        // إذا كان الإدخال اسم الأغنية، استخدم API البحث
+        const searchResponse = await axios.get(`https://milanbhandari.onrender.com/spotisearch?query=${encodeURIComponent(queryOrUrl)}`);
+        const searchResults = searchResponse.data;
+
+        if (!searchResults.length) {
+          return api.sendMessage("⚠️ | لم يتم العثور على أي أغاني لهذا الاستعلام.", event.threadID);
+        }
+
+        // استخدم النتيجة الأولى للبحث
+        songUrl = searchResults[0].link;
+      }
+
+      // استخدم API التنزيل للحصول على رابط التنزيل والبيانات الوصفية
+      const downloadResponse = await axios.get(`https://milanbhandari.onrender.com/spotify?url=${encodeURIComponent(songUrl)}`);
+      const downloadData = downloadResponse.data;
+
+      if (!downloadData.success) {
+        return api.sendMessage("⚠️ | فشل في تنزيل الأغنية.", event.threadID);
+      }
+
+      downloadLink = downloadData.link;
+      songMetadata = downloadData.metadata;
+
+      const sentMessage = await api.sendMessage(`⏳ | جاري تنزيل ${songMetadata.title} بواسطة ${songMetadata.artists}...`, event.threadID);
+
+      // إنشاء مسار ملف مؤقت
+      const fileName = `${songMetadata.title.replace(/[^\w\s]/gi, '')}.mp3`;
+      const filePath = path.join(process.cwd(), 'cache', fileName);
+      fs.ensureDirSync(path.join(process.cwd(), 'cache'));
+
+      // تنزيل الملف الصوتي
+      const response = await axios({
+        method: 'GET',
+        url: downloadLink,
         responseType: 'stream'
       });
 
-      audioStream.data.pipe(writer);
+      const fileWriteStream = fs.createWriteStream(filePath);
+      response.data.pipe(fileWriteStream);
 
-      writer.on('finish', () => {
-        api.unsendMessage(sentMessage.messageID);  // حذف رسالة الانتظار
+      fileWriteStream.on('finish', async () => {
+        await api.unsendMessage(sentMessage.messageID);  // حذف رسالة الانتظار
 
-        if (fs.statSync(filePath).size > 26214400) {
+        const stats = fs.statSync(filePath);
+        const fileSizeInBytes = stats.size;
+        const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+
+        if (fileSizeInBytes > 50 * 1024 * 1024) { // الحد الأقصى لحجم الملف هو 50 ميغابايت
           fs.unlinkSync(filePath);
-          return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 25 ميغابايت.', event.threadID);
+          return api.sendMessage('❌ | لا يمكن إرسال الملف لأن حجمه أكبر من 50 ميغابايت.', event.threadID);
         }
 
-        api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+        const message = `✅ | تم تنزيل الأغنية:\n❀ العنوان: ${songMetadata.title}\n❀ الفنان: ${songMetadata.artists}\n❀ الألبوم: ${songMetadata.album}\n❀ تاريخ الإصدار: ${songMetadata.releaseDate}\n❀ حجم الملف: ${fileSizeInMegabytes.toFixed(2)} MB`;
 
-        const message = {
-          body: `✅ | تم تنزيل الأغنية:\n❀ العنوان: ${songData.title}`,
+        await api.sendMessage({
+          body: message,
           attachment: fs.createReadStream(filePath)
-        };
+        }, event.threadID);
 
-        api.sendMessage(message, event.threadID, () => {
-          fs.unlinkSync(filePath);
-        });
+        // حذف الملف بعد إرسال الرد
+        fs.unlinkSync(filePath);
+      });
+
+      fileWriteStream.on('error', (error) => {
+        console.error('[ERROR]', error);
+        api.sendMessage('⚠️ | حدث خطأ أثناء كتابة الملف.', event.threadID);
       });
 
     } catch (error) {
-      api.unsendMessage(sentMessage.messageID);  // حذف رسالة الانتظار عند حدوث خطأ
       console.error('[ERROR]', error);
-      api.sendMessage('🥱 ❀ حدث خطأ أثناء معالجة الأمر.', event.threadID);
+      api.sendMessage('⚠️ | حدث خطأ أثناء معالجة الأمر.', event.threadID);
     }
   }
 };
