@@ -77,7 +77,8 @@ export default {
         }
 
         const message = `✅ | تم تنزيل الأغنية:\n❀ العنوان: ${songMetadata.title}\n❀ الفنان: ${songMetadata.artists}\n❀ الألبوم: ${songMetadata.album}\n❀ تاريخ الإصدار: ${songMetadata.releaseDate}\n❀ حجم الملف: ${fileSizeInMegabytes.toFixed(2)} MB`;
-
+           api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+  
         await api.sendMessage({
           body: message,
           attachment: fs.createReadStream(filePath)
