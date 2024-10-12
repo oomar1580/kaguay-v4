@@ -74,7 +74,7 @@ export default {
                         client.handler.reply.set(info.messageID, {
                             author: event.senderID,
                             type: "reply", // تحديد نوع الرد
-                            name: "ايموجي",
+                            name: "لعبة-ايموجي",
                             correctAnswer: correctAnswer, // إضافة الإجابة الصحيحة
                             unsend: true
                         });
@@ -109,7 +109,7 @@ export default {
                         api.sendMessage(`✅ | تهانينا يا ${userName} 🥳 إجابتك صحيحة، وحصلت بذلك على 50 نقطة`, event.threadID);
                    
                 api.setMessageReaction("✅", event.messageID, (err) => {}, true);        
-                        api.unsendMessage(reply.messageID);
+                        
                     } else {
                         api.sendMessage(`❌ | آسفة إجابتك خاطئة`, event.threadID);
 
