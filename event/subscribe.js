@@ -71,21 +71,3 @@ export default {
     }
   },
 };
-قم بإضافة هذه الأجزاء من حداجل أن يستورد الصورة ويرسلعا مع الرسالة 
-await sendWelcomeMessage(api, event.threadID, welcomeMessage, "cache12/welcom.gif");
-      }
-      break;
-    }
-  }
-}
-وهذا 
-async function sendWelcomeMessage(api, threadID, message, attachmentPath) {
-  try {
-    await api.sendMessage({
-      body: message,
-      attachment: fs.createReadStream(attachmentPath),
-    }, threadID);
-  } catch (error) {
-    console.error('Error sending welcome or farewell message:', error);
-  }
-}
