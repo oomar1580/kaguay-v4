@@ -27,7 +27,7 @@ export default {
       },
       false: async () => {
         // إرسال رسالة عدم وجود بادئة مع GIF
-        const noPrefixMessage = "🧭 | لا توجد بادئة محددة لهذه المجموعة.";
+        const noPrefixMessage = "🧭 | ᴛʜᴇʀᴇ ɪѕ ɴᴏ ᴘʀᴇғɪх\n 🧭 | لاتـوجـد أي بادئـة";
         const gifPath = path.join(process.cwd(), "cache12", "welcom.gif");
         await sendNoPrefixMessage(api, event.threadID, noPrefixMessage, gifPath);
       },
