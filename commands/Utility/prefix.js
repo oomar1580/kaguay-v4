@@ -14,8 +14,8 @@ export default {
     api.setMessageReaction("❓", event.messageID, (err) => {}, true);
   
     // رسالة "لا توجد أي بادئة" مع مرفق GIF سيتم إرسالها مباشرة
-    const noPrefixMessage = "🧭 | ᴛʜᴇʀᴇ ɪѕ ɴᴏ ᴘʀᴇғɪх\n 🧭 | لاتـوجـد أي بادئـة";
-    const videoLink = 'https://i.postimg.cc/mgtRQ0Y8/welcom.gif'; // الرابط الخاص بالـ GIF
+    const noPrefixMessage = "🧭 | ᴛʜᴇʀᴇ ɪѕ ɴᴏ ᴘʀᴇғɪх";
+    const videoLink = 'https://i.ibb.co/T2SV06R/download.gif'; // الرابط الخاص بالـ GIF
 
     // مسار مجلد مؤقت لتخزين الصورة المتحركة
     const tmpFolderPath = path.join(process.cwd(), 'tmp');
