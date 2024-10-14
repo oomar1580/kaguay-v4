@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import axios from "axios";
 
 export default {
   name: "الرمز",
@@ -9,27 +10,42 @@ export default {
   role: "member",
   aliases: ["prefix", "Prefix", "البادئة"],
   execute: async ({ event, api }) => {
+    
+    api.setMessageReaction("❓", event.messageID, (err) => {}, true);
+  
     // رسالة "لا توجد أي بادئة" مع مرفق GIF سيتم إرسالها مباشرة
     const noPrefixMessage = "🧭 | ᴛʜᴇʀᴇ ɪѕ ɴᴏ ᴘʀᴇғɪх\n 🧭 | لاتـوجـد أي بادئـة";
-    const gifPath = path.join(process.cwd(), "cache12", "welcom.gif");
+    const videoLink = 'https://i.postimg.cc/mgtRQ0Y8/welcom.gif'; // الرابط الخاص بالـ GIF
 
-    // إرسال الرسالة مع GIF مباشرة
-    await sendNoPrefixMessage(api, event.threadID, noPrefixMessage, gifPath);
+    // مسار مجلد مؤقت لتخزين الصورة المتحركة
+    const tmpFolderPath = path.join(process.cwd(), 'tmp');
+
+    // إنشاء المجلد إذا لم يكن موجودًا
+    if (!fs.existsSync(tmpFolderPath)) {
+      fs.mkdirSync(tmpFolderPath);
+    }
+
+    // مسار تخزين الـ GIF محليًا
+    const gifPath = path.join(tmpFolderPath, 'owner_video.gif');
+
+    try {
+      // جلب الـ GIF من الرابط وحفظه
+      const gifResponse = await axios.get(videoLink, { responseType: 'arraybuffer' });
+      fs.writeFileSync(gifPath, Buffer.from(gifResponse.data, 'binary'));
+
+      // إرسال الرسالة مع الـ GIF
+      await sendNoPrefixMessage(api, event.threadID, noPrefixMessage, gifPath);
+    } catch (error) {
+      console.error("Error fetching and sending GIF:", error);
+      api.sendMessage("❌ | حدث خطأ أثناء تحميل أو إرسال ملف الـ GIF.", event.threadID);
+    }
   },
 };
 
 // دالة إرسال رسالة مع GIF
 async function sendNoPrefixMessage(api, threadID, message, attachmentPath) {
   try {
-    // التحقق من وجود ملف الـ GIF
-    if (!fs.existsSync(attachmentPath)) {
-      return api.sendMessage("❌ | ملف الـ GIF غير موجود في المسار المحدد.", threadID);
-    }
-    
-    api.setMessageReaction("❓", event.messageID, (err) => {}, true);
-  
-
-    // قراءة ملف الـ GIF كـ stream وإرساله مع الرسالة
+    // إرسال الرسالة مع ملف الـ GIF
     await api.sendMessage({
       body: message,
       attachment: fs.createReadStream(attachmentPath),
