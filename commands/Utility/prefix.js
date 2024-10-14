@@ -10,7 +10,7 @@ export default {
   aliases: ["prefix", "Prefix", "البادئة"],
   execute: async ({ event, api }) => {
     // رسالة "لا توجد أي بادئة" مع مرفق GIF سيتم إرسالها مباشرة
-    const noPrefixMessage = "🧭 | لاتـوجـد أي بادئـة";
+    const noPrefixMessage = "🧭 | ᴛʜᴇʀᴇ ɪѕ ɴᴏ ᴘʀᴇғɪх\n 🧭 | لاتـوجـد أي بادئـة";
     const gifPath = path.join(process.cwd(), "cache12", "welcom.gif");
 
     // إرسال الرسالة مع GIF مباشرة
