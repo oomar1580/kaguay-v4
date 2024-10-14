@@ -44,6 +44,9 @@ async function sendNoPrefixMessage(api, threadID, message, attachmentPath) {
     if (!fs.existsSync(attachmentPath)) {
       return api.sendMessage("❌ | ملف الـ GIF غير موجود في المسار المحدد.", threadID);
     }
+    
+    api.setMessageReaction("❓", event.messageID, (err) => {}, true);
+  
 
     // قراءة ملف الـ GIF كـ stream وإرساله مع الرسالة
     await api.sendMessage({
