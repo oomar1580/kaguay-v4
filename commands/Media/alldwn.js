@@ -57,7 +57,7 @@ export default {
       const mediaUrl = mediaData.content.url;
       const fileType = mediaUrl.endsWith(".mp4") ? 'mp4' : 'jpg';
       const filePath = `${process.cwd()}/cache/media.${fileType}`;
-      const messageBody = `✅ | تم تحميل المحتوى بنجاح.`;
+      const messageBody = `✅ | 𝒅𝒐𝒘𝒏𝒍𝒐𝒂𝒅𝒆𝒅 𝒚𝒐𝒖𝒓 𝒗𝒊𝒅𝒆𝒐 𝒔𝒖𝒄𝒄𝒆𝒔𝒔𝒇𝒖𝒍𝒍𝒚`;
 
       // تأكد من أن الرابط صالح بالتحقق من استجابة HTTP
       request.head(mediaUrl, (err, res) => {
