@@ -24,7 +24,7 @@ export default {
       const description = args.join(" ");
       if (!description) {
         api.sendMessage(
-          "[!] يجب تقديم وصف الفيديو أو الصورة للمتابعة.",
+          "[!] | يجب تقديم رابط الفيديو للمتابعة.",
           event.threadID,
           event.messageID
         );
@@ -41,37 +41,23 @@ export default {
         event.threadID
       );
 
-      // تحديد الرابط الجديد
-      const apiUrl = `https://www.samirxpikachu.run.place/alldl?url=${encodeURIComponent(description)}`;
+      // تحديد الرابط الجديد API
+      const apiUrl = `https://ajiro-rest-api.gleeze.com/api/downloaderV2?url=${encodeURIComponent(description)}`;
 
+      // طلب البيانات من API
       const response = await axios.get(apiUrl);
       const mediaData = response.data;
 
-      if (!mediaData || !mediaData.medias || !mediaData.medias.length) {
+      // تحقق من وجود رابط التحويل (redirect) في الاستجابة
+      if (!mediaData || mediaData.content.status !== "redirect" || !mediaData.content.url) {
         api.sendMessage("⚠️ | لم أتمكن من العثور على محتوى بناءً على الوصف المقدم. يرجى المحاولة مرة أخرى.", event.threadID);
         return;
       }
 
-      // البحث عن الفيديو أو الصورة في قائمة الوسائط
-      const videoInfo = mediaData.medias.find(media => media.videoAvailable);
-      const imageInfo = mediaData.medias.find(media => !media.videoAvailable);
-
-      let mediaUrl, fileType, messageBody, filePath;
-
-      if (videoInfo) {
-        mediaUrl = videoInfo.url;
-        fileType = 'mp4';
-        filePath = `${process.cwd()}/cache/video.mp4`;
-        messageBody = `╼╾─────⊹⊱⊰⊹─────╼╾\n✅ | تم تحميل الفيديو:\n❀ العنوان: ${mediaData.title}\n⏱️ المدة: ${mediaData.duration}\n╼╾─────⊹⊱⊰⊹─────╼╾`;
-      } else if (imageInfo) {
-        mediaUrl = imageInfo.url;
-        fileType = 'jpg';
-        filePath = `${process.cwd()}/cache/image.jpg`;
-        messageBody = `╼╾─────⊹⊱⊰⊹─────╼╾\n✅ | تم تحميل الصورة:\n❀ العنوان: ${mediaData.title}\n╼╾─────⊹⊱⊰⊹─────╼╾`;
-      } else {
-        api.sendMessage("⚠️ | لم أتمكن من العثور على محتوى صالح للتنزيل. يرجى المحاولة مرة أخرى.", event.threadID);
-        return;
-      }
+      const mediaUrl = mediaData.content.url;
+      const fileType = mediaUrl.endsWith(".mp4") ? 'mp4' : 'jpg';
+      const filePath = `${process.cwd()}/cache/media.${fileType}`;
+      const messageBody = `✅ | تم تحميل المحتوى بنجاح.`;
 
       // تأكد من أن الرابط صالح بالتحقق من استجابة HTTP
       request.head(mediaUrl, (err, res) => {
