@@ -1,7 +1,7 @@
 import axios from 'axios';
 import fs from 'fs-extra';
 import path from 'path';
-import tinyurl from 'tinyurl'; // Assuming tinyurl package is installed
+import tinyurl from 'tinyurl';
 
 export default {
   name: "إزالة_الخلفية",
@@ -33,7 +33,7 @@ export default {
     } else if (args[0] && isValidUrl(args[0]) && args[0].match(/\.(png|jpg|jpeg)$/)) {
       imageUrl = args[0];
     } else {
-      return api.sendMessage({ body: `⚠️ | يرجى تقديم عنوان URL صورة صحيح أو الرد على صورة.` }, event.threadID, event.messageID);
+      return api.sendMessage({ body: `⚠️ | رد على صورة` }, event.threadID, event.messageID);
     }
 
     try {
@@ -41,18 +41,22 @@ export default {
       const shortenedUrl = await tinyurl.shorten(imageUrl);
 
       // Use the new API URL for background removal
-      const apiUrl = `https://samirxpikachuio.onrender.com/rbg?url=${encodeURIComponent(imageUrl)}`;
-      const response = await axios.get(apiUrl, { responseType: 'stream' });
+      const apiUrl = `https://www.noobs-api.000.pe/dipto/4kv2?imageUrl=${encodeURIComponent(imageUrl)}`;
+      const response = await axios.get(apiUrl);
 
-      if (response && response.data) {
+      if (response && response.data && response.data.mediumLink) {
         const endTime = new Date().getTime();
         const timeTaken = (endTime - startTime) / 1000;
 
-        const imageStream = response.data;
+        const mediumLink = response.data.mediumLink;
+        const imageStream = await axios({
+          url: mediumLink,
+          responseType: 'stream'
+        });
 
         const filePath = path.join(process.cwd(), 'cache', `${Date.now()}_removed_bg.png`);
         const writer = fs.createWriteStream(filePath);
-        imageStream.pipe(writer);
+        imageStream.data.pipe(writer);
 
         writer.on('finish', () => {
           api.setMessageReaction("✅", event.messageID, (err) => {}, true);
@@ -77,4 +81,4 @@ export default {
       api.sendMessage({ body: `🚧 | حدث خطأ أثناء معالجة الصورة: ${error.message}` }, event.threadID, event.messageID);
     }
   }
-}
+};
