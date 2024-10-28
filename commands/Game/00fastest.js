@@ -3,12 +3,15 @@ import axios from "axios";
 import path from "path";
 
 const tempImageFilePath = process.cwd() + "/cache/tempImage.jpg";
-const userDataFile = path.join(process.cwd(), 'pontsData.json');
+const userDataFile = path.join(process.cwd(), 'pointsData.json');
 
 // Ensure the existence of the user data file
 if (!fs.existsSync(userDataFile)) {
     fs.writeFileSync(userDataFile, '{}');
 }
+
+// Define a variable to store the active game data
+let activeGame = null;
 
 export default {
     name: "الاسرع",
@@ -50,16 +53,16 @@ export default {
             fs.writeFileSync(tempImageFilePath, Buffer.from(imageResponse.data, "binary"));
 
             const attachment = [fs.createReadStream(tempImageFilePath)];
-            const message = `▱▱▱▱▱▱▱▱▱▱▱▱▱\n\tمن يرد بالإيموجي الأول يفز:\n▱▱▱▱▱▱▱▱▱▱▱▱▱`;
+            const message = `▱▱▱▱▱▱▱▱▱▱▱▱▱\n\tمن يرسل الإيموجي الأول يفز:\n▱▱▱▱▱▱▱▱▱▱▱▱▱`;
 
             api.sendMessage({ body: message, attachment }, event.threadID, async (error, info) => {
                 if (!error) {
                     api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
-                    client.handler.reply.set(info.messageID, {
+                    activeGame = {
+                        messageID: info.messageID,
                         correctEmoji: randomEmoji.emoji,
-                        type: "game",
-                        unsend: true
-                    });
+                        type: "game"
+                    };
                 } else {
                     console.error("Error sending message:", error);
                 }
@@ -71,46 +74,33 @@ export default {
     },
     
     events: async function ({ api, event, client }) {
-        // التحقق مما إذا كانت هناك لعبة فعالة باستخدام الإيموجي
-        const activeGame = Array.from(client.handler.reply.values()).find(
-            (game) => game.type === "game" && game.correctEmoji
-        );
-
         if (activeGame && event.body === activeGame.correctEmoji) {
             try {
-                const { correctEmoji } = activeGame;
+                api.unsendMessage(activeGame.messageID); // Delete the game message upon correct answer
 
-                // الحصول على بيانات المستخدم وتحديث النقاط
                 api.getUserInfo(event.senderID, (err, result) => {
                     if (err) {
                         console.error("Error getting user info:", err);
                         return;
                     }
+
                     const userName = result[event.senderID].name;
                     const pointsData = JSON.parse(fs.readFileSync(userDataFile, 'utf8'));
                     const userPoints = pointsData[event.senderID] || { name: userName, points: 0 };
-                    userPoints.points += 50; // Increase points for the correct emoji
+                    userPoints.points += 50; // Increase points for the correct answer
                     pointsData[event.senderID] = userPoints;
                     fs.writeFileSync(userDataFile, JSON.stringify(pointsData, null, 2));
 
-                    // إرسال رسالة الفوز وتحديث التفاعل
                     api.sendMessage(`✅ | تهانينا يا ${userName}! أنت كنت الأسرع وحصلت على 50 نقطة.`, event.threadID);
                     api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                    
-                    // إلغاء اللعبة النشطة
-                    client.handler.reply.delete(activeGame.messageID);
+
+                    // Reset the active game and delete the temporary image
+                    activeGame = null;
+                    fs.unlinkSync(tempImageFilePath);
                 });
             } catch (error) {
                 console.error("Error handling game win:", error);
             }
         }
-    },
-
-    onReply: async function ({ client, event }) {
-        // إلغاء اللعبة النشطة وإزالة الرسالة المؤقتة عند الحاجة
-        if (event.messageID) {
-            client.handler.reply.delete(event.messageID);
-        }
-        fs.unlinkSync(tempImageFilePath);
     }
 };
