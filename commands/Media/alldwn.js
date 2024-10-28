@@ -72,7 +72,7 @@ class VideoDownloader {
   async events({ api, event }) {
     const { body, threadID, senderID } = event;
 
-    if (body && /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|facebook\.com|instagram\.com|pin\.it)\/.+$/.test(body)) {
+    if (body && /^(https?:\/\/)?(www\.)?(facebook\.com|instagram\.com|pin\.it)\/.+$/.test(body)) {
       // إذا أرسل المستخدم رابط صالح، يمكن تفعيل `execute` مباشرة من هنا
       this.execute({ api, event });
     }
