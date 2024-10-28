@@ -29,7 +29,7 @@ api.setMessageReaction("♻️", event.messageID, (err) => {}, true);
 
     try {
       // استخدام رابط API الجديد
-      const apiUrl = `https://deku-rest-apis.ooguy.com/canvas/trash?uid=${id}`;
+      const apiUrl = `https://joshweb.click/canvas/trash?uid=${id}`;
 
       // استدعاء API للحصول على الصورة الضبابية
       const response = await axios.get(apiUrl, { responseType: 'stream' });
