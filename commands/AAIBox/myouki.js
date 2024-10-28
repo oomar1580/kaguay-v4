@@ -16,7 +16,7 @@ export default {
     }
 
     // إعداد رابط API بناءً على ما إذا كان هناك صورة مرفقة أو نص
-    let apiUrl = 'https://deku-rest-apis.ooguy.com/gemini?';
+    let apiUrl = 'https://joshweb.click/gemini?';
     if (attachment && attachment.type === 'photo') {
       const prompt = customPrompt || 'اجب على على هذه الصورة';
       const imageUrl = attachment.url;
