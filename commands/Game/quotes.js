@@ -10,9 +10,56 @@ export default {
   description: "يرسل اقتباسات عميقة مع صور معبرة 💖.",
   execute: async ({ api, event, Economy }) => {
     try {
-      const messages = [
-        
+      const cost = 100; // المبلغ المطلوب
+      const userBalance = (await Economy.getBalance(event.senderID)).data;
 
+      // إرسال الرسالة الأولية تطلب من المستخدم دفع المبلغ
+      const initialMessage = `📝 |  رد عـلـى هـذه الـرسـالـة وأدخـل ${cost} دولار مـن أجـل الاقـتـبـاس`;
+      const successInitialMessage = await api.sendMessage(initialMessage, event.threadID);
+
+      // التحقق من الرصيد
+      if (userBalance < cost) {
+        return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يجب أن يكون لديك ${cost} دولار أولاً.`, event.threadID);
+      }
+
+      global.client.handler.reply.set(successInitialMessage.messageID, {
+        author: event.senderID,
+        type: "inputPayment",
+        cost: cost,
+        unsend: true
+      });
+
+    } catch (error) {
+      console.error(error);
+      return api.sendMessage(`حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.`, event.threadID);
+    }
+  },
+
+  async onReply({ api, event, reply, Economy }) {
+    if (reply.type === 'inputPayment') {
+      const cost = reply.cost;
+      const userBalance = (await Economy.getBalance(event.senderID)).data;
+
+      // التحقق من الرصيد مرة أخرى
+      if (userBalance < cost) {
+        api.setMessageReaction("⚠️", event.messageID, (err) => {}, true);
+        return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يرجى تفقد رصيدك عن طريق كتابة 'رصيدي'.`, event.threadID);
+      }
+
+      // التحقق إذا لم يدفع المستخدم المبلغ الصحيح
+      if (event.body.trim() !== cost.toString()) {
+        api.setMessageReaction("⚠️", event.messageID, (err) => {}, true);
+        return api.sendMessage(`⚠️ | المرجو دفع المبلغ المحدد وهو ${cost} دولار.`, event.threadID);
+      }
+
+      // في حال دفع المستخدم المبلغ المحدد بنجاح
+      await Economy.decrease(cost, event.senderID); // خصم المبلغ من الرصيد
+      api.setMessageReaction("✅", event.messageID, (err) => {}, true); // إظهار إشارة النجاح
+
+      // بعد خصم المبلغ، يتم إرسال الاقتباس والصورة
+      try {
+        const messages = [
+          
 			`لــيــتـــــنا نـــســـتـــطـــيـــع إيــقــاف الـــــــزمــــن عــــلـــــى لـــــحـــــظـــــات كـــنـــا بـــــهــــــا ســعــداء 
 ⁰⁰.⁰⁰🖤🍷𝕀 𝕨𝕚𝕤𝕙 𝕨𝕖 𝕔𝕠𝕦𝕝𝕕 𝕤𝕥𝕠𝕡 𝕥𝕚𝕞𝕖 𝕠𝕟 𝕞𝕠𝕞𝕖𝕟𝕥𝕤 𝕨𝕙𝕖𝕟 𝕨𝕖 𝕨𝕖𝕣𝕖 𝕙𝕒𝕡𝕡𝕪 ⁰⁰.⁰⁰🖤🍷`,
 				`أحدهم يضحك وأحدهم يبڪي ، أحدهم يُريد العيش والآخر يشتهي الموت ، وأحدهم لم يعد يبالي ..
@@ -243,67 +290,50 @@ _ 𝒯𝒶𝓀ℯ 𝒸ℴ𝓃𝓉𝓇ℴ𝓁 ℴ𝒻 𝓎ℴ𝓊𝓇 𝒻𝓊�
 				`لاتعآمل ڪل ﺂلناس بآسلوب وأحد
 ‎2:28 ━━━●────────10:00 ‌‏ ㅤ◁ㅤㅤ❚❚ㅤㅤ▷ ㅤ↻ ✶•┈┈┈┈•❉❉•┈┈┈┈•✶ 
 فليس ڪل مريض يآخذ نفس دوآء💔💙↗️`,
-      ];
+        ];
 
-      // اختيار رسالة عشوائية
-      const randomMessageIndex = Math.floor(Math.random() * messages.length);
-      const randomMessage = messages[randomMessageIndex];
+        // اختيار رسالة عشوائية
+        const randomMessageIndex = Math.floor(Math.random() * messages.length);
+        const randomMessage = messages[randomMessageIndex];
 
-      // جلب صورة عشوائية
-      const searchQueries = ["flowers", "itashi", "Nezko", "joker", "nature"]; // استعلامات بحث متنوعة
-      const randomQueryIndex = Math.floor(Math.random() * searchQueries.length);
-      const searchQuery = searchQueries[randomQueryIndex];
+        // جلب صورة عشوائية
+        const searchQueries = ["flowers", "itashi", "Nezko", "joker", "nature"]; // استعلامات بحث متنوعة
+        const randomQueryIndex = Math.floor(Math.random() * searchQueries.length);
+        const searchQuery = searchQueries[randomQueryIndex];
 
-      const apiUrl = `https://smfahim.xyz/pin?title=${encodeURIComponent(searchQuery)}&search=1`;
+        const apiUrl = `https://smfahim.xyz/pin?title=${encodeURIComponent(searchQuery)}&search=1`;
 
-      const response = await axios.get(apiUrl);
-      const imageLinks = response.data.data; // استخراج الروابط من البيانات المسترجعة
+        const response = await axios.get(apiUrl);
+        const imageLinks = response.data.data;
 
-      if (imageLinks.length === 0) {
-        return api.sendMessage(`لم يتم العثور على صور للاستعلام: ${searchQuery}`, event.threadID, event.messageID);
+        if (imageLinks.length === 0) {
+          return api.sendMessage(`لم يتم العثور على صور للاستعلام: ${searchQuery}`, event.threadID, event.messageID);
+        }
+
+        const randomImageIndex = Math.floor(Math.random() * imageLinks.length);
+        const imageUrl = imageLinks[randomImageIndex]; // اختيار صورة عشوائية من النتائج
+
+        // تحميل الصورة وإرسالها مع الرسالة
+        const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
+        const imagePath = path.join(process.cwd(), "cache", `random_image.jpg`);
+        await fs.writeFile(imagePath, imageResponse.data);
+
+        const imageStream = fs.createReadStream(imagePath);
+
+        await api.sendMessage({
+          body: randomMessage,
+          attachment: imageStream,
+        }, event.threadID);
+
+        // حذف الصورة المؤقتة بعد الإرسال
+        await fs.unlink(imagePath);
+
+      } catch (error) {
+        console.error(error);
+        return api.sendMessage(`حدث خطأ أثناء معالجة الاقتباس أو الصورة. يرجى المحاولة مرة أخرى.`, event.threadID);
       }
 
-      const randomImageIndex = Math.floor(Math.random() * imageLinks.length);
-      const imageUrl = imageLinks[randomImageIndex]; // اختيار صورة عشوائية من النتائج
-
-      const userMoney = (await Economy.getBalance(event.senderID)).data;
-      const cost = 100;
-
-      if (userMoney < cost) {
-        return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يجب عليك الحصول على ${cost} دولار أولاً.`, event.threadID);
-      }
-
-      // تحميل الصورة وإرسالها مع الرسالة بعد التأكد من الرصيد
-      const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
-      const imagePath = path.join(process.cwd(), "cache", `random_image.jpg`);
-      await fs.writeFile(imagePath, imageResponse.data);
-
-      const imageStream = fs.createReadStream(imagePath);
-
-      // الخصم من الرصيد
-      await Economy.decrease(cost, event.senderID);
-
-      api.setMessageReaction("💖", event.messageID, (err) => {}, true);
-
-      await api.sendMessage({
-        body: randomMessage,
-        attachment: imageStream,
-      }, event.threadID);
-
-      // إرسال رسالة النجاح
-      const successMessage = await api.sendMessage(`✅ تم خصم ${cost} دولار من رصيدك وتم إرسال الاقتباس بنجاح!`, event.threadID);
-
-      // حذف الصورة المؤقتة بعد الإرسال
-      await fs.unlink(imagePath);
-
-      // حذف رسالة النجاح بعد دقيقة
-      setTimeout(() => {
-        api.unsendMessage(successMessage.messageID);
-      }, 60 * 1000); // 60 ثانية
-
-    } catch (error) {
-      console.error(error);
-      return api.sendMessage(`حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.`, event.threadID);
+      return api.sendMessage(``, event.threadID);
     }
   }
 };
