@@ -11,6 +11,9 @@ export default {
   role: "member",
   aliases: ["مدة_التشغيل"],
   execute: async ({ args, api, event }) => {
+    
+    api.setMessageReaction("⚙️", event.messageID, (err) => {}, true);
+  
     // الحصول على التاريخ والوقت بشكل منفصل
     const currentDate = moment().tz('Africa/Casablanca').format('YYYY-MM-DD');
     const currentTime = moment().tz('Africa/Casablanca').format('hh:mm:ss A');
@@ -54,6 +57,8 @@ export default {
       fs.writeFileSync(imagePath, response.data);
 
       // إرسال الرسالة مع الصورة كملف مرفق
+      api.setMessageReaction("✨", event.messageID, (err) => {}, true);
+  
       api.sendMessage(
         { body: output, attachment: fs.createReadStream(imagePath) },
         event.threadID,
