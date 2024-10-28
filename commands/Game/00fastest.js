@@ -15,10 +15,9 @@ export default {
     author: "حسين يعقوبي",
     role: "member",
     description: "احزر الإيموجي من الصورة",
-    execute: async function ({ api, event, Economy }) {
+    execute: async function ({ api, event, Economy, client }) {
         try {
             const emojis = [
-                { emoji: "😗", link: "https://i.imgur.com/LdyIyYD.png" },
                 { emoji: "😭", link: "https://i.imgur.com/P8zpqby.png" },
                 { emoji: "🤠", link: "https://i.imgur.com/kG71glL.png" },
                 { emoji: "🙂", link: "https://i.imgur.com/hzP1Zca.png" },
@@ -43,7 +42,6 @@ export default {
                 { emoji: "🏖️", link: "https://i.imgur.com/CCb2cVz.png" },
                 { emoji: "🏕️", link: "https://i.imgur.com/zoGHqWD.jpg" },
                 { emoji: "🪆", link: "https://i.imgur.com/FUrUIYZ.jpg" }
-                // Add more emoji-image pairs here
             ];
 
             const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
@@ -56,27 +54,12 @@ export default {
 
             api.sendMessage({ body: message, attachment }, event.threadID, async (error, info) => {
                 if (!error) {
-                    try {
-                        await Economy.getBalance(event.senderID); // Check user's economy info
-                        api.getUserInfo(event.senderID, (err, result) => {
-                            if (err) {
-                                console.error("Error getting user info:", err);
-                                return;
-                            }
-                            const userName = result[event.senderID].name;
-
-                            api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
-                            client.handler.reply.set(info.messageID, {
-                                author: event.senderID,
-                                type: "reply",
-                                name: "الاسرع",
-                                correctEmoji: randomEmoji.emoji,
-                                unsend: true
-                            });
-                        });
-                    } catch (e) {
-                        console.error("Error checking user's economy info:", e);
-                    }
+                    api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
+                    client.handler.reply.set(info.messageID, {
+                        correctEmoji: randomEmoji.emoji,
+                        type: "game",
+                        unsend: true
+                    });
                 } else {
                     console.error("Error sending message:", error);
                 }
@@ -86,37 +69,47 @@ export default {
             api.sendMessage(`An error occurred while executing the game. Please try again.`, event.threadID);
         }
     },
-    onReply: async function ({ api, event, reply, Economy }) {
-        if (reply && reply.type === "reply" && reply.name === "الاسرع") {
-            const userEmoji = event.body.trim();
-            const correctEmoji = reply.correctEmoji;
+    
+    events: async function ({ api, event, client }) {
+        // التحقق مما إذا كانت هناك لعبة فعالة باستخدام الإيموجي
+        const activeGame = Array.from(client.handler.reply.values()).find(
+            (game) => game.type === "game" && game.correctEmoji
+        );
 
-            if (userEmoji === correctEmoji) {
-                try {
-                    api.getUserInfo(event.senderID, (err, result) => {
-                        if (err) {
-                            console.error("Error getting user info:", err);
-                            return;
-                        }
-                        const userName = result[event.senderID].name;
+        if (activeGame && event.body === activeGame.correctEmoji) {
+            try {
+                const { correctEmoji } = activeGame;
 
-                        const pointsData = JSON.parse(fs.readFileSync(userDataFile, 'utf8'));
-                        const userPoints = pointsData[event.senderID] || { name: userName, points: 0 }; // Check if user data exists, create new if not
-                        userPoints.points += 50; // Increase points
-                        pointsData[event.senderID] = userPoints; // Update user data in object
-                        fs.writeFileSync(userDataFile, JSON.stringify(pointsData, null, 2));
+                // الحصول على بيانات المستخدم وتحديث النقاط
+                api.getUserInfo(event.senderID, (err, result) => {
+                    if (err) {
+                        console.error("Error getting user info:", err);
+                        return;
+                    }
+                    const userName = result[event.senderID].name;
+                    const pointsData = JSON.parse(fs.readFileSync(userDataFile, 'utf8'));
+                    const userPoints = pointsData[event.senderID] || { name: userName, points: 0 };
+                    userPoints.points += 50; // Increase points for the correct emoji
+                    pointsData[event.senderID] = userPoints;
+                    fs.writeFileSync(userDataFile, JSON.stringify(pointsData, null, 2));
 
-                        api.sendMessage(`✅ | تهانينا يا ${userName} ! أنت كنت الأسرع وحصلت بذالك على 50 نقطة.`, event.threadID);
-                       // api.unsendMessage(reply.messageID);
-                        api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                    });
-                } catch (e) {
-                    console.error("Error handling winning action:", e);
-                }
-            } else {
-                api.sendMessage(`❌ | آسفة هذا ليس الإيموجي الصحيح`, event.threadID);
-                api.setMessageReaction("❌", event.messageID, (err) => {}, true);
+                    // إرسال رسالة الفوز وتحديث التفاعل
+                    api.sendMessage(`✅ | تهانينا يا ${userName}! أنت كنت الأسرع وحصلت على 50 نقطة.`, event.threadID);
+                    api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+                    
+                    // إلغاء اللعبة النشطة
+                    client.handler.reply.delete(activeGame.messageID);
+                });
+            } catch (error) {
+                console.error("Error handling game win:", error);
             }
+        }
+    },
+
+    onReply: async function ({ client, event }) {
+        // إلغاء اللعبة النشطة وإزالة الرسالة المؤقتة عند الحاجة
+        if (event.messageID) {
+            client.handler.reply.delete(event.messageID);
         }
         fs.unlinkSync(tempImageFilePath);
     }
