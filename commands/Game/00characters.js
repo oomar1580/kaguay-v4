@@ -439,7 +439,7 @@ export default {
                         event.threadID);
 
                     api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                    api.unsendMessage(reply.messageID);
+                    
                 } catch (e) {
                     console.error("Error handling winning action:", e);
                 }
