@@ -14,28 +14,30 @@ export default {
     author: "kaguya project",
     role: "member",
     description: "تخمين الإيموجي من خلال الوصف",
-    execute: async function ({ api, event, Economy }) {
+    execute: async function ({ api, event, Economy, client }) {
         try {
             const questions = [
                 { question: "رجل شرطه", answer: "👮‍♂️" },
                 { question: "امره شرطه", answer: "👮‍♀️" },
-                { question: "حزين", answer: "😢" }, 
+                { question: "حزين", answer: "😢" },
                 { question: "الاكرهه شبه مبتسم", answer: "🙂" },
-                { question: "يخرج لسانه", answer: "😛" }, 
+                { question: "يخرج لسانه", answer: "😛" },
                 { question: "ليس له فم", answer: "😶" },
                 { question: "يتثائب", answer: "🥱" },
                 { question: "نائم", answer: "😴" },
-                { question: "يخرج لسانه ومغمض عين واجده", answer: "😜" }, 
+                { question: "يخرج لسانه ومغمض عين واجده", answer: "😜" },
                 { question: "يخرج لسانه وعيناه مغمضه", answer: "😝" },
                 { question: "واو", answer: "😮" },
                 { question: "مغلق فمه", answer: "🤐" },
-                { question: "مقلوب راسه", answer: "🙃" }, 
+                { question: "مقلوب راسه", answer: "🙃" },
                 { question: "ينفجر رئسه", answer: "🤯" },
-                { question: "يشعر بل حر", answer: "🥵" }, { question: "بالون", answer: "🎈" },
-                { question: "عيون", answer: "👀" }, 
+                { question: "يشعر بل حر", answer: "🥵" },
+                { question: "بالون", answer: "🎈" },
+                { question: "عيون", answer: "👀" },
                 { question: "ماعز", answer: "🐐" },
                 { question: "الساعة الثانيه عشر", answer: "🕛" },
-                { question: "كره قدم", answer: "⚽" }, { question: "سله تسوق", answer: "🛒" },
+                { question: "كره قدم", answer: "⚽" },
+                { question: "سله تسوق", answer: "🛒" },
                 { question: "دراجه هوائيه", answer: "🚲" },
                 { question: "جدي", answer: "🐐" },
                 { question: "ضفدع", answer: "🐸" },
@@ -48,7 +50,7 @@ export default {
                 { question: "تابوت", answer: "⚰️" },
                 { question: "وجه فضائي", answer: "👽" },
                 { question: "مقلة ، عين ، زرقاء", answer: "🧿" },
-                { question:"حاسوب", answer: "💻" },
+                { question: "حاسوب", answer: "💻" },
                 { question: "مشبك الورق", answer: "📎" },
                 { question: "سيف الأزرق السحري البراق", answer: "🗡️" },
                 { question: "جدار أحمر مبني من الطوب", answer: "🧱" },
@@ -69,18 +71,11 @@ export default {
 
             api.sendMessage(message, event.threadID, async (error, info) => {
                 if (!error) {
-                    try {
-                        await Economy.getBalance(event.senderID); // التحقق من وجود معلومات الاقتصاد للمستخدم
-                        client.handler.reply.set(info.messageID, {
-                            author: event.senderID,
-                            type: "reply", // تحديد نوع الرد
-                            name: "لعبة-ايموجي",
-                            correctAnswer: correctAnswer, // إضافة الإجابة الصحيحة
-                            unsend: true
-                        });
-                    } catch (e) {
-                        console.error("خطأ في التحقق من معلومات الاقتصاد للمستخدم:", e);
-                    }
+                    client.handler.messageEvent.set(event.threadID, {
+                        correctAnswer: correctAnswer,
+                        author: event.senderID,
+                        messageID: info.messageID
+                    });
                 } else {
                     console.error("خطأ في إرسال الرسالة:", error);
                 }
@@ -89,41 +84,22 @@ export default {
             console.error("خطأ في تنفيذ الأمر:", error);
         }
     },
-    onReply: async function ({ api, event, reply, Economy }) {
-        try {
-            if (reply && reply.type === "reply" && reply.name === "ايموجي") {
-                const userAnswer = event.body.trim().toLowerCase();
-                const correctAnswer = reply.correctAnswer && reply.correctAnswer.toLowerCase();
+    events: async function ({ api, event, client }) {
+        const messageData = client.handler.messageEvent.get(event.threadID);
+        
+        if (messageData && event.senderID === messageData.author) {
+            const userAnswer = event.body.trim();
+            if (userAnswer === messageData.correctAnswer) {
+                api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+                api.sendMessage("✅ | إجابة صحيحة! لقد حصلت على 50 نقطة!", event.threadID);
 
-                if (correctAnswer) {
-                    const userInfo = await api.getUserInfo(event.senderID);
-                    const userName = userInfo ? userInfo[event.senderID].name : "المستخدم";
-
-                    if (userAnswer === correctAnswer) {
-                        const pointsData = JSON.parse(fs.readFileSync(userDataFile, "utf8"));
-                        const userPoints = pointsData[event.senderID] || { name: userName, points: 0 };
-                        userPoints.points += 50;
-                        pointsData[event.senderID] = userPoints;
-                        fs.writeFileSync(userDataFile, JSON.stringify(pointsData, null, 2));
-
-                        api.sendMessage(`✅ | تهانينا يا ${userName} 🥳 إجابتك صحيحة، وحصلت بذلك على 50 نقطة`, event.threadID);
-                   
-                api.setMessageReaction("✅", event.messageID, (err) => {}, true);        
-                        
-                    } else {
-                        api.sendMessage(`❌ | آسفة إجابتك خاطئة`, event.threadID);
-
-api.setMessageReaction("❌", event.messageID, (err) => {}, true);
-                        
-                    }
-                } else {
-                   console.error("الإجابة الصحيحة غير معروفة");
-                }
+                // إزالة الحدث من الذاكرة وحذف الرسالة
+                client.handler.messageEvent.delete(event.threadID);
+                api.unsendMessage(messageData.messageID);
             } else {
-                console.error("رد غير معروف");
+                api.setMessageReaction("❌", event.messageID, (err) => {}, true);
+                api.sendMessage("❌ | إجابة خاطئة، حاول مرة أخرى!", event.threadID);
             }
-        } catch (error) {
-            console.error("حدث خطأ أثناء معالجة الرد:", error);
         }
     }
 };
