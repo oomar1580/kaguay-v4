@@ -9,14 +9,17 @@ if (!fs.existsSync(userDataFile)) {
     fs.writeFileSync(userDataFile, '{}');
 }
 
+let activeGame = null;
+
 export default {
     name: "لعبة-ايموجي",
     author: "kaguya project",
     role: "member",
     description: "تخمين الإيموجي من خلال الوصف",
-    execute: async function ({ api, event, Economy, client }) {
+    execute: async function ({ api, event, Economy }) {
         try {
             const questions = [
+
                 { question: "رجل شرطه", answer: "👮‍♂️" },
                 { question: "امره شرطه", answer: "👮‍♀️" },
                 { question: "حزين", answer: "😢" },
@@ -61,7 +64,6 @@ export default {
                 { question: "أحمر الشفاه", answer: "💄" },
                 { question: "ورق الحمام", answer: "🧻" },
                 { question: "ميدالية المركز الأول", answer: "🥇" },
-                // الأسئلة الأخرى هنا
             ];
 
             const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
@@ -69,13 +71,13 @@ export default {
 
             const message = `▱▱▱▱▱▱▱▱▱▱▱▱▱\n\t🌟 | أرسل الإيموجي الصحيح حسب الوصف التالي :\n${randomQuestion.question}`;
 
-            api.sendMessage(message, event.threadID, async (error, info) => {
+            api.sendMessage(message, event.threadID, (error, info) => {
                 if (!error) {
-                    client.handler.messageEvent.set(event.threadID, {
-                        correctAnswer: correctAnswer,
+                    activeGame = {
+                        correctEmoji: correctAnswer,
                         author: event.senderID,
                         messageID: info.messageID
-                    });
+                    };
                 } else {
                     console.error("خطأ في إرسال الرسالة:", error);
                 }
@@ -84,22 +86,33 @@ export default {
             console.error("خطأ في تنفيذ الأمر:", error);
         }
     },
-    events: async function ({ api, event, client }) {
-        const messageData = client.handler.messageEvent.get(event.threadID);
-        
-        if (messageData && event.senderID === messageData.author) {
-            const userAnswer = event.body.trim();
-            if (userAnswer === messageData.correctAnswer) {
-                api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-                api.sendMessage("✅ | إجابة صحيحة! لقد حصلت على 50 نقطة!", event.threadID);
+    events: async function ({ api, event }) {
+        if (activeGame && event.body === activeGame.correctEmoji && event.senderID === activeGame.author) {
+            try {
+                api.unsendMessage(activeGame.messageID); // حذف الرسالة عند الإجابة الصحيحة
 
-                // إزالة الحدث من الذاكرة وحذف الرسالة
-                client.handler.messageEvent.delete(event.threadID);
-                api.unsendMessage(messageData.messageID);
-            } else {
-                api.setMessageReaction("❌", event.messageID, (err) => {}, true);
-                api.sendMessage("❌ | إجابة خاطئة، حاول مرة أخرى!", event.threadID);
+                api.getUserInfo(event.senderID, (err, result) => {
+                    if (err) {
+                        console.error("خطأ في جلب معلومات المستخدم:", err);
+                        return;
+                    }
+
+                    const userName = result[event.senderID].name;
+                    const pointsData = JSON.parse(fs.readFileSync(userDataFile, 'utf8'));
+                    const userPoints = pointsData[event.senderID] || { name: userName, points: 0 };
+                    userPoints.points += 50; // زيادة النقاط للإجابة الصحيحة
+                    pointsData[event.senderID] = userPoints;
+                    fs.writeFileSync(userDataFile, JSON.stringify(pointsData, null, 2));
+
+                    api.sendMessage(`✅ | إجابة صحيحة! ${userName}، لقد حصلت على 50 نقطة!`, event.threadID);
+                    activeGame = null; // إنهاء اللعبة الحالية بعد الإجابة الصحيحة
+                });
+            } catch (error) {
+                console.error("خطأ في معالجة الإجابة:", error);
             }
+        } else if (activeGame && event.senderID === activeGame.author) {
+            api.setMessageReaction("❌", event.messageID, (err) => {}, true);
+            api.sendMessage("❌ | إجابة خاطئة، حاول مرة أخرى!", event.threadID);
         }
     }
 };
