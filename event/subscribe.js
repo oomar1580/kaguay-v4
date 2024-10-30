@@ -71,9 +71,3 @@ export default {
     }
   },
 };
-reen",
-        },
-      ]);
-    }
-  },
-};
