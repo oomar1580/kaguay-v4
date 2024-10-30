@@ -27,8 +27,10 @@ export default {
   events: async function ({ api, event }) {
     if (!isChatEnabled) return; // إذا كانت الدردشة غير مفعلة، تجاهل الأحداث
 
-    const { threadID, body, messageID } = event;
+    const { threadID, body, messageID, senderID } = event;
+    const botID = api.getCurrentUserID(); // الحصول على ID الخاص بالبوت
 
+    if (senderID === botID) return; // تجاهل الرسائل التي يرسلها البوت نفسه
     if (!body || body.trim() === "") return; // إذا لم يتم إدخال أي نص، تجاهل الحدث
 
     try {
