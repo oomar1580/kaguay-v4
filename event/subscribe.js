@@ -30,10 +30,6 @@ export default {
             },
           ]);
         }
-        // تحديث عدد الأعضاء بعد خروج شخص
-        await Threads.update(event.threadID, {
-          members: +threads.members - 1,
-        });
         break;
       }
 
@@ -75,14 +71,10 @@ export default {
           await api.editMessage(welcomeMessage, initialMessage.messageID);
 
         } else {
-          // إذا تم إضافة أعضاء آخرين، فقط تحديث عدد الأعضاء بدون رسائل
+          // إذا تم إضافة أعضاء آخرين، فقط إنشاء حسابات المستخدمين دون تحديث عدد الأعضاء
           for (let i of event.logMessageData.addedParticipants) {
             await Users.create(i.userFbId);
           }
-          // تحديث عدد الأعضاء بعد إضافة أشخاص
-          await Threads.update(event.threadID, {
-            members: +threads.members + +event.logMessageData.addedParticipants.length,
-          });
         }
         break;
       }
