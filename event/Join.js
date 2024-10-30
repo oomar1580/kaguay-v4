@@ -46,7 +46,7 @@ function getRandomBackground() {
     "https://i.imgur.com/MnAwD8U.jpg",
     "https://i.imgur.com/tSkuyIu.jpg",
     "https://i.ibb.co/rvft0WP/923823d1a27d17d3319c4db6c0efb60c.jpg",
-    "https://i.ibb.co/r4fMzsC/beautiful-fantasy-wallpaper-ultra-hd-wallpaper-4k-sr10012418-1706506236698-cover.webp"
+    "https://i.ibb.co/r4fMzsC/beautiful-fantasy-wallpaper-ultra-hd-wallpaper-4k-sr10012418-1706506236698-cover.webp",
     "https://i.ibb.co/Tm01gpv/peaceful-landscape-beautiful-background-wallpaper-nature-relaxation-ai-generation-style-watercolor-l.jpg",
     "https://i.ibb.co/qCsmcb6/image-13.png"
   ];
