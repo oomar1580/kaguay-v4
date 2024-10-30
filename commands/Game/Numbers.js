@@ -3,7 +3,6 @@ class NumberGuessingGame {
   name = 'ارقام';
   author = 'Arjhil Dacayanan';
   role = 'member';
-  aliases:['أرقام'];
   description = 'لعبة تخمين الرقم بين 1 و 100.';
 
   // الدالة execute لبدء اللعبة
