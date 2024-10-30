@@ -130,7 +130,7 @@ class Kaguya extends EventEmitter {
                 listenMqtt.isListening = true;
                 const mqtt = await api.listenMqtt(async (err, event) => {
                   if (err) {
-                    this.emit("system:error", err);
+                    this.on("error", err);
                   }
                   await listen({ api, event, client: global.client });
                   randomReact(event); // Call to react to the message
@@ -159,4 +159,4 @@ class Kaguya extends EventEmitter {
 }
 
 const KaguyaInstance = new Kaguya();
-KaguyaInstance.start();
+KaguyaInstance.start();  
