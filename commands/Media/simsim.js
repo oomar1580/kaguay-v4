@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-let isChatEnabled = true; // متغير للتحكم في تشغيل/إيقاف الدردشة
+let isChatEnabled = false; // متغير للتحكم في تشغيل/إيقاف الدردشة
 
 export default {
   name: "شات",
   author: "Kaguya Project",
-  role: "member",
+  role: "admin",
   description: "يدردش معك ويرد برسالة فقط.",
   aliases: ["سيم", "تشغيل-الدردشة", "ايقاف-الدردشة"],
 
