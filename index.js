@@ -130,9 +130,14 @@ class Kaguya extends EventEmitter {
                 listenMqtt.isListening = true;
                 const mqtt = await api.listenMqtt(async (err, event) => {
                   if (err) {
-                    this.on("error", err);
+                    this.emit("system:error", err);
+                    return;
                   }
-                  await listen({ api, event, client: global.client });
+                  if (typeof listen === "function") {
+                    await listen({ api, event, client: global.client });
+                  } else {
+                    console.error("Error: `listen` is not a function. Please check the definition in listen.js.");
+                  }
                   randomReact(event); // Call to react to the message
                 });
                 await sleep(this.currentConfig.mqtt_refresh);
@@ -159,4 +164,4 @@ class Kaguya extends EventEmitter {
 }
 
 const KaguyaInstance = new Kaguya();
-KaguyaInstance.start();  
+KaguyaInstance.start();
