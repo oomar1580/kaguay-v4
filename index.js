@@ -1,5 +1,5 @@
 import fs from "fs";
-import login from "./logins/fca-new/fb-chat-api/index.js"; // FCA fb-chat-api
+import login from "./logins/fb-chat-api/index.js"; // FCA fb-chat-api
 import { listen } from "./listen/listen.js";
 import { commandMiddleware, eventMiddleware } from "./middleware/index.js";
 import sleep from "time-sleep";

@@ -1,0 +1,17 @@
+{
+  "name": "fb-chat-api",
+  "version": "1.0.0",
+  "description": "fb tools",
+  "main": "index.js",
+  "scripts": {
+	"start": "set NODE_ENV=&& node index.js",
+	"dev": "set NODE_ENV=development&& node index.js",
+	"prod": "set NODE_ENV=production&& node index.js"
+  },
+  "author": "am0n",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/am0n666/fb-chat-api.git"
+	},
+  "license": "ISC"
+}
