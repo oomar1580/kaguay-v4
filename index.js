@@ -1,5 +1,5 @@
 import fs from "fs";
-import login from "./logins/fb-chat-api/index.js"; // FCA fb-chat-api
+import login from "./logins/fb-chat-api-temp-master/index.js"; // FCA fb-chat-api
 import { listen } from "./listen/listen.js";
 import { commandMiddleware, eventMiddleware } from "./middleware/index.js";
 import sleep from "time-sleep";
@@ -9,12 +9,6 @@ import config from "./KaguyaSetUp/config.js";
 import EventEmitter from "events";
 import axios from "axios";
 import semver from "semver";
-
-// Login replacement
-login({ email: "FB_EMAIL", password: "FB_PASSWORD" }, (err, api) => {
-  if (err) return console.error(err);
-  fs.writeFileSync('KaguyaState.json', JSON.stringify(api.getAppState())); // Create appstate
-});
 
 class Kaguya extends EventEmitter {
   constructor() {
