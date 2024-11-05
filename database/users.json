@@ -1,5 +1,5 @@
 [
-    {
+  {
     "uid": "100076269693499",
     "data": {
       "money": 86024,
@@ -1010,6 +1010,98 @@
       "isFriend": false,
       "isBirthday": false,
       "gender": "Nữ",
+      "other": {}
+    }
+  },
+  {
+    "uid": "100092631887370",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "😁 Luffy  San  󱢏",
+      "firstName": "😁 Luffy",
+      "vanity": "lluffysan",
+      "avatar": "https://graph.facebook.com/100092631887370/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "friend",
+      "profileUrl": "https://www.facebook.com/lluffysan",
+      "isFriend": true,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61567687122796",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Mino Hit",
+      "firstName": "Mino",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61567687122796/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61567687122796",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nữ",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61561363314310",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "ᏢᏒᎬᏁᏨ ᎠᎯᏒᏦ",
+      "firstName": "ᏢᏒᎬᏁᏨ",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61561363314310/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61561363314310",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
+      "other": {}
+    }
+  },
+  {
+    "uid": "61564359943275",
+    "data": {
+      "money": 0,
+      "exp": 0,
+      "level": 0,
+      "banned": {
+        "status": false,
+        "reason": "",
+        "time": 0
+      },
+      "name": "Sabo Sabo",
+      "firstName": "Sabo",
+      "vanity": "",
+      "avatar": "https://graph.facebook.com/61564359943275/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
+      "type": "user",
+      "profileUrl": "https://www.facebook.com/profile.php?id=61564359943275",
+      "isFriend": false,
+      "isBirthday": false,
+      "gender": "Nam",
       "other": {}
     }
   }
