@@ -119,30 +119,33 @@ class Kaguya extends EventEmitter {
           };
 
           const listenMqtt = async () => {
-            try {
-              if (!listenMqtt.isListening) {
-                listenMqtt.isListening = true;
-                const mqtt = await api.listenMqtt(async (err, event) => {
-                  if (err) {
-                    this.on("error", err);
-                  }
-                  await listen({ api, event, client: global.client });
-                  randomReact(event); // Call to react to the message
-                });
-                await sleep(this.currentConfig.mqtt_refresh);
-                notifer("[ MQTT ]", "Mqtt refresh in progress!");
-                log([{ message: "[ MQTT ]: ", color: "yellow" }, { message: `Refresh mqtt in progress!`, color: "white" }]);
-                await mqtt.stopListening();
-                await sleep(5000);
-                notifer("[ MQTT ]", "Refresh successful!");
-                log([{ message: "[ MQTT ]: ", color: "green" }, { message: `Refresh successful!`, color: "white" }]);
-                listenMqtt.isListening = false;
-              }
-              listenMqtt();
-            } catch (error) {
-              this.emit("system:error", error);
-            }
-          };
+  try {
+    if (!listenMqtt.isListening) {
+      listenMqtt.isListening = true;
+      const mqtt = await api.listenMqtt(async (err, event) => {
+        if (err) {
+          this.emit("system:error", err);
+        }
+        await listen({ api, event, client: global.client });
+        randomReact(event); // رد فعل عشوائي على الرسائل
+      });
+
+      await sleep(this.currentConfig.mqtt_refresh);
+      notifer("[ MQTT ]", "Mqtt refresh in progress!");
+      log([{ message: "[ MQTT ]: ", color: "yellow" }, { message: `Refresh mqtt in progress!`, color: "white" }]);
+      await mqtt.stopListening();
+      await sleep(5000);
+      notifer("[ MQTT ]", "Refresh successful!");
+      log([{ message: "[ MQTT ]: ", color: "green" }, { message: `Refresh successful!`, color: "white" }]);
+      listenMqtt.isListening = false;
+
+      // إعادة تشغيل `listenMqtt` بعد التأخير المحدد
+      setTimeout(listenMqtt, 10000);
+    }
+  } catch (error) {
+    this.emit("system:error", error);
+  }
+};
 
           listenMqtt.isListening = false;
           listenMqtt();
