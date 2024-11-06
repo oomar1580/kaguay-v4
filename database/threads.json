@@ -495,5 +495,29 @@
         "time": null
       }
     }
+  },
+  {
+    "threadID": "7577352082359486",
+    "data": {
+      "name": "مجموعة جوق😁😂(اضحك😂وغير جوك🔥😜)",
+      "threadThumbnail": "https://scontent-iad3-1.xx.fbcdn.net/v/t1.15752-9/448936494_390260026842424_3738862966543585593_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=935a9d&_nc_eui2=AeENx2kaWPAmmuZu6C4-4SOSZj-aiD11K8JmP5qIPXUrwmM03nrJZKy51zsMm70icG7eJTUFIUMOUjSSfqpqc_9B&_nc_ohc=rwj529kYj4MQ7kNvgHKusjB&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&oh=03_Q7cD1QHa-qrsDHtV88QZYosvIxQ00WBh8nSOsw63r3qAwzFgjQ&oe=67520024",
+      "members": 51,
+      "adminIDs": [
+        "100089240747406",
+        "100092925543171"
+      ],
+      "emoji": null,
+      "prefix": null,
+      "approvalMode": true,
+      "anti": {
+        "nameBox": false,
+        "imageBox": false
+      },
+      "banned": {
+        "status": false,
+        "reason": null,
+        "time": null
+      }
+    }
   }
 ]

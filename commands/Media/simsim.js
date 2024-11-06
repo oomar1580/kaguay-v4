@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let isChatEnabled = true; // متغير للتحكم في تشغيل/إيقاف الدردشة
+let isChatEnabled = false; // متغير للتحكم في تشغيل/إيقاف الدردشة
 
 export default {
   name: "شات",
