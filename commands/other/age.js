@@ -24,16 +24,19 @@ export default {
       const translatedPrompt = translationResponse?.data?.[0]?.[0]?.[0] || prompt;
 
       // استخدم الرابط الجديد لتوليد الصورة
-      const apiUrl = `https://api.kenliejugarap.com/flux-anime/?width=140&height=200&prompt=${encodeURIComponent(translatedPrompt)}`;
+      const apiUrl = `https://www.samirxpikachu.run.place/pixai?prompt=${encodeURIComponent(translatedPrompt)}`;
       const startTime = Date.now();
 
       const apiResponse = await axios.get(apiUrl);
-      const imageUrl = apiResponse?.data?.url;
+      const imageUrls = apiResponse?.data?.images;
 
-      if (!imageUrl) {
+      if (!imageUrls || imageUrls.length === 0) {
         api.sendMessage("❌ | لم يتم العثور على أي صور بناءً على الوصف.", event.threadID, event.messageID);
         return;
       }
+
+      // اختيار صورة واحدة فقط من القائمة
+      const imageUrl = imageUrls[0];
 
       // تحميل الصورة من الرابط
       const imageResponse = await axios.get(imageUrl, {
@@ -61,7 +64,7 @@ export default {
         body: `✅❪𝒈𝒆𝒏𝒆𝒓𝒂𝒕𝒆𝒅 𝒔𝒖𝒄𝒄𝒆𝒔𝒔𝒇𝒖𝒍𝒍𝒚❫✅\n\n⌬︙𝒆𝒙𝒆𝒄𝒖𝒕𝒊𝒐𝒏 𝒕𝒊𝒎𝒆 ➭『${executionTime}』s\n⌬︙𝖙𝖎𝖒𝖊 ➭『${timeString}』\n⌬︙𝖉𝖆𝖙𝖊 ➭『${dateString}』`,
         attachment: stream
       }, event.threadID, event.messageID);
-
+      
     } catch (error) {
       console.error("Error:", error);
       api.sendMessage("❌ | An error occurred. Please try again later.", event.threadID, event.messageID);
