@@ -12,6 +12,7 @@ export default {
 
   execute: async function ({ api, event }) {
     const senderID = event.senderID;
+    
 
     // طلب من المستخدم إدخال البرومبت أولاً
     api.sendMessage("\n\t\t〖𝙸𝙼𝙰𝙶𝙸𝙽𝙰𝚃𝙸𝙾𝙽 𝚂𝙴𝙲𝚃𝙸𝙾𝙽〗\n👥 | من فضلك أدخل النص (البرومبت) الذي تريد تحويله إلى صورة:", event.threadID, (err, message) => {
@@ -24,6 +25,9 @@ export default {
       });
     });
   },
+
+      api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
+
 
   onReply: async ({ api, event, reply }) => {
     if (reply.author !== event.senderID) return; // التحقق من أن المستخدم هو نفسه
