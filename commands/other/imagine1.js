@@ -10,12 +10,18 @@ export default {
   aliases: ["dalle", "تخيل"],
   description: "توليد صورة بناءً على النص المدخل.",
 
-  execute: async function ({ api, event }) {
+  async execute({ api, event }) {
     const senderID = event.senderID;
-    
 
     // طلب من المستخدم إدخال البرومبت أولاً
     api.sendMessage("\n\t\t〖𝙸𝙼𝙰𝙶𝙸𝙽𝙰𝚃𝙸𝙾𝙽 𝚂𝙴𝙲𝚃𝙸𝙾𝙽〗\n👥 | من فضلك أدخل النص (البرومبت) الذي تريد تحويله إلى صورة:", event.threadID, (err, message) => {
+      if (err) return console.error("Error sending message:", err);
+
+      api.setMessageReaction("🕐", event.messageID, (err) => {
+        if (err) console.error("Error setting reaction:", err);
+      }, true);
+
+      // حفظ بيانات الرد للتفاعل معها لاحقًا
       global.client.handler.reply.set(message.messageID, {
         author: senderID,
         type: "textPrompt",
@@ -26,11 +32,8 @@ export default {
     });
   },
 
-      api.setMessageReaction("🕐", event.messageID, (err) => {}, true);
-
-
-  onReply: async ({ api, event, reply }) => {
-    if (reply.author !== event.senderID) return; // التحقق من أن المستخدم هو نفسه
+  async onReply({ api, event, reply }) {
+    if (reply.author !== event.senderID) return; // التأكد من أن المستخدم هو نفسه
     const messageBody = event.body.trim();
 
     try {
@@ -47,7 +50,7 @@ export default {
       const response = await axios.get(apiUrl);
 
       if (!response.data || !response.data.success || !response.data.result || response.data.result.length === 0) {
-        api.sendMessage("فشل في استرجاع الصورة.", event.threadID, event.messageID);
+        api.sendMessage("⚠️ | فشل في استرجاع الصورة.", event.threadID, event.messageID);
         return;
       }
 
