@@ -19,26 +19,23 @@ export default {
     try {
       const prompt = args.join(" ");
 
-      // ترجمة النص من العربية إلى الإنجليزية إذا لزم الأمر
+      // Translate text from Arabic to English if needed
       const translationResponse = await axios.get(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=en&dt=t&q=${encodeURIComponent(prompt)}`);
       const translatedPrompt = translationResponse?.data?.[0]?.[0]?.[0] || prompt;
 
-      // استخدم الرابط الجديد لتوليد الصورة
-      const apiUrl = `https://www.samirxpikachu.run.place/pixai?prompt=${encodeURIComponent(translatedPrompt)}`;
+      // Use the new API URL for image generation
+      const apiUrl = `https://hiroshi-api.onrender.com/ai/anime?prompt=${encodeURIComponent(translatedPrompt)}`;
       const startTime = Date.now();
 
       const apiResponse = await axios.get(apiUrl);
-      const imageUrls = apiResponse?.data?.images;
+      const imageUrl = apiResponse?.data?.image_url;
 
-      if (!imageUrls || imageUrls.length === 0) {
+      if (!imageUrl) {
         api.sendMessage("❌ | لم يتم العثور على أي صور بناءً على الوصف.", event.threadID, event.messageID);
         return;
       }
 
-      // اختيار صورة واحدة فقط من القائمة
-      const imageUrl = imageUrls[0];
-
-      // تحميل الصورة من الرابط
+      // Download the image from the URL
       const imageResponse = await axios.get(imageUrl, {
         responseType: "arraybuffer"
       });
@@ -64,10 +61,10 @@ export default {
         body: `✅❪𝒈𝒆𝒏𝒆𝒓𝒂𝒕𝒆𝒅 𝒔𝒖𝒄𝒄𝒆𝒔𝒔𝒇𝒖𝒍𝒍𝒚❫✅\n\n⌬︙𝒆𝒙𝒆𝒄𝒖𝒕𝒊𝒐𝒏 𝒕𝒊𝒎𝒆 ➭『${executionTime}』s\n⌬︙𝖙𝖎𝖒𝖊 ➭『${timeString}』\n⌬︙𝖉𝖆𝖙𝖊 ➭『${dateString}』`,
         attachment: stream
       }, event.threadID, event.messageID);
-      
+
     } catch (error) {
       console.error("Error:", error);
-      api.sendMessage("❌ | An error occurred. Please try again later.", event.threadID, event.messageID);
+      api.sendMessage("❌ | حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقًا.", event.threadID, event.messageID);
     }
   }
 };
