@@ -25,6 +25,7 @@ export default {
       global.client.handler.reply.set(successInitialMessage.messageID, {
         author: event.senderID,
         type: "inputPayment",
+	name:"اقتباس",
         cost: cost,
         unsend: true
       });
