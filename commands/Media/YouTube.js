@@ -11,7 +11,7 @@ export default {
   aliases: ["يوتيب", "فيديو", "مقطع"],
 
   async execute({ api, event }) {
-    const msg = `❍──────────❍\n\t\t\t\t〖ⓎⓄⓊⓉⓊⒷⒺ〗\n📝 | رد عـلـى الـرسـالـة و أدخـل إسـم الـمـقـطـع الـمـراد الـبـحـث عـنـه\n❍──────────❍`;
+    const msg = `●═══════❍═══════●\n\t\t\t\t〖ⓎⓄⓊⓉⓊⒷⒺ〗\n📝 | رد عـلـى الـرسـالـة و أدخـل إسـم الـمـقـطـع الـمـراد الـبـحـث عـنـه\n●═══════❍═══════●`;
     
     api.sendMessage(msg, event.threadID, (error, message) => {
       if (error) {
@@ -33,7 +33,7 @@ export default {
       const videoName = event.body.trim();
 
       if (!videoName) {
-        return api.sendMessage("❍─────────❍\n\t\t\t\t〖ⓎⓄⓊⓉⓊⒷⒺ〗\n📝 | رد عـلـى الـرسـالـة و أدخـل إسـم الـمـقـطـع الـمـراد الـبـحـث عـنـه\n❍──────────❍", event.threadID);
+        return api.sendMessage("●═══════❍═══════●\n\t\t\t\t〖ⓎⓄⓊⓉⓊⒷⒺ〗\n📝 | رد عـلـى الـرسـالـة و أدخـل إسـم الـمـقـطـع الـمـراد الـبـحـث عـنـه\n●═══════❍═══════●", event.threadID);
       }
 
       try {
@@ -114,10 +114,11 @@ export default {
       const videoUrl = video.videoUrl;
 
       try {
-        const downloadUrl = `https://c-v1.onrender.com/downloader?url=${encodeURIComponent(videoUrl)}`;
+        const downloadUrl = `https://api.nexoracle.com/downloader/yt-video?apikey=932950ea576a2a2c12&url=${encodeURIComponent(videoUrl)}`;
         const downloadResponse = await axios.get(downloadUrl);
 
-        const videoFileUrl = downloadResponse.data.media.url;
+        const { result } = downloadResponse.data;
+        const videoFileUrl = result.video;
         if (!videoFileUrl) {
           return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل المقطع.", event.threadID);
         }
@@ -139,7 +140,7 @@ export default {
             api.setMessageReaction("✅", event.messageID, (err) => {}, true);
 
             const message = {
-              body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${video.title}\n📅 | تـاريـخ الـرفـع : ${video.publishDate}\n👍 | عـدد الـايـكـات : ${video.likeCount}\n👁️ | عـدد الـمـشـاهـدات : ${video.viewCount}\n━━━━━━━◈✿◈━━━━━━━`,
+              body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${result.title}\n📅 | تـاريـخ الـرفـع : ${result.publish_at}\n👍 | عـدد الـايـكـات : ${result.desc}\n👁️ | عـدد الـمـشـاهـدات : ${result.views}\n━━━━━━━◈✿◈━━━━━━━`,
               attachment: fs.createReadStream(filePath)
             };
 
