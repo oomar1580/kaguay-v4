@@ -3,9 +3,9 @@ import axios from 'axios';
 async function gpt4(prompt, customId) {
   try {
     // استدعاء API الجديد لجلب الرد من ChatGPT
-    const apiUrl = `https://markdevs69v2.onrender.com/new/api/gpt3?prompt=${encodeURIComponent(prompt)}&uid=${customId}`;
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt4?ask=${encodeURIComponent(prompt)}&uid=${customId}`;
     const res = await axios.get(apiUrl);
-    const gptResponse = res.data.gpt3;  // استخدام الحقل gpt3 بدلاً من result
+    const gptResponse = res.data.content;  // استخدام الحقل content بدلاً من gpt3
 
     return gptResponse;
   } catch (error) {
@@ -19,17 +19,19 @@ export default {
   role: "member",
   description: "يتفاعل مع الذكاء الاصطناعي ويواصل المحادثة",
 
-  execute: async function({ api, event, args, messageReply }) {
+  execute: async function({ api, event, args }) {
     try {
+      // إضافة تفاعل بالساعة لإعلام المستخدم بالمعالجة
       api.setMessageReaction("⏱️", event.messageID, (err) => {}, true);
 
       const { threadID, senderID } = event;
       const prompt = args.join(" ") || "أهلاً";
       const response = await gpt4(prompt, senderID);
 
+      // تغيير التفاعل إلى نجمة بعد الحصول على الرد
       api.setMessageReaction("✨", event.messageID, (err) => {}, true);
 
-      // إرسال الرسالة مع تحقق من وجود response
+      // إرسال الرد من ChatGPT
       const sentMessage = await api.sendMessage(response, threadID);
       global.client.handler.reply.set(sentMessage.messageID, {
         author: senderID,
@@ -38,7 +40,7 @@ export default {
         unsend: false,
       });
 
-      // حذف رسالة الانتظار
+      // حذف رسالة الانتظار بعد الإرسال
       api.unsendMessage(event.messageID);
 
     } catch (error) {
@@ -49,11 +51,11 @@ export default {
   onReply: async function({ api, event, reply }) {
     if (reply.type === "reply" && reply.author === event.senderID) {
       try {
-        // التعامل مع الردود وإرسالها
+        // التعامل مع رد المستخدم وإعادة إرسالها إلى ChatGPT
         const response = await gpt4(event.body, event.senderID);
         const sentMessage = await api.sendMessage(response, event.threadID);
 
-        // تحديث الرد ليكون استمرارية
+        // تحديث الرد ليكون استمرارية للمحادثة
         global.client.handler.reply.set(sentMessage.messageID, {
           author: event.senderID,
           type: "reply",
@@ -61,7 +63,7 @@ export default {
           unsend: false,
         });
 
-        // إضافة التفاعل ب ⬇️ بعد الرد بـ تم
+        // إضافة التفاعل ب ⬇️ عند الرد بـ تم
         if (event.body.trim().toLowerCase() === "تم") {
           api.setMessageReaction("⬇️", event.messageID, (err) => {}, true);
         }
