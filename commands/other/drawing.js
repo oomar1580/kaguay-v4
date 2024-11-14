@@ -12,7 +12,7 @@ export default {
   author: "HUSSEIN YACOUBI",
   role: "member",
   description: "🔮توليد صور على شكل انمي بإستخدام الذكاء الاصطناعي",
-  aliases:["ani"],
+  aliases: ["ani"],
   execute: async ({ api, event, args }) => {
     try {
       // Checking if the prompt is provided
@@ -40,8 +40,10 @@ export default {
       const endTime = new Date().getTime();
       const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
 
-      // Edit the initial message with the progress bar
+      // Send initial message and get message ID for editing
       const initialMessage = await api.sendMessage("⏳ جـارٍ تـولـيـد وصـفـك...", event.threadID);
+      
+      // Edit the initial message with the progress bar
       setTimeout(() => api.editMessage("████▒▒▒▒▒▒ 31%", initialMessage.messageID), 500);
       setTimeout(() => api.editMessage("██████▒▒▒▒ 59%", initialMessage.messageID), 1000);
       setTimeout(() => api.editMessage("███████▒▒▒ 73%", initialMessage.messageID), 1500);
