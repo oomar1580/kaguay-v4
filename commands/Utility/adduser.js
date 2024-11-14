@@ -1,15 +1,20 @@
-async function getUID(url, api) {
-  const regexName = new RegExp(/"title":"(.*?)"/s);
+import axios from 'axios';
+
+async function getUID(url) {
   if (url.includes("facebook.com") || url.includes("fb.com")) {
     try {
-      if (url.indexOf("https://") === -1 && url.indexOf("http://") === -1) url = "https://" + url;
-      let data = await api.httpGet(url);
-      let regex = /for (;;);{"redirect":"(.*?)"}/.exec(data);
-      if (data.includes('"ajaxify":"')) data = await api.httpGet(regex[1].replace(/\\/g, '').replace(/(?<=\?\s*)(.*)/, '').slice(0, -(0x1 * 0x1f) || undefined));
-      let regexid = /"userID":"(\d+)"/.exec(data);
-      let name = JSON.parse('{"name"' + data.match(regexName)[1] + '"}')['name'] || null;
-      return [+regexid[1], name, false];
-    } catch {
+      if (!url.startsWith("https://") && !url.startsWith("http://")) url = "https://" + url;
+      const apiUrl = `https://joshweb.click/api/findid?url=${encodeURIComponent(url)}`;
+
+      // Request the user ID from the new API
+      const response = await axios.get(apiUrl);
+      if (response.data.status) {
+        return [response.data.result, null, false];
+      } else {
+        return [null, null, true];
+      }
+    } catch (error) {
+      console.error('Error fetching user ID:', error);
       return [null, null, true];
     }
   } else {
@@ -21,45 +26,49 @@ export default {
   name: "ضفي",
   author: "kaguya project",
   description: "أمر لإضافة عضو إلى المجموعة",
-  aliases:["add"],
+  aliases: ["add","ضيفي"],
   role: "admin",
   execute: async ({ api, event, args }) => {
     const { threadID, messageID } = event;
     const botID = api.getCurrentUserID();
     const out = msg => api.sendMessage(msg, threadID, messageID);
-    var { participantIDs, approvalMode, adminIDs } = await api.getThreadInfo(threadID);
-    var participantIDs = participantIDs.map(e => parseInt(e));
+    const { participantIDs, approvalMode, adminIDs } = await api.getThreadInfo(threadID);
+    const participantIDsParsed = participantIDs.map(e => parseInt(e));
 
-    if (!args[0]) return out("⚠️ | الرجاء إدخال معرّف العضو من أجل إضافته إلى المجم .");
+    if (!args[0]) return out("⚠️ | الرجاء إدخال رابط البروفايل من أجل إضافة العضو إلى المجموعة.");
 
-    if (!isNaN(args[0])) return addUser(args[0], undefined);
-    else {
-      try {
-        var [id, name, fail] = await getUID(args[0], api);
-        if (fail && id !== null) return out(id);
-        else if (fail && id === null) return out("❗ |لم يتم العثور على معرّف المستخدم.")
-        else {
-          await addUser(id, name || "عضو في فيسبوك");
-        }
-      } catch (e) {
-        return out(`${e.name}: ${e.message}.`);
+    try {
+      const [id, , fail] = await getUID(args[0]);
+      if (fail && id !== null) return out(id);
+      else if (fail && id === null) return out("❗ | لم يتم العثور على معرّف المستخدم.");
+      else {
+        await addUser(id);
       }
+    } catch (e) {
+      return out(`${e.name}: ${e.message}.`);
     }
 
-    async function addUser(id, name) {
+    async function addUser(id) {
       id = parseInt(id);
-      if (participantIDs.includes(id)) return out(` ⚠️ | ${name ? name : "العضو"} موجود بالفعل في المجموعة.`);
+      if (participantIDsParsed.includes(id)) return out(` ⚠️ | العضو موجود بالفعل في المجموعة.`);
       else {
-        var admins = adminIDs.map(e => parseInt(e.id));
+        const admins = adminIDs.map(e => parseInt(e.id));
+        
         try {
+          // Fetch the user's name using getUserInfo
+          const userInfo = await api.getUserInfo(id);
+          const userName = userInfo[id]?.name || "عضو";
+          
           await api.addUserToGroup(id, threadID);
+          if (approvalMode && !admins.includes(botID)) {
+            return out(`✅ | تمت إضافة ${userName} إلى قائمة الموافقة.`);
+          } else {
+            return out(`✅ | تمت إضافة ${userName} إلى المجموعة.`);
+          }
         } catch {
-          return out(` 🚫 |لا يمكن إضافة ${name ? name : "العضو"} إلى المجموعة.`);
+          return out(` 🚫 | لا يمكن إضافة العضو إلى المجموعة.`);
         }
-        if (approvalMode && !admins.includes(botID)) return out(` ✅ | تمت إضافة ${name ? name : "العضو"} إلى قائمة الموافقة.`);
-        else return out(`✅ |تمت إضافة ${name ? name : "العضو"} إلى المجموعة.`)
       }
     }
   },
 };
-
