@@ -41,6 +41,9 @@ export default {
 
                 // التفاعل مع الرسالة الأصلية بإشارة نجاح
                 api.setMessageReaction("✅", event.messageID, (err) => {}, true);
+                
+api.unsendMessage(initialMessage.messageID);
+                
               }, 500);
             }, 500);
           }, 500);
