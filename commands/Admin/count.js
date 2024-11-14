@@ -25,11 +25,11 @@ class RestrictCommand {
 
       if (global.client.config.botEnabled) {
         api.setMessageReaction("✅", event.messageID, (err) => {}, true);
-        await this.updateBotNickname(api, "كاغويا 》✅《 الحالة ➠ مفعل", event.threadID, currentUserID);
+        await this.updateBotNickname(api, "ᏦᎯᎶᏬᎽᎯ ᏰᎾᎿ 》✅《 𝙴𝙽𝙰𝙱𝙻𝙴𝙳", event.threadID, currentUserID);
         return api.sendMessage("✅ | تم تعطيل تقييد إستخدام البوت !", event.threadID);
       } else {
         api.setMessageReaction("🚫", event.messageID, (err) => {}, true);
-        await this.updateBotNickname(api, "كاغويا 》❌《 الحالة ➠ مقيد", event.threadID, currentUserID);
+        await this.updateBotNickname(api, "ᏦᎯᎶᏬᎽᎯ ᏰᎾᎿ 》❌《 𝙳𝙸𝚂𝙰𝙱𝙻𝙴𝙳", event.threadID, currentUserID);
         return api.sendMessage("❌ | تم تفعيل تقييد إستخدام البوت !", event.threadID);
       }
     } catch (err) {
