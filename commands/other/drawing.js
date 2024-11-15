@@ -15,22 +15,22 @@ export default {
   aliases: ["ani"],
   execute: async ({ api, event, args }) => {
     try {
-      // Checking if the prompt is provided
+      // التحقق من وجود الوصف
       const prompt = args.join(" ");
       if (!prompt) {
-        return api.sendMessage("⚠️ | قم بتقديم وصف بعد الأمر من احل توليد صور انمي بإستخدام الذكاء الإصطناعي", event.threadID);
+        return api.sendMessage("⚠️ | قم بتقديم وصف بعد الأمر من أجل توليد صور انمي بإستخدام الذكاء الإصطناعي", event.threadID);
       }
 
-      // Set initial reaction to indicate processing
+      // إضافة تفاعل يشير إلى بدء المعالجة
       api.setMessageReaction("⏰", event.messageID, () => {}, true);
 
-      // Translate prompt to English if it's in Arabic
+      // ترجمة الوصف إلى الإنجليزية إذا كان بالعربية
       const translatedPrompt = await translateToEnglish(prompt);
 
-      // Measure time taken for generating the image
+      // حساب وقت التوليد
       const startTime = new Date().getTime();
 
-      // API call to generate anime-style image
+      // استدعاء API لتوليد الصورة
       const baseURL = `https://c-v5.onrender.com/api/ani`;
       const response = await axios.get(baseURL, {
         params: { prompt: translatedPrompt },
@@ -40,41 +40,49 @@ export default {
       const endTime = new Date().getTime();
       const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
 
-      // Send initial message and get message ID for editing
+      // إرسال رسالة أولية للحصول على معرف الرسالة للتعديل لاحقاً
       const initialMessage = await api.sendMessage("⏳ جـارٍ تـولـيـد وصـفـك...", event.threadID);
-      
-      // Edit the initial message with the progress bar
+
+      // تعديل الرسالة الأولية لإظهار تقدم التحميل
       setTimeout(() => api.editMessage("████▒▒▒▒▒▒ 31%", initialMessage.messageID), 500);
       setTimeout(() => api.editMessage("██████▒▒▒▒ 59%", initialMessage.messageID), 1000);
       setTimeout(() => api.editMessage("███████▒▒▒ 73%", initialMessage.messageID), 1500);
       setTimeout(() => api.editMessage("█████████▒ 88%", initialMessage.messageID), 2000);
       setTimeout(() => api.editMessage("██████████ 100%", initialMessage.messageID), 2500);
 
-      // Define file path and write stream for saving image
+      // تعريف مسار الملف
       const fileName = 'anime-x-image.png';
       const filePath = path.join(process.cwd(), 'cache', fileName);
       const writerStream = fs.createWriteStream(filePath);
 
-      // Pipe response data to the file
+      // تخزين الصورة
       response.data.pipe(writerStream);
 
       writerStream.on('finish', async () => {
-        // Unsend the progress message after completion
+        // حذف رسالة التقدم بعد انتهاء التحميل
         api.unsendMessage(initialMessage.messageID);
 
-        // Send final message with generated image
+        // إرسال الرسالة النهائية مع الصورة
         await api.sendMessage({
           body: `✅ | تــم بــنــجــاح\n\n⚙️ | البــرومــبــت: ${prompt}\n⏱️ | الــوقــت: ${timeTaken} ث`,
           attachment: fs.createReadStream(filePath)
         }, event.threadID);
 
-        // Add reaction to original message
+        // إضافة تفاعل للإشارة إلى اكتمال العملية
         api.setMessageReaction("✅", event.messageID, () => {}, true);
+        
+        // حذف الصورة بعد الإرسال
+        fs.unlinkSync(filePath);
+      });
+
+      writerStream.on('error', async (error) => {
+        console.error('Error writing file:', error);
+        api.sendMessage("⚠️ | حدث خطأ أثناء تحميل الصورة.", event.threadID);
       });
 
     } catch (error) {
       console.error('Error generating image:', error);
-      api.sendMessage("❌ |فــشــل الــتــولــيــد ربــمــا تــكــون الــمــشكــلــة مــن الــخــادم", event.threadID);
+      api.sendMessage("❌ | فشل التوليد، ربما تكون المشكلة من الخادم.", event.threadID);
     }
   }
 };
