@@ -12,20 +12,27 @@ class VideoDownloader {
     api.setMessageReaction("⏱️", event.messageID, (err) => {}, true);
 
     const link = event.body; // استخدام الرابط المرسل
-    const downloadingMsg = await api.sendMessage("⏳ | جاري تنزيل الفيديو...", event.threadID);
+    const downloadingMsg = await api.sendMessage("⏳ | جـارٍ تـنـزيـل الـمـقـطـع...", event.threadID);
 
     try {
       // استخدام رابط API الجديد
-      const apiUrl = `https://jerome-web.gleeze.com/service/api/alldl?url=${encodeURIComponent(link)}`;
+      const apiUrl = `https://api.nexoracle.com/downloader/aio2?apikey=932950ea576a2a2c12&url=${encodeURIComponent(link)}`;
 
       // طلب البيانات من API
       const response = await axios.get(apiUrl);
       const mediaData = response.data;
 
       // تحقق من توفر الفيديو
-      if (mediaData && mediaData.status && mediaData.data) {
-        const videoUrl = mediaData.data.high || mediaData.data.low;
-        const videoTitle = mediaData.data.title || 'محتوى غير متوفر';
+      if (mediaData.status === 200 && mediaData.result && mediaData.result.medias) {
+        const videoMedia = mediaData.result.medias.find(media => media.videoAvailable);
+        
+        if (!videoMedia) {
+          throw new Error("لا يوجد فيديو متاح للتنزيل.");
+        }
+
+        const videoUrl = videoMedia.url;
+        const videoTitle = mediaData.result.title || 'محتوى غير متوفر';
+        const videoDuration = mediaData.result.duration || 'غير متوفر';
         const videoPath = path.join(process.cwd(), 'cache', `${videoTitle}.mp4`);
         fs.ensureDirSync(path.join(process.cwd(), 'cache'));
 
@@ -43,7 +50,7 @@ class VideoDownloader {
           await api.unsendMessage(downloadingMsg.messageID);
           api.setMessageReaction("✅", event.messageID, (err) => {}, true);
           await api.sendMessage({
-            body: `✅ | تـم تـنـزيـل الـفـيـديو بـنـجـاح \n📝 | الـعـنـوان : ${videoTitle}`,
+            body: `✅ | تـم تـنـزيـل الـفـيـديـو بـنـجـاح \n📝 | الـعـنـوان : ${videoTitle}\n⏳ | الـمـدة: ${videoDuration}`,
             attachment: fs.createReadStream(videoPath)
           }, event.threadID);
           fs.unlinkSync(videoPath); // حذف الملف بعد الإرسال
