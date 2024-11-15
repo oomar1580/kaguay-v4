@@ -6,13 +6,13 @@ class VideoDownloader {
   name = 'تيكتوك';
   author = 'kaguya project';
   role = 'member';
-  description = 'تنزيل فيديوهات من Facebook، YouTube، Instagram، Pinterest و TikTok باستخدام رابط URL.';
+  description = 'تنزيل فيديوهات من TikTok باستخدام رابط URL.';
 
   async execute({ api, event }) {
     // التحقق من الرابط المُرسل
-    const link = event.body.trim(); // استخدام الرابط المرسل مع إزالة المسافات
-    if (!link || !/^(https?:\/\/)?(www\.tiktok\.com|vm\.tiktok\.com|youtube\.com|youtu\.be|facebook\.com|instagram\.com|pin\.it)\/.+$/.test(link)) {
-      return api.sendMessage("⚠️ | يرجى إرسال رابط صالح يبدأ بـ https://.", event.threadID);
+    const link = event.body.trim();
+    if (!link || !/^(https?:\/\/)?(vm\.tiktok\.com|www\.tiktok\.com)\/.+$/.test(link)) {
+      return api.sendMessage("⚠️ | يرجى إرسال رابط TikTok صالح يبدأ بـ https://.", event.threadID);
     }
 
     // إرسال رسالة الانتظار
@@ -20,12 +20,12 @@ class VideoDownloader {
 
     try {
       // تحديد رابط API الخاص بـ TikTok
-      const url = 'https://ryuu-rest-apis.onrender.com/api/tiktok?url=';
+      const url = 'https://hiroshi-api.onrender.com/tiktok/download?url=';
       const response = await axios.get(`${url}${encodeURIComponent(link)}`);
 
       // التحقق مما إذا كان هناك فيديو متاح
-      if (response.data.status && response.data.videoUrl) {
-        const videoUrl = response.data.videoUrl;
+      if (response.data.code === 0 && response.data.data.play) {
+        const videoUrl = response.data.data.play;
         const videoTitle = `تيكتوك_${Date.now()}.mp4`; // تعيين اسم افتراضي للفيديو
         const videoPath = path.join(process.cwd(), 'cache', videoTitle);
 
@@ -36,7 +36,7 @@ class VideoDownloader {
         const videoStream = await axios({
           method: 'GET',
           url: videoUrl,
-          responseType: 'stream'
+          responseType: 'stream',
         });
 
         const fileWriteStream = fs.createWriteStream(videoPath);
@@ -49,8 +49,8 @@ class VideoDownloader {
 
           // إرسال الفيديو
           await api.sendMessage({
-            body: `✅ | تـم تـنـزيـل الــفـيـديـو بـنـجـاح`,
-            attachment: fs.createReadStream(videoPath)
+            body: `✅ | تم تنزيل الفيديو بنجاح!`,
+            attachment: fs.createReadStream(videoPath),
           }, event.threadID, () => {
             fs.unlinkSync(videoPath); // حذف الملف بعد الإرسال
           });
