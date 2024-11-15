@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import fs from 'fs-extra';
 import path from 'path';
@@ -114,11 +115,10 @@ export default {
       const videoUrl = video.videoUrl;
 
       try {
-        const downloadUrl = `https://api.nexoracle.com/downloader/yt-video?apikey=932950ea576a2a2c12&url=${encodeURIComponent(videoUrl)}`;
+        const downloadUrl = `https://apiv2.kenliejugarap.com/video?url=${encodeURIComponent(videoUrl)}`;
         const downloadResponse = await axios.get(downloadUrl);
 
-        const { result } = downloadResponse.data;
-        const videoFileUrl = result.video;
+        const { response: videoFileUrl, title } = downloadResponse.data;
         if (!videoFileUrl) {
           return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل المقطع.", event.threadID);
         }
@@ -140,7 +140,7 @@ export default {
             api.setMessageReaction("✅", event.messageID, (err) => {}, true);
 
             const message = {
-              body: `━━━━━━━◈✿◈━━━━━━━\n✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${result.title}\n📅 | تـاريـخ الـرفـع : ${result.publish_at}\n👍 | عـدد الـايـكـات : ${result.desc}\n👁️ | عـدد الـمـشـاهـدات : ${result.views}\n━━━━━━━◈✿◈━━━━━━━`,
+              body: `✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${title}`,
               attachment: fs.createReadStream(filePath)
             };
 
