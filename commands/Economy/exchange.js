@@ -1,52 +1,106 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-
 const userDataFile = path.join(process.cwd(), 'pontsData.json');
 
 export default {
     name: "صرف",
     author: "kaguya project",
     role: "member",
-    description: "يتم تحويل النقاط من ملف pontsData.json إلى الرصيد بمعدل 5 دولار لكل نقطة باستخدام Economy.increase.",
+    description: "تحويل النقاط إلى مال أو المال إلى نقاط باستخدام ملف pontsData.json و Economy.",
     async execute({ api, event, args, Economy }) {
-        if (!args[0]) {
-            return api.sendMessage(
-                "◆━━◆🏛 بنك صرف النقاط 🏛◆━━◆" +
-                "\n» الرجاء إدخال اختيارك «" +
-                "\nاكتب صرف نقاطك" +
-                "\nيمكنك جلب النقاط من لعب الالعاب" +
-                "\nنقطة = 5 دولار 💵",
-                event.threadID
-            );
-        }
+        // الرسالة الأولى لاختيار نوع التحويل
+        const initialMessage = 
+            "◆━◆🏛 بـنـك الـصـرف 🏛◆━◆\n" +
+            "\n» الرجاء اختيار العملية المطلوبة:\n" +
+            "\n1. رد بكلمة *نقاط* لتحويل المال إلى نقاط.\n" +
+            "\n2. رد بكلمة *نقود* لتحويل النقاط إلى مال.\n" + 
+            "\nنقطة = 5 دولار 💵" ;
+        const initialResponse = await api.sendMessage(initialMessage, event.threadID);
 
-        if (args[0] == "check") {
-            const userData = fs.readJsonSync(userDataFile, { throws: false });
-            if (!userData[event.senderID]) {
-                return api.sendMessage("ليس لديك نقاط كافية للتحويل.", event.threadID);
+        global.client.handler.reply.set(initialResponse.messageID, {
+            author: event.senderID,
+            type: "conversionChoice",
+            unsend: true,
+            name: "صرف",
+        });
+    },
+    onReply: async function ({ api, event, reply, Economy }) {
+        const userData = fs.readJsonSync(userDataFile, { throws: false }) || {};
+        const userPoints = userData[event.senderID]?.points || 0;
+        const userBalance = (await Economy.getBalance(event.senderID)).data;
+
+        switch (reply.type) {
+            case "conversionChoice": {
+                // الرد على الاختيار الأول
+                const choice = event.body.toLowerCase();
+                if (choice === "نقاط") {
+                    if (userBalance < 5) {
+                        return api.sendMessage("⚠️ | ليس لديك رصيد كافٍ لتحويل المال إلى نقاط. كل نقطة تحتاج إلى 5 دولار.", event.threadID);
+                    }
+                    const nextMessage = "💰 | الرجاء إدخال الكمية بالدولار التي ترغب في تحويلها إلى نقاط.";
+                    const nextResponse = await api.sendMessage(nextMessage, event.threadID);
+
+                    global.client.handler.reply.set(nextResponse.messageID, {
+                        author: event.senderID,
+                        type: "convertToPoints",
+                        unsend: true,
+                        name: "صرف",
+                    });
+                } else if (choice === "نقود") {
+                    if (userPoints <= 0) {
+                        return api.sendMessage("⚠️ | ليس لديك نقاط كافية لتحويلها إلى مال.", event.threadID);
+                    }
+                    const nextMessage = "💎 | الرجاء إدخال عدد النقاط التي ترغب في تحويلها إلى مال.";
+                    const nextResponse = await api.sendMessage(nextMessage, event.threadID);
+
+                    global.client.handler.reply.set(nextResponse.messageID, {
+                        author: event.senderID,
+                        type: "convertToMoney",
+                        unsend: true,
+                        name: "صرف",
+                    });
+                } else {
+                    return api.sendMessage("⚠️ | الرجاء الرد بكلمة *نقاط* أو *نقود* لاختيار العملية.", event.threadID);
+                }
+                break;
             }
-            return api.sendMessage(`${event.senderID} لديك ${userData[event.senderID].points} نقطة`, event.threadID, event.messageID);
+            case "convertToPoints": {
+                // تحويل المال إلى نقاط
+                const amount = parseInt(event.body);
+                if (isNaN(amount) || amount <= 0) {
+                    return api.sendMessage("⚠️ | الرجاء إدخال كمية صحيحة من المال للتحويل.", event.threadID);
+                }
+                if (userBalance < amount) {
+                    return api.sendMessage("⚠️ | ليس لديك رصيد كافٍ لتحويل هذا المبلغ إلى نقاط.", event.threadID);
+                }
+
+                const points = Math.floor(amount / 5);
+                await Economy.decrease(amount, event.senderID);
+                userData[event.senderID] = userData[event.senderID] || { points: 0 };
+                userData[event.senderID].points += points;
+                fs.writeJsonSync(userDataFile, userData);
+ 
+
+                return api.sendMessage(`✅ | تم تحويل ${amount} دولار إلى ${points} نقاط بنجاح!`, event.threadID);
+            }
+            case "convertToMoney": {
+                // تحويل النقاط إلى مال
+                const amount = parseInt(event.body);
+                if (isNaN(amount) || amount <= 0) {
+                    return api.sendMessage("⚠️ | الرجاء إدخال عدد صحيح من النقاط للتحويل.", event.threadID);
+                }
+                if (userPoints < amount) {
+                    return api.sendMessage("⚠️ | ليس لديك نقاط كافية لتحويل هذا العدد إلى مال.", event.threadID);
+                }
+
+                const money = amount * 5;
+                userData[event.senderID].points -= amount;
+                fs.writeJsonSync(userDataFile, userData);
+                await Economy.increase(money, event.senderID);
+
+                return api.sendMessage(`✅ | تم تحويل ${amount} نقاط إلى ${money} دولار بنجاح!`, event.threadID);
+            }
         }
-
-        const amount = parseInt(args[0]);
-        if (isNaN(amount) || amount <= 0) {
-            return api.sendMessage("الرجاء إدخال كمية صحيحة من النقاط للتحويل.", event.threadID);
-        }
-
-        const userData = fs.readJsonSync(userDataFile, { throws: false });
-        if (!userData[event.senderID] || userData[event.senderID].points < amount) {
-            return api.sendMessage("ليس لديك نقاط كافية للتحويل.", event.threadID);
-        }
-
-        const convertedAmount = amount * 5; // تحويل كل نقطة إلى 10 دولار
-        await Economy.increase(convertedAmount, event.senderID);
-
-        userData[event.senderID].points -= amount;
-        fs.writeJsonSync(userDataFile, userData);
-
-        const date = new Date().toLocaleString();
-        const message = `💸 تم التحويل بنجاح!\nالتفاصيل:\n- الوقت: ${date}\n- تم تحويل ${amount} نقطة إلى ${convertedAmount} دولار 💵 بنجاح`;
-        return api.sendMessage(message, event.threadID);
-    }
+    },
 };
