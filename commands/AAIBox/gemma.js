@@ -20,7 +20,7 @@ export default {
     const imgurl = encodeURIComponent(event.messageReply.attachments[0].url);
     api.setMessageReaction("⏰", event.messageID, () => {}, true);
 
-    const lado = `https://c-v5.onrender.com/i2art?url=${imgurl}`;
+    const lado = `https://xapiz.onrender.com/i2art?url=${imgurl}`;
 
     // تحديد المسار لحفظ الملف داخل مجلد cache
     const cacheDir = path.join(process.cwd(), "cache");
