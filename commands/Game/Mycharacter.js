@@ -1,8 +1,10 @@
 import path from 'path'; // استيراد وحدة path
 import axios from 'axios'; // استيراد axios لتحميل الصور
 import fs from 'fs'; // استيراد fs للتعامل مع نظام الملفات
+
 const femaleImages = [
- "https://i.imgur.com/4PqzyWP.jpg",
+
+"https://i.imgur.com/4PqzyWP.jpg",
 "https://i.imgur.com/iQ3DWx5.jpg","https://i.imgur.com/Foi1zGB.jpg",
 "https://i.imgur.com/B10Hy1N.jpeg",
 "https://i.imgur.com/fGuBKSc.jpeg",  
@@ -47,11 +49,15 @@ const femaleImages = [
 "https://i.imgur.com/PChQ6Ea.jpg",
 "https://i.imgur.com/pekp4LZ.jpg",
 "https://i.imgur.com/iQ3DWx5.jpg",   
+"https://i.ibb.co/DfR0F42/IMG-20241111-181714.jpg", 
+"https://i.ibb.co/7jNP6cr/947fe622ad70647c3aafbc9f3e8aefee.jpg", 
+"https://i.ibb.co/5sppPkM/1730939819791.jpg",
     // أضف المزيد من الروابط حسب الحاجة
 ];
 
 const maleImages = [
-     "https://i.imgur.com/HX2HxPS.jpeg",                              "https://i.imgur.com/P3xPruS.jpeg",                             "https://i.imgur.com/r8yrFRw.jpg",
+"
+https://i.imgur.com/HX2HxPS.jpeg",                              "https://i.imgur.com/P3xPruS.jpeg",                             "https://i.imgur.com/r8yrFRw.jpg",
 "https://i.imgur.com/GKL14dJ.jpeg",
 "https://i.imgur.com/GFrI0C6.jpeg",
 "https://i.imgur.com/JhsVMVn.jpeg",  
@@ -96,51 +102,61 @@ const maleImages = [
 "https://i.imgur.com/phrVQXt.jpg",
 "https://i.imgur.com/QHZN13e.jpg",
 "https://i.imgur.com/ci4PEdV.jpg",
-"https://i.imgur.com/aakLRDZ.jpeg",      
+"https://i.imgur.com/aakLRDZ.jpeg", 
+"https://i.ibb.co/1vXWB92/IMG-20241102-214800.jpg",
     // أضف المزيد من الروابط حسب الحاجة
 ];
-// الروابط والثوابت كما هي في الكود الأصلي...
 
 export default {
     name: "شخصيتي",
     author: "Anonymous",
     role: "member",
-    description: "تظهر شخصية أنمي خاصة بك لو كنت أنمي أي شخصية ستكون ؟ ",
-    execute: async function ({ api, event, args, Economy }) {
+    description: "تظهر شخصية أنمي خاصة بك لو كنت أنمي أي شخصية ستكون؟",
+    execute: async function ({ api, event, Economy }) {
         api.setMessageReaction("🤔", event.messageID, (err) => {}, true);
 
-const userMoney = (await Economy.getBalance(event.senderID)).data;
-      const cost = 500;
-      if (userMoney < cost) {
-        return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يجب عليك الحصول على ${cost} دولار أولاً لقاء كل محاولة`, event.threadID);
-      }
+        const userBalance = (await Economy.getBalance(event.senderID)).data;
+        const cost = 500;
 
-      // الخصم من الرصيد
-      await Economy.decrease(cost, event.senderID)
-        
-
-        // استخدام senderID للحصول على معلومات العضو
-        const userInfo = await api.getUserInfo(event.senderID);
-        const user = userInfo[event.senderID];
-        const name = user ? user.name : "الشخص المذكور"; // استخدام اسم العضو
-
-        // تحديد مسار مجلد الـ cache والتحقق من وجوده
-        const cachePath = path.join(process.cwd(), 'cache');
-        if (!fs.existsSync(cachePath)) {
-            fs.mkdirSync(cachePath);
+        // التحقق من الرصيد
+        if (userBalance < cost) {
+            return api.sendMessage(`⚠️ | لا يوجد لديك رصيد كافٍ. يجب أن يكون لديك ${cost} دولار أولاً.`, event.threadID);
         }
+
+        // رسالة الاختيار الأولية
+        const initialMessage = `━━━━━━━༺۵༻━━━━━━━\n\t\t〖قـسـم الإخـتـيـار 〗\n📝 | رد ب "فتيات" من أجل جلب شخصية أنمي للفتيات أو "فتيان" من أجل جلب شخصية أنمي خاصة بالفتيان\n━━━━━━━༺۵༻━━━━━━━`;
+        const successInitialMessage = await api.sendMessage(initialMessage, event.threadID);
+
+        // تخزين الرد
+        global.client.handler.reply.set(successInitialMessage.messageID, {
+            author: event.senderID,
+            type: "inputChoice",
+            name: "شخصيتي",
+            cost: cost,
+            unsend: true
+        });
+    },
+    onReply: async function ({ api, event, reply, Economy }) {
+        if (reply.type !== "inputChoice" || reply.author !== event.senderID) return;
+
+        const userChoice = event.body.toLowerCase(); // قراءة الرد
+        const cachePath = path.join(process.cwd(), 'cache');
+        if (!fs.existsSync(cachePath)) fs.mkdirSync(cachePath);
 
         let imgURL;
-        if (args.includes("فتيات")) {
+
+        if (userChoice === "فتيات") {
             imgURL = femaleImages[Math.floor(Math.random() * femaleImages.length)];
-        } else if (args.includes("فتيان")) {
+        } else if (userChoice === "فتيان") {
             imgURL = maleImages[Math.floor(Math.random() * maleImages.length)];
         } else {
-            api.sendMessage("⚠️ |عذراً، يرجى كتابة '*شخصيتي فتيات' أو '*شخصيتي فتيان' للحصول على شخصية أنمي مناسبة.", event.threadID);
-            return;
+            return api.sendMessage("⚠️ | يرجى الرد بكلمة 'فتيات' أو 'فتيان' فقط.", event.threadID);
         }
 
-        // تحميل الصورة وحفظها مؤقتًا
+        // خصم الرصيد
+        await Economy.decrease(reply.cost, reply.author);
+
+        // تحميل الصورة
         const tempFilename = `image_${Date.now()}.jpg`;
         const tempFilePath = path.join(cachePath, tempFilename);
         const response = await axios({
@@ -148,22 +164,25 @@ const userMoney = (await Economy.getBalance(event.senderID)).data;
             method: 'GET',
             responseType: 'arraybuffer',
         });
-        const buffer = Buffer.from(response.data, 'binary');
-        fs.writeFileSync(tempFilePath, buffer);
+        fs.writeFileSync(tempFilePath, Buffer.from(response.data, 'binary'));
 
-      api.setMessageReaction("💫", event.messageID, (err) => {}, true);
+        api.setMessageReaction("💫", event.messageID, (err) => {}, true);
 
-        // إرسال الصورة مع استخدام اسم العضو في الرسالة
-        const bodyText = args.includes("فتيات") ? 
-            `✿━━━━━━━━━━━━━━━✿\n💫 | لو كانت ${name} شخصية أنمي فستكون  :\n✿━━━━━━━━━━━━━━━✿` :
-            `✿━━━━━━━━━━━━━━━✿\n💫 | لو كان ${name} شخصية أنمي فسيكون  :\n✿━━━━━━━━━━━━━━━✿`;
+        // رسالة النتيجة
+        const bodyText = userChoice === "فتيات"
+            ? `✿━━━━━━━━━━━━━━━✿\n💫 | لو كانت ${reply.name} شخصية أنمي فستكون:\n✿━━━━━━━━━━━━━━━✿`
+            : `✿━━━━━━━━━━━━━━━✿\n💫 | لو كان ${reply.name} شخصية أنمي فسيكون:\n✿━━━━━━━━━━━━━━━✿`;
 
         api.sendMessage({
             body: bodyText,
             attachment: fs.createReadStream(tempFilePath)
         }, event.threadID, () => {
-            // حذف الصورة بعد الإرسال
-            fs.unlinkSync(tempFilePath);
+            fs.unlinkSync(tempFilePath); // حذف الملف بعد الإرسال
         });
+
+        // حذف الرسالة الأصلية إذا كانت محددة
+        if (reply.unsend) {
+            api.unsendMessage(reply.messageID);
+        }
     }
 };
