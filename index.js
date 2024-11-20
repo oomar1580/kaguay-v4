@@ -1,3 +1,4 @@
+// استيراد الحزم والملفات الضرورية
 import fs from "fs";
 import login from "./logins/fcax/fb-chat-api/index.js";
 import { listen } from "./listen/listen.js";
@@ -39,8 +40,8 @@ class Kaguya extends EventEmitter {
     try {
       const redToGreen = gradient("white", "green");
       console.log(redToGreen("■".repeat(50), { interpolation: "hsv" }));
-      console.log(`${gradient(["#4feb34", "#4feb34"])("[ AUTHOR ]: ")} ${gradient("cyan", "pink")("Arjhil Dacayanan")}`);
-      console.log(`${gradient(["#4feb34", "#4feb34"])("[ Facebook ]: ")} ${gradient("cyan", "pink")("https://www.facebook.com/arjhil.dacayanan.73?mibextid=ZbWKwL")}`);
+      console.log(`${gradient(["#4feb34", "#4feb34"])("[ owner ]: ")} ${gradient("cyan", "pink")("HUSSEIN YACOUBI")}`);
+      console.log(`${gradient(["#4feb34", "#4feb34"])("[ Facebook ]: ")} ${gradient("cyan", "pink")("https://www.facebook.com/share/15EQBXgrmV/")}`);
 
       const { data } = await axios.get("https://raw.githubusercontent.com/Tshukie/Kaguya-Pr0ject/master/package.json");
       if (semver.lt(this.package.version, (data.version ??= this.package.version))) {
@@ -62,6 +63,39 @@ class Kaguya extends EventEmitter {
     } catch (err) {
       this.emit("system:error", err);
     }
+  }
+
+  async loadComponents() {
+    let failedCount = 0;
+
+    // تحميل الأوامر
+    try {
+      await commandMiddleware();
+      console.log(`✔ Loaded ${global.client.commands.size} commands.`);
+    } catch (err) {
+      failedCount++;
+      console.error(`❌ Failed to load commands: ${err.message}`);
+    }
+
+    // تحميل الأحداث
+    try {
+      await eventMiddleware();
+      console.log(`✔ Loaded ${global.client.events.size} events.`);
+    } catch (err) {
+      failedCount++;
+      console.error(`❌ Failed to load events: ${err.message}`);
+    }
+
+    // طباعة ملخص التحميل
+    console.log("=".repeat(50));
+    console.log(`✔ Total commands loaded: ${global.client.commands.size}`);
+    console.log(`✔ Total events loaded: ${global.client.events.size}`);
+    if (failedCount > 0) {
+      console.log(`❌ Failed to load ${failedCount} component(s).`);
+    } else {
+      console.log("✔ All components loaded successfully!");
+    }
+    console.log("=".repeat(50));
   }
 
   start() {
@@ -86,8 +120,8 @@ class Kaguya extends EventEmitter {
         config: this.currentConfig,
       };
 
-      await commandMiddleware();
-      await eventMiddleware();
+      await this.loadComponents(); // استدعاء دالة التحميل
+
       this.checkVersion();
 
       this.on("system:run", () => {
@@ -96,38 +130,13 @@ class Kaguya extends EventEmitter {
 
           api.setOptions(this.currentConfig.options);
 
-          const reactions = [
-            "🥰", "😂", "😢", "😍", "🤔", "😱", "🥺", "🤣", "😀", "😭",
-            "❤️", "😜", "😎", "😏", "😘", "😤", "🤗", "🤩", "😇", "😬",
-            "😅", "😳", "🙈", "🙉", "🙊", "🤭", "😋", "🤓", "😌", "🤤",
-            "🤑", "😺", "😸", "😻", "🤖", "👻", "🎉", "🌈", "✨", "🔥",
-            "💔", "💖", "🌹", "🌼", "🍀", "🌟", "💯", "👍", "👎", "🤝"
-          ];
-
-          const randomReact = (event) => {
-            if (event.body) {
-              const randomCount = Math.floor(Math.random() * 3) + 1;
-              for (let i = 0; i < randomCount; i++) {
-                const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
-                api.setMessageReaction(randomReaction, event.messageID, (err) => {
-                  if (err) {
-                    // Suppress the error message
-                  }
-                });
-              }
-            }
-          };
-
           const listenMqtt = async () => {
             try {
               if (!listenMqtt.isListening) {
                 listenMqtt.isListening = true;
                 const mqtt = await api.listenMqtt(async (err, event) => {
-                  if (err) {
-                    this.on("error", err);
-                  }
+                  if (err) this.on("error", err);
                   await listen({ api, event, client: global.client });
-                  randomReact(event); // Call to react to the message
                 });
                 await sleep(this.currentConfig.mqtt_refresh);
                 notifer("[ MQTT ]", "Mqtt refresh in progress!");
