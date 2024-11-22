@@ -35,35 +35,27 @@ class Kaguya extends EventEmitter {
       this.emit("system:error", "Cannot parse JSON credentials in KaguyaSetUp/KaguyaState.json");
     }
   }
-
-  async checkVersion() {
+async checkVersion() {
     try {
-      const redToGreen = gradient("white", "green");
-      console.log(redToGreen("■".repeat(50), { interpolation: "hsv" }));
-      console.log(`${gradient(["#4feb34", "#4feb34"])("[ owner ]: ")} ${gradient("cyan", "pink")("HUSSEIN YACOUBI")}`);
-      console.log(`${gradient(["#4feb34", "#4feb34"])("[ Facebook ]: ")} ${gradient("cyan", "pink")("https://www.facebook.com/share/15EQBXgrmV/")}`);
+        const pinkGradient = gradient(["#ff00ff", "#ff99ff"]); // تدرج لوني وردي
+        console.log(pinkGradient(`       
+█▄▀ ▄▀█ █▀▀ █░█ █▄█ ▄▀█
+█░█ █▀█ █▄█ █▄█ ░█░ █▀█
+`));
 
-      const { data } = await axios.get("https://raw.githubusercontent.com/Tshukie/Kaguya-Pr0ject/master/package.json");
-      if (semver.lt(this.package.version, (data.version ??= this.package.version))) {
-        log([{ message: "[ SYSTEM ]: ", color: "yellow" }, { message: `New Update: contact the owner`, color: "white" }]);
-      }
+        console.log(`${gradient(["#ff99ff", "#ff00ff"])("[ owner ]: ")} ${gradient("cyan", "pink")("HUSSEIN YACOUBI")}`);
+        console.log(`${gradient(["#ff99ff", "#ff00ff"])("[ Facebook ]: ")} ${gradient("cyan", "pink")("https://www.facebook.com/share/15EQBXgrmV/")}`);
 
-      let currentFrame = 0;
-      const interval = setInterval(() => {
-        process.stdout.write("\b".repeat(currentFrame));
-        const frame = redToGreen("■".repeat(currentFrame), { interpolation: "hsv" });
-        process.stdout.write(frame);
-        currentFrame++;
-        if (currentFrame > 50) {
-          clearInterval(interval);
-          process.stdout.write("\n");
-          this.emit("system:run");
+        const { data } = await axios.get("https://raw.githubusercontent.com/Tshukie/Kaguya-Pr0ject/master/package.json");
+        if (semver.lt(this.package.version, (data.version ??= this.package.version))) {
+            log([{ message: "[ SYSTEM ]: ", color: "yellow" }, { message: `New Update: contact the owner`, color: "white" }]);
         }
-      }, 10);
+
+        this.emit("system:run"); // تشغيل النظام مباشرة بدون إطار متحرك
     } catch (err) {
-      this.emit("system:error", err);
+        this.emit("system:error", err);
     }
-  }
+}
 
   async loadComponents() {
     let failedCount = 0;
