@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 let isChatEnabled = false; // متغير للتحكم في تشغيل/إيقاف الدردشة
 
@@ -14,13 +14,25 @@ export default {
 
     if (body === "تشغيل-الدردشة") {
       isChatEnabled = true;
-      return api.sendMessage("✅ | تم تفعيل الدردشة التلقائية.", threadID, messageID);
+      return api.sendMessage(
+        "✅ | تم تفعيل الدردشة التلقائية.",
+        threadID,
+        messageID
+      );
     } else if (body === "ايقاف-الدردشة") {
       isChatEnabled = false;
-      return api.sendMessage("❌ | تم إيقاف الدردشة التلقائية.", threadID, messageID);
+      return api.sendMessage(
+        "❌ | تم إيقاف الدردشة التلقائية.",
+        threadID,
+        messageID
+      );
     } else {
       // تنبيه المستخدم في حال إرسال رسالة دون تفعيل الدردشة
-      return api.sendMessage("🗨️ | يمكنك تشغيل الدردشة باستخدام 'تشغيل-الدردشة' أو إيقافها باستخدام 'ايقاف-الدردشة'.", threadID, messageID);
+      return api.sendMessage(
+        "🗨️ | يمكنك تشغيل الدردشة باستخدام 'تشغيل-الدردشة' أو إيقافها باستخدام 'ايقاف-الدردشة'.",
+        threadID,
+        messageID
+      );
     }
   },
 
@@ -34,14 +46,24 @@ export default {
     if (!body || body.trim() === "") return; // إذا لم يتم إدخال أي نص، تجاهل الحدث
 
     try {
-      const response = await axios.get(`https://simsimi.site/api/v2/?mode=talk&lang=ar&message=${encodeURIComponent(body)}&filter=true`);
-      const replyMessage = response.data.success || "عذرا، لم أتمكن من فهم رسالتك.";
+      // استدعاء API الجديد للحصول على الرد
+      const response = await axios.get(
+        `https://simsimi-api-pro.onrender.com/sim?query=${encodeURIComponent(
+          body
+        )}`
+      );
+      const replyMessage =
+        response.data.respond || "عذرا، لم أتمكن من فهم رسالتك.";
 
       // إرسال الرد النصي فقط
       api.sendMessage(replyMessage, threadID, messageID);
     } catch (error) {
       console.error("Error during chat:", error);
-      api.sendMessage("⚠️ | حدث خطأ أثناء محاولة الدردشة. يرجى المحاولة مرة أخرى.", threadID, messageID);
+      api.sendMessage(
+        "⚠️ | حدث خطأ أثناء محاولة الدردشة. يرجى المحاولة مرة أخرى.",
+        threadID,
+        messageID
+      );
     }
-  }
+  },
 };
