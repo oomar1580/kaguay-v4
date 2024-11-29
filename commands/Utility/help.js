@@ -16,28 +16,29 @@ class Help {
 
     // مصفوفة الصور العشوائية للعرض الأولي
     this.randomImageUrls = [
-            "https://i.imgur.com/mCpWvaI.jpeg",
-      "https://i.imgur.com/Q8Ljscl.jpeg",
-      "https://i.imgur.com/ZGfBNLX.jpeg",
-      "https://i.imgur.com/UV1zAwh.jpeg",
-      "https://i.imgur.com/MKoNjNT.jpeg",
-      "https://i.imgur.com/ICzZ9l6.jpeg",
-      "https://i.imgur.com/wdWjH1D.jpeg",
-      "https://i.imgur.com/H2rhsH5.jpeg",
-      "https://i.imgur.com/GE7w5nt.jpeg",
-      "https://i.imgur.com/UEg87Rw.png",
-      "https://i.imgur.com/q9myIow.jpeg",
-      "https://i.imgur.com/k1Bhji6.jpeg",
-      "https://i.imgur.com/6DT6OrG.jpeg",
-      "https://i.imgur.com/dRMPS2V.jpeg"
+            "https://i.postimg.cc/59sCqJt7/photo14.jpg",
+
+      "https://i.postimg.cc/15TV2KwD/No-Name-2019-1-27-8-22-44-No-00.jpg",
+
+      "https://i.postimg.cc/q7GRJchb/No-Name-2019-1-20-9-26-17-No-00.jpg",
+
+      "https://i.postimg.cc/wTsjyYRs/CCo-FMdqe-PSGh-UYb-JEh-B7-Jej-J7-ZH2s-Ee-ZWCKtb-C5r59spqf-OHqlf-IUNDrk-OHGs78-Nslzw-Hq-XLu-Os-Lg-Ls-W-main.jpg",
+
+      "https://i.postimg.cc/nhJ9nhSL/story-2330-photo-1656070288443767046.jpg",
+
+      "https://i.postimg.cc/HxRjRY7d/1369266-650.jpg",
+
+      "https://i.postimg.cc/RVcqpzCx/kaguyasama-wa-kokurasetai-w9nm2-V-T7c.jpg",
+
+      "https://i.postimg.cc/T3f1ZHhL/FQ-Gzh-HXMAIv-PDm.jpg",
     ];
 
     // مصفوفة الصور المخصصة للرد عند جلب معلومات أمر معين
     this.detailedImageUrls = [
     "https://i.postimg.cc/jj25dynJ/thumb-350-1080006.webp",
     "https://i.postimg.cc/d32QSBpg/thumb-350-1239849.webp",
-    "https://i.imgur.com/VZKKBHv.jpeg",
-    "https://i.imgur.com/fX5iiTb.png" // قم بتعديل الرابط حسب الحاجة
+    "https://i.postimg.cc/J4HQQPVT/VZKKBHv.jpg",
+      "https://i.postimg.cc/wxZX3LyD/fX5iiTb.png",  // قم بتعديل الرابط حسب الحاجة
     ];
   }
 
