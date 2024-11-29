@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import fs from 'fs-extra';
 import path from 'path';
@@ -34,7 +33,7 @@ export default {
       const videoName = event.body.trim();
 
       if (!videoName) {
-        return api.sendMessage("●═══════❍═══════●\n\t\t\t\t〖ⓎⓄⓊⓉⓊⒷⒺ〗\n📝 | رد عـلـى الـرسـالـة و أدخـل إسـم الـمـقـطـع الـمـراد الـبـحـث عـنـه\n●═══════❍═══════●", event.threadID);
+        return api.sendMessage("⚠️ | يرجى إدخال اسم المقطع.", event.threadID);
       }
 
       try {
@@ -48,7 +47,7 @@ export default {
           return api.sendMessage("⚠️ | لم يتم العثور على أي نتائج.", event.threadID);
         }
 
-        let msg = '🎥 | تم العثور على المقاطع الأربعة التالية :\n';
+        let msg = '🎥 | تم العثور على المقاطع الأربعة التالية:\n';
         const selectedResults = searchResults.slice(0, 4);
         const attachments = [];
 
@@ -112,13 +111,12 @@ export default {
       }
 
       const video = searchResults[selectedIndex];
-      const videoUrl = video.videoUrl;
+      const videoUrl = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(video.videoUrl)}`;
 
       try {
-        const downloadUrl = `https://apiv2.kenliejugarap.com/video?url=${encodeURIComponent(videoUrl)}`;
-        const downloadResponse = await axios.get(downloadUrl);
+        const downloadResponse = await axios.get(videoUrl);
 
-        const { response: videoFileUrl, title } = downloadResponse.data;
+        const { video: videoFileUrl, title } = downloadResponse.data;
         if (!videoFileUrl) {
           return api.sendMessage("⚠️ | لم يتم العثور على رابط تحميل المقطع.", event.threadID);
         }
@@ -140,7 +138,7 @@ export default {
             api.setMessageReaction("✅", event.messageID, (err) => {}, true);
 
             const message = {
-              body: `✅ | تـم تـحـمـيـل الـفـيـديو:\n❀ الـعـنـوان : ${title}`,
+              body: `✅ | تـم تـحـمـيـل الـفـيـديـو:\n❀ الـعـنـوان : ${title}`,
               attachment: fs.createReadStream(filePath)
             };
 
