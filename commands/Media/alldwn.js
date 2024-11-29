@@ -17,21 +17,16 @@ class VideoDownloader {
 
     try {
       // استخدام رابط API الجديد
-      const apiUrl = `https://www.noobs-api.000.pe/dipto/alldl?url=${encodeURIComponent(
-        link
-      )}`;
+      const apiUrl = `https://jerome-web.gleeze.com/service/api/alldl?url=${encodeURIComponent(link)}`;
 
       // طلب البيانات من API
       const response = await axios.get(apiUrl);
       const mediaData = response.data;
 
       // تحقق من توفر الفيديو
-      if (mediaData.result && mediaData.data.success) {
-        const videoUrl = mediaData.result;
+      if (mediaData.status && mediaData.data) {
+        const videoUrl = mediaData.data.high || mediaData.data.low; // تحديد رابط الفيديو
         const videoTitle = mediaData.data.title || "محتوى غير متوفر";
-        const videoDuration = mediaData.data.duration
-          ? `${(mediaData.data.duration / 1000).toFixed(2)} ثوانٍ`
-          : "غير متوفر";
         const videoPath = path.join(process.cwd(), "cache", `${Date.now()}.mp4`);
         fs.ensureDirSync(path.join(process.cwd(), "cache"));
 
@@ -50,7 +45,7 @@ class VideoDownloader {
           api.setMessageReaction("✅", event.messageID, (err) => {}, true);
           await api.sendMessage(
             {
-              body: `✅ | تـم تـنـزيـل الـفـيـديـو بـنـجـاح \n📝 | الـعـنـوان : ${videoTitle}\n⏳ | الـمـدة: ${videoDuration}`,
+              body: `✅ | تـم تـنـزيـل الـفـيـديـو بـنـجـاح \n📝 | الـعـنـوان : ${videoTitle}`,
               attachment: fs.createReadStream(videoPath),
             },
             event.threadID
@@ -77,6 +72,7 @@ class VideoDownloader {
   async events({ api, event }) {
     const { body, threadID } = event;
 
+    // التحقق إذا كان الرابط يخص فيديو من موقع مثل Pinterest أو Instagram أو YouTube
     if (body && /^(https?:\/\/)?(www\.)?(instagram\.com|pin\.it|youtube\.com|youtu\.be)\/.+$/.test(body)) {
       // إذا أرسل المستخدم رابط صالح، يمكن تفعيل `execute` مباشرة من هنا
       this.execute({ api, event });
