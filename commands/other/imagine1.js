@@ -30,7 +30,7 @@ export default {
           author: senderID,
           type: "textPrompt",
           name: "تخيلي",
-          unsend: true
+          unsend: true,
         });
       }
     );
@@ -54,10 +54,11 @@ export default {
       }
 
       // جلب الصورة باستخدام رابط API
-      const apiUrl = `https://jerome-web.gleeze.com/service/api/bing?prompt=${encodeURIComponent(translatedPrompt)}`;
+      const apiUrl = `https://ccprojectapis.ddns.net/api/blackbox/gen?prompt=${encodeURIComponent(
+        translatedPrompt
+      )}`;
       const response = await axios.get(apiUrl);
-
-      const imageUrl = response?.data?.result?.[0];
+      const imageUrl = response?.data?.response?.match(/(.*?)/)?.[1]; // استخراج الرابط من النص
       if (!imageUrl) {
         api.sendMessage("⚠️ | فشل في استرجاع الصورة.", event.threadID, event.messageID);
         return;
