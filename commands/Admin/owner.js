@@ -1,79 +1,45 @@
-// استيراد الوحدات النمطية اللازمة
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
-
 export default {
   name: 'المطور', // اسم الأمر
   author: 'حسين يعقوبي', // مؤلف الأمر
   role: 'member', // الدور المطلوب لاستخدام الأمر
-  description: 'يعرض معلومات عن مالك الأمر.', // وصف الأمر
-  aliases:['مطور','المالك'],
-  async execute({ api, event, Economy }) {
+  description: 'يعرض معلومات وجهة اتصال المطور.', // وصف الأمر
+  aliases: ['مطور', 'المالك'],
+  async execute({ api, event }) {
     try {
-
-      const userMoney = (await Economy.getBalance(event.senderID)).data;
-      const cost = 5000;
-      if (userMoney < cost) {
-        return api.sendMessage(`⚠️ | إدفع ${cost} دولار أولاً من أجل ان ترى من هو المطور`, event.threadID);
-      }
-
-      // الخصم من الرصيد
-      await Economy.decrease(cost, event.senderID);
-
-      api.setMessageReaction('🚀', event.messageID, (err) => {}, true);
-      // معلومات المالك
       const ownerInfo = {
         name: 'مــاهــر',
         gender: 'ذكر',
         age: '19',
-        countury:'لــيــبــيــا 🇱🇾',
+        country: 'لــيــبــيــا 🇱🇾',
         height: '180',
         facebookLink: 'https://www.facebook.com/MAHER.FOKS',
         nick: 'الــثــعــلــب 🦊',
       };
 
-      const videoLink = 'https://drive.google.com/uc?export=download&id=1VU7B3OxTlTmGymay7l9McpCYKOPJy7m9'; // الرابط الخاص بالفيديو
+      const ownerContactID = '61550232547706'; // معرّف المطور
 
-      // مسار مجلد مؤقت لتخزين الفيديو باستخدام process.cwd()
-      const tmpFolderPath = path.join(process.cwd(), 'tmp');
-
-      // إنشاء المجلد إذا لم يكن موجودًا
-      if (!fs.existsSync(tmpFolderPath)) {
-        fs.mkdirSync(tmpFolderPath);
-      }
-
-      // جلب الفيديو وحفظه
-      const videoResponse = await axios.get(videoLink, { responseType: 'arraybuffer' });
-      const videoPath = path.join(tmpFolderPath, 'owner_video.mp4');
-      fs.writeFileSync(videoPath, Buffer.from(videoResponse.data, 'binary'));
-
-      api.setMessageReaction('🌟', event.messageID, (err) => {}, true);
-
-      // تنسيق رسالة المعلومات
+      // رسالة المعلومات حول المطور
       const message = `࿇ ══━━━✥◈✥━━━══ ࿇
       •——[معلومات حول المالك]——•
       ❏ الاسم: 『${ownerInfo.name}』
       ❏ الجنس: 『${ownerInfo.gender}』
       ❏ العمر: 『${ownerInfo.age}』
-      ❏ البلد: 『${ownerInfo.countury}』
+      ❏ البلد: 『${ownerInfo.country}』
       ❏ الطول: 『${ownerInfo.height}』 سم
       ❏ رابط الفيسبوك: 『${ownerInfo.facebookLink}』
       ❏ اللقب:『${ownerInfo.nick}』\n ࿇ ══━━━✥◈✥━━━══ ࿇`;
 
-      // إرسال الرسالة والفيديو كمرفق
-      await api.sendMessage({
-        body: message,
-        attachment: fs.createReadStream(videoPath)
-      }, event.threadID, event.messageID);
+      // إرسال رسالة المعلومات
+      await api.sendMessage(message, event.threadID);
 
-      // رد فعل على الرسالة إذا كانت تحتوي على "ownerinfo"
-      if (event.body.toLowerCase().includes('المطور')) {
-        api.setMessageReaction('🚀', event.messageID, (err) => {}, true);
-      }
+      // مشاركة جهة الاتصال الخاصة بالمطور
+      await api.shareContact(ownerContactID, ownerContactID, event.threadID);
+
+      // إضافة تفاعل مع الرسالة كإشارة على النجاح
+      api.setMessageReaction('🚀', event.messageID, (err) => {}, true);
     } catch (error) {
-      console.error('حدث خطأ في أمر ownerinfo:', error);
-      api.sendMessage('حدث خطأ أثناء معالجة الأمر.', event.threadID);
+      console.error('حدث خطأ أثناء تنفيذ الأمر:', error);
+      api.sendMessage('⚠️ حدث خطأ أثناء معالجة الأمر.', event.threadID);
     }
   },
 };
