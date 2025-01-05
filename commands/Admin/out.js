@@ -6,7 +6,7 @@ export default {
   aliases : ["اخرجي"],
   execute: async ({ api, event, args }) => {
     const permission = [`100076269693499`,
-                         '100054133070771'];
+                         '61550232547706'];
     if (!permission.includes(event.senderID)) {
       return api.sendMessage("❌ | آسفة هذا خاص بحسين فقط", event.threadID, event.messageID);
     }
