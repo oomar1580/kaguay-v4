@@ -16,18 +16,19 @@ class VideoDownloader {
     const downloadingMsg = await api.sendMessage("⏳ | جـارٍ تـنـزيـل الـمـقـطـع...", event.threadID);
 
     try {
-      // استخدام رابط API الخاص بفيسبوك
-      const apiUrl = `https://ccprojectapis.ddns.net/api/fbdl?url=${encodeURIComponent(link)}`;
+      // استخدام رابط API الجديد
+      const apiUrl = `https://kaiz-apis.gleeze.com/api/fbdl?url=${encodeURIComponent(link)}`;
 
       // طلب البيانات من API
       const response = await axios.get(apiUrl);
       const mediaData = response.data;
 
       // تحقق من نجاح الاستجابة وتوفر الفيديو
-      if (mediaData?.url?.status && mediaData.url.data.length > 0) {
-        const videoData = mediaData.url.data[0]; // استخدام أول فيديو متاح
-        const videoUrl = videoData.url;
-        const videoResolution = videoData.resolution || "غير معروف";
+      if (mediaData?.videoUrl) {
+        const videoUrl = mediaData.videoUrl;
+        const videoTitle = mediaData.title || "غير معروف";
+        const videoQuality = mediaData.quality || "غير معروف";
+        const videoThumbnail = mediaData.thumbnail;
         const videoPath = path.join(process.cwd(), "cache", `${Date.now()}.mp4`);
         fs.ensureDirSync(path.join(process.cwd(), "cache"));
 
@@ -46,7 +47,7 @@ class VideoDownloader {
           api.setMessageReaction("✅", event.messageID, (err) => {}, true);
           await api.sendMessage(
             {
-              body: `✅ | تـم تـنـزيـل الـفـيـديـو بـنـجـاح \n📺 | الـدقـة: ${videoResolution}`,
+              body: `✅ | تـم تـنـزيـل الـفـيـديـو بـنـجـاح! \n📺 | الـعـنـوان: ${videoTitle}\n🎥 | الـدقـة: ${videoQuality}`,
               attachment: fs.createReadStream(videoPath),
             },
             event.threadID
