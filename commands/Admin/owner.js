@@ -24,12 +24,13 @@ export default {
       api.setMessageReaction('🚀', event.messageID, (err) => {}, true);
       // معلومات المالك
       const ownerInfo = {
-        name: 'حسين يعقوبي',
+        name: 'مــاهــر',
         gender: 'ذكر',
-        age: '18',
+        age: '19',
+        countury:'لــيــبــيــا 🇱🇾',
         height: '180',
-        facebookLink: 'https://www.facebook.com/profile.php?id=100093589771272',
-        nick: 'صاིئدّ اིلཻأرٰوٰ໑ٰاིح᪽',
+        facebookLink: 'https://www.facebook.com/MAHER.FOKS',
+        nick: 'الــثــعــلــب 🦊',
       };
 
       const videoLink = 'https://drive.google.com/uc?export=download&id=1VU7B3OxTlTmGymay7l9McpCYKOPJy7m9'; // الرابط الخاص بالفيديو
@@ -55,6 +56,7 @@ export default {
       ❏ الاسم: 『${ownerInfo.name}』
       ❏ الجنس: 『${ownerInfo.gender}』
       ❏ العمر: 『${ownerInfo.age}』
+      ❏ البلد: 『${ownerInfo.countury}』
       ❏ الطول: 『${ownerInfo.height}』 سم
       ❏ رابط الفيسبوك: 『${ownerInfo.facebookLink}』
       ❏ اللقب:『${ownerInfo.nick}』\n ࿇ ══━━━✥◈✥━━━══ ࿇`;
