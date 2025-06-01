@@ -17,7 +17,7 @@ class VideoDownloader {
 
     try {
       // استخدام رابط API الجديد
-      const apiUrl = `https://kaiz-apis.gleeze.com/api/fbdl?url=${encodeURIComponent(link)}`;
+      const apiUrl = `https://kaiz-apis.gleeze.com/api/fbdl?url=${encodeURIComponent(link)}apikey=c31e5b66-f953-44df-ba24-574743539332`;
 
       // طلب البيانات من API
       const response = await axios.get(apiUrl);
